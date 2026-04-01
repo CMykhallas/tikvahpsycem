@@ -14,12 +14,12 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
-    "strict": false,
-    "noUnusedLocals": false,
+    /* Linting - Ajustado para segurança básica */
+    "strict": true, // Ativado: protege contra valores null/undefined inesperados
+    "noUnusedLocals": true, // Avisa se você esqueceu variáveis sem uso
     "noUnusedParameters": false,
-    "noImplicitAny": false,
-    "noFallthroughCasesInSwitch": false,
+    "noImplicitAny": false, // Mantido false para facilitar se você ainda está migrando
+    "noFallthroughCasesInSwitch": true,
 
     "baseUrl": ".",
     "paths": {
