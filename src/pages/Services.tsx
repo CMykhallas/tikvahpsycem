@@ -24,7 +24,21 @@ import {
   BookOpen,
   Award,
   Wrench,
-  MessageCircle
+  MessageCircle,
+  FileText,
+  BarChart3,
+  Compass,
+  Handshake,
+  Building2,
+  Wallet,
+  Coins,
+  Newspaper,
+  UserCheck,
+  Laptop,
+  Book,
+  UsersRound,
+  HandHeart,
+  BriefcaseBusiness,
 } from "lucide-react";
 import consultoriaNegocios from "@/assets/consultoria-negocios.jpg";
 import formacaoDesenvolvimento from "@/assets/formacao-desenvolvimento.jpg";
@@ -33,132 +47,152 @@ const Services = () => {
   const mainServices = [
     {
       icon: Brain,
-      title: "Psicoterapia",
-      description: "Atendimento psicológico especializado para indivíduos, casais e famílias",
+      title: "Psicoterapia & Saúde Mental",
+      description: "Serviços psicológicos integrados para promoção de saúde mental, prevenção e intervenção em crises.",
       link: "/services/psicoterapia",
       services: [
-        "Psicoterapia Individual",
-        "Terapia de Casal", 
-        "Terapia Familiar Sistêmica",
-        "Avaliação Psicológica"
+        "Psicoterapia Clínica, Social e Organizacional",
+        "Avaliação Psicológica e Diagnóstico Funcional",
+        "Terapia Individual, Familiar e de Grupo",
+        "Intervenção em Crises e Trauma",
       ]
     },
     {
-      icon: Building,
-      title: "Consultoria",
-      description: "Soluções especializadas para desenvolvimento organizacional",
-      link: "/services/consultoria", 
+      icon: Building2,
+      title: "Gestão Empresarial & de Negócios",
+      description: "Consultoria estratégica e operativa para organizações, ONGs e PME, com foco em crescimento sustentável.",
+      link: "/services/gestao",
       services: [
-        "Consultoria Organizacional",
-        "Gestão de Recursos Humanos",
-        "Coaching Executivo",
-        "Assessment Psicológico"
+        "Gestão Empresarial e Diagnóstico Organizacional",
+        "Planeamento Estratégico e Gestão de Mudança",
+        "Gestão de Negócios e Modelagem de Negócio",
+        "Gestão de Recursos Humanos e Clima Organizacional",
       ]
     },
     {
       icon: GraduationCap,
-      title: "Cursos",
-      description: "Programas de formação e desenvolvimento profissional",
-      link: "/services/cursos",
+      title: "Formação & Desenvolvimento",
+      description: "Programas de formação, capacitação e estágios supervisionados para profissionais e organizações.",
+      link: "/services/formacao",
       services: [
-        "Inteligência Emocional",
-        "Liderança e Gestão", 
-        "Comunicação Eficaz",
-        "Desenvolvimento Pessoal"
+        "Cursos Técnicos, Psicológicos e Organizacionais",
+        "Programa de Primeiros Socorros Psicológicos (PSP)",
+        "Estágios Supervisionados (incl. PEP)",
+        "Monitoria e Avaliação de Projetos (M&E)",
       ]
     },
     {
-      icon: Users,
-      title: "Workshops",
-      description: "Experiências práticas de aprendizado e desenvolvimento",
-      link: "/services/workshops",
+      icon: UsersRound,
+      title: "Comunidade & Responsabilidade Social",
+      description: "Intervenções comunitárias, programas de responsabilidade social e apoio psicossocial em contextos vulneráveis.",
+      link: "/services/comunidade",
       services: [
-        "Mindfulness e Bem-estar",
-        "Gestão de Stress",
-        "Trabalho em Equipe",
-        "Resolução de Conflitos"
+        "Programas de Responsabilidade Social e Sustentabilidade",
+        "Outreach e Suporte Comunitário",
+        "Voluntariado Estruturado e Campanhas de Sensibilização",
+        "Pesquisa Aplicada em Políticas Sociais",
       ]
     }
   ];
 
   const comprehensiveServices = [
     {
-      category: "Saúde e Bem-estar",
+      category: "Saúde Mental, Terapias e Reabilitação",
       icon: Stethoscope,
       services: [
-        "Psicologia",
-        "Terapia da Fala", 
+        "Psicologia Clínica, Social e Organizacional",
+        "Terapia da Fala",
+        "Terapia da Fala em Língua Gestual",
         "Terapia Ocupacional",
-        "Apoio em Crises",
-        "Terapias",
-        "Primeiros Socorros Psicológicos (PSP)"
+        "Apoio Psicológico em Crises",
+        "Programa de Primeiros Socorros Psicológicos (PSP)",
       ]
     },
     {
-      category: "Consultoria e Negócios",
-      icon: Briefcase,
+      category: "Gestão Empresarial, Negócios & Economia",
+      icon: TrendingUp,
       services: [
-        "Consultoria Científica",
-        "Consultoria Técnica", 
-        "Consultoria de Negócios",
-        "Coaching",
-        "Mentoria"
+        "Gestão Empresarial",
+        "Gestão de Negócios",
+        "Consultoria em Negócios",
+        "Gestão e Administração de Recursos Humanos",
+        "Planeamento de Recursos Humanos",
+        "Gestão de Clima Organizacional",
+        "Análise Económica Aplicada",
+        "Economia de Recursos Humanos",
       ]
     },
     {
-      category: "Financeiro e Jurídico",
-      icon: DollarSign,
+      category: "Financeiro, Fiscalidade & Jurídico",
+      icon: Wallet,
       services: [
-        "Contabilidade",
-        "Auditoria",
-        "Fiscalidade",
-        "Jurisprudência"
+        "Contabilidade e Auditoria",
+        "Fiscalidade Corporativa e Planeamento Fiscal",
+        "Jurisprudência Aplicada e Pareceres Jurídicos",
+        "Assessoria Empresarial e Institucional",
+        "Governação, Compliance e Gestão de Risco",
       ]
     },
     {
-      category: "Tecnologia e Suporte",
-      icon: Code,
+      category: "Tecnologia, Inovação & Dados",
+      icon: Laptop,
       services: [
-        "TI (Tecnologia da Informação)",
-        "Assessoria",
-        "Help-Desk"
+        "Tecnologias de Informação (TI)",
+        "Desenvolvimento de Soluções Digitais para Saúde e Gestão",
+        "Gestão de Segurança de Dados e Privacidade",
+        "Plataformas de Gestão de Projetos e M&E",
       ]
     },
     {
-      category: "Educação e Desenvolvimento",
-      icon: BookOpen,
+      category: "Formação, P&D & Educação",
+      icon: Book,
       services: [
-        "Cursos e Treinamentos",
-        "Estágios",
-        "Reciclagem",
-        "Pesquisa e Desenvolvimento (P&D)"
+        "Cursos e Treinamentos Técnicos e Psicológicos",
+        "Programa de Primeiros Socorros Psicológicos (PSP)",
+        "Estágios Supervisionados em Psicologia, Terapia da Fala e Ocupacional",
+        "Programas de Estágio Profissional (PEP)",
+        "Monitoria e Avaliação de Projetos (M&E)",
+        "Pesquisa e Desenvolvimento (P&D) Aplicada",
       ]
     },
     {
-      category: "Sustentabilidade e Comunidade",
-      icon: TreePine,
-      services: [
-        "Sustentabilidade e Responsabilidade Social",
-        "Outreach e Suporte Comunitário",
-        "Parcerias e Colaborações"
-      ]
-    },
-    {
-      category: "Comunicação e Mídia",
-      icon: MessageCircle,
-      services: [
-        "Publicações e Mídia",
-        "Marketing e Publicidade",
-        "Gestão de Redes Sociais"
-      ]
-    },
-    {
-      category: "Gestão e Administração",
+      category: "Consultoria Estratégica & Organizacional",
       icon: Target,
       services: [
-        "Administração e Operações",
-        "Gestão de Projetos",
-        "Monitoria e Avaliação de Projetos"
+        "Consultoria Psicológica Organizacional",
+        "Consultoria Científica e Técnica",
+        "Consultoria em Gestão de Projetos Sociais",
+        "Coaching Executivo e Individual",
+        "Mentoria e Reciclagem Profissional",
+      ]
+    },
+    {
+      category: "Administração, Operações & Projetos",
+      icon: FileText,
+      services: [
+        "Gestão Completa de Projetos Sociais e de Saúde",
+        "Administração e Operações Institucionais",
+        "Gestão de Processos e Documentação",
+        "Parcerias e Colaborações Estratégicas",
+      ]
+    },
+    {
+      category: "Responsabilidade Social & Comunidade",
+      icon: Heart,
+      services: [
+        "Programas de Sustentabilidade Organizacional",
+        "Responsabilidade Social e Impacto Social Medido",
+        "Outreach e Suporte Comunitário",
+        "Voluntariado Estruturado e Campanhas de Apoio",
+      ]
+    },
+    {
+      category: "Comunicação, Publicações & Mídia",
+      icon: Newspaper,
+      services: [
+        "Publicações Técnicas, Relatórios e Estudos",
+        "Produção de Conteúdos Educativos e de Sensibilização",
+        "Gestão de Comunicação Institucional e Mídia",
       ]
     }
   ];
@@ -181,10 +215,10 @@ const Services = () => {
               Serviços <span className="text-gradient-accent">Tikvah</span>
             </h1>
             <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
-              O Seu Ecossistema de Apoio e Crescimento
+              Ecossistema Estratégico de Apoio e Crescimento
             </p>
             <p className="text-lg text-white/80 max-w-3xl mx-auto mt-4">
-              A Tikvah oferece um leque abrangente de serviços, desenhados para promover o bem-estar, a eficiência e o desenvolvimento em diversas esferas, seja para indivíduos, empresas ou comunidades.
+              A Tikvah integra saúde mental, gestão empresarial, recursos humanos, fiscalidade, tecnologia, responsabilidade social e comunidade num modelo de intervenção 360°, com foco em resultados mensuráveis e sustentáveis.
             </p>
           </div>
         </div>
@@ -198,7 +232,7 @@ const Services = () => {
               Serviços <span className="text-gradient-primary">Principais</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Nossos serviços principais que formam a base do nosso atendimento especializado
+              Nossos eixos centrais de intervenção, integrados num modelo de apoio contínuo a pessoas, organizações e comunidades.
             </p>
           </div>
 
@@ -299,7 +333,7 @@ const Services = () => {
                 <Award className="w-12 h-12 text-primary mx-auto mb-4" />
                 <h4 className="text-lg font-semibold text-foreground mb-3">Qualidade Certificada</h4>
                 <p className="text-sm text-muted-foreground">
-                  Serviços baseados em padrões internacionais de qualidade
+                  Serviços baseados em padrões internacionais de qualidade e avaliação de impacto.
                 </p>
               </div>
               
@@ -307,7 +341,7 @@ const Services = () => {
                 <Target className="w-12 h-12 text-accent mx-auto mb-4" />
                 <h4 className="text-lg font-semibold text-foreground mb-3">Abordagem Personalizada</h4>
                 <p className="text-sm text-muted-foreground">
-                  Soluções adaptadas às necessidades específicas de cada cliente
+                  Soluções adaptadas às necessidades específicas de cada cliente e contexto organizacional.
                 </p>
               </div>
               
@@ -315,7 +349,7 @@ const Services = () => {
                 <Lightbulb className="w-12 h-12 text-primary mx-auto mb-4" />
                 <h4 className="text-lg font-semibold text-foreground mb-3">Inovação Contínua</h4>
                 <p className="text-sm text-muted-foreground">
-                  Constantemente atualizados com as últimas metodologias
+                  Constantemente atualizados com as últimas metodologias em psicologia, gestão, economia e tecnologia.
                 </p>
               </div>
             </div>
