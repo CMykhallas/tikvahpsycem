@@ -1,36 +1,70 @@
-
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Building, Users, TrendingUp, Target } from "lucide-react";
+import { 
+  Building, 
+  Users, 
+  TrendingUp, 
+  Target,
+  Lightbulb,
+  FileText,
+  BarChart3,
+  Compass,
+  Handshake,
+  Globe,
+} from "lucide-react";
 
 const Consultoria = () => {
   const services = [
     {
       icon: Building,
-      title: "Consultoria Organizacional",
-      description: "Desenvolvimento e otimização de processos organizacionais para maior eficiência e produtividade.",
+      title: "Consultoria Organizacional & Gestão Estratégica",
+      description: "Diagnóstico organizacional, alinhamento de processos, gestão de mudança e otimização de estrutura para maior eficiência, desempenho e sustentabilidade.",
       duration: "120 minutos"
     },
     {
       icon: Users,
       title: "Gestão de Recursos Humanos",
-      description: "Estratégias para recrutamento, desenvolvimento e retenção de talentos na sua organização.",
+      description: "Desenho de sistemas de recrutamento, seleção, avaliação de desempenho, desenvolvimento de competências, plano de carreira e gestão de clima organizacional.",
       duration: "90 minutos"
     },
     {
       icon: TrendingUp,
-      title: "Coaching Executivo",
-      description: "Desenvolvimento de lideranças para maximizar o potencial e performance executiva.",
+      title: "Coaching Executivo & Desenvolvimento de Liderança",
+      description: "Programas individuais de coaching para lideranças, com foco em tomada de decisão, gestão de conflitos, gestão de estresse e maximização de performance executiva.",
       duration: "90 minutos"
     },
     {
       icon: Target,
       title: "Assessment Psicológico Organizacional",
-      description: "Avaliação psicológica para seleção, desenvolvimento e posicionamento de colaboradores.",
+      description: "Avaliação psicológica estruturada para seleção, sucessão, posicionamento e desenvolvimento de talentos, com base em instrumentos validados e alinhados a objetivos estratégicos.",
       duration: "180 minutos"
+    },
+    {
+      icon: Lightbulb,
+      title: "Consultoria Científica & Técnica Organizacional",
+      description: "Suporte em desenho, avaliação e acompanhamento de projetos de pesquisa, intervenção social e programas institucionais, com rigor metodológico e foco em resultados mensuráveis.",
+      duration: "90 minutos"
+    },
+    {
+      icon: Globe,
+      title: "Consultoria em Negócios & Desenvolvimento de Modelo",
+      description: "Análise de negócio, modelagem de modelo operacional, planeamento estratégico, gestão de risco e apoio à expansão de portfólio em contexto local e regional.",
+      duration: "120 minutos"
+    },
+    {
+      icon: Compass,
+      title: "Gestão de Projetos & Monitoria de Impacto",
+      description: "Suporte integral à gestão de projetos sociais, de saúde e educacionais, incluindo concepção, financiamento, execução, monitoria e avaliação de impacto.",
+      duration: "90 minutos"
+    },
+    {
+      icon: FileText,
+      title: "Governação, Compliance & Políticas Internas",
+      description: "Desenho de políticas internas, protocolos de governança, gestão de risco e conformidade regulatória, alinhados a standards internacionais e contexto local.",
+      duration: "90 minutos"
     }
   ];
 
@@ -44,7 +78,7 @@ const Consultoria = () => {
             Serviços de <span className="text-teal-600">Consultoria</span>
           </h1>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Soluções estratégicas para desenvolvimento organizacional e otimização de recursos humanos
+            Soluções estratégicas de desenvolvimento organizacional, gestão de talentos e governança, construídas com base em evidência e adaptadas ao contexto moçambicano.
           </p>
         </div>
 
@@ -81,10 +115,10 @@ const Consultoria = () => {
 
         <div className="bg-white rounded-xl shadow-lg p-8 text-center">
           <h3 className="text-2xl font-bold text-slate-800 mb-4">
-            Consultoria Personalizada
+            Consultoria Personalizada e Integrada
           </h3>
           <p className="text-slate-600 mb-6">
-            Cada organização é única. Desenvolvemos soluções customizadas para suas necessidades específicas.
+            Cada organização é única. A Tikvah desenha soluções customizadas, integrando gestão estratégica, recursos humanos, psicologia organizacional, governança e ferramentas de monitoria e avaliação de impacto.
           </p>
           <Link to="/contact">
             <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3">
