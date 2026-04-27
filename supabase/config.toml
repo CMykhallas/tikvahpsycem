@@ -23,6 +23,3 @@ verify_jwt = false
 
 [functions.google-ads-webhook]
 verify_jwt = false
-
-[functions.security-alert-webhook]
-verify_jwt = false
