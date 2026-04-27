@@ -44,6 +44,23 @@ serve(async (req) => {
     console.log('🔒 [CREATE-ORDER] Starting secure order creation');
 
     // =========================================
+    // FASE 0: JWT VALIDATION (optional — allows guest checkout)
+    // =========================================
+    const jwtCheck = await validateOptionalJWT(req, corsHeaders);
+    if (jwtCheck.error) {
+      await logger.logIncident({
+        incident_type: 'VALIDATION_FAILURE',
+        severity: 'high',
+        ip_address: ip,
+        user_agent: userAgent,
+        endpoint: 'create-order',
+        details: { reason: 'INVALID_JWT' }
+      });
+      return jwtCheck.error;
+    }
+    const authenticatedUserId = jwtCheck.userId;
+
+    // =========================================
     // FASE 1: SECURITY MIDDLEWARE
     // =========================================
     const securityCheck = await securityMiddleware(req, 'create-order', supabase);
