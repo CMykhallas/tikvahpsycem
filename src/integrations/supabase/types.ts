@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      applications: {
+        Row: {
+          area: string
+          created_at: string
+          document_name: string | null
+          document_url: string | null
+          education_level: string
+          email: string
+          full_name: string
+          id: string
+          motivation: string | null
+          phone: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          area: string
+          created_at?: string
+          document_name?: string | null
+          document_url?: string | null
+          education_level: string
+          email: string
+          full_name: string
+          id?: string
+          motivation?: string | null
+          phone: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          area?: string
+          created_at?: string
+          document_name?: string | null
+          document_url?: string | null
+          education_level?: string
+          email?: string
+          full_name?: string
+          id?: string
+          motivation?: string | null
+          phone?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       appointments: {
         Row: {
           client_name: string
@@ -551,7 +596,7 @@ export type Database = {
         }[]
       }
       get_security_stats: {
-        Args: { time_window?: unknown }
+        Args: { time_window?: string }
         Returns: {
           blocked_ips: number
           critical_incidents: number
@@ -561,13 +606,15 @@ export type Database = {
           unique_ips: number
         }[]
       }
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
+      has_role:
+        | { Args: { _role: string }; Returns: boolean }
+        | {
+            Args: {
+              _role: Database["public"]["Enums"]["app_role"]
+              _user_id: string
+            }
+            Returns: boolean
+          }
     }
     Enums: {
       app_role: "admin" | "staff" | "user"
