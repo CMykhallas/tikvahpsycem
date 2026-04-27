@@ -36,6 +36,22 @@ serve(async (req) => {
     logStep("🔒 Starting secure M-Pesa payment processing");
 
     // =========================================
+    // FASE 0: JWT VALIDATION (optional — guest payments allowed)
+    // =========================================
+    const jwtCheck = await validateOptionalJWT(req, corsHeaders);
+    if (jwtCheck.error) {
+      await logger.logIncident({
+        incident_type: 'VALIDATION_FAILURE',
+        severity: 'high',
+        ip_address: ip,
+        user_agent: userAgent,
+        endpoint: 'process-mpesa-payment',
+        details: { reason: 'INVALID_JWT' }
+      });
+      return jwtCheck.error;
+    }
+
+    // =========================================
     // FASE 1: SECURITY MIDDLEWARE
     // =========================================
     const securityCheck = await securityMiddleware(req, 'process-mpesa-payment', supabase);
