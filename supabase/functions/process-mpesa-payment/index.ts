@@ -5,7 +5,7 @@
 
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { SecurityLogger, securityMiddleware } from '../_shared/security.ts';
+import { SecurityLogger, securityMiddleware, validateOptionalJWT } from '../_shared/security.ts';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -34,6 +34,22 @@ serve(async (req) => {
 
   try {
     logStep("🔒 Starting secure M-Pesa payment processing");
+
+    // =========================================
+    // FASE 0: JWT VALIDATION (optional — guest payments allowed)
+    // =========================================
+    const jwtCheck = await validateOptionalJWT(req, corsHeaders);
+    if (jwtCheck.error) {
+      await logger.logIncident({
+        incident_type: 'VALIDATION_FAILURE',
+        severity: 'high',
+        ip_address: ip,
+        user_agent: userAgent,
+        endpoint: 'process-mpesa-payment',
+        details: { reason: 'INVALID_JWT' }
+      });
+      return jwtCheck.error;
+    }
 
     // =========================================
     // FASE 1: SECURITY MIDDLEWARE

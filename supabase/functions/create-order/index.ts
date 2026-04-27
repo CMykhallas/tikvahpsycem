@@ -13,7 +13,8 @@ import {
   PriceValidator,
   InputValidator,
   TokenGenerator,
-  securityMiddleware
+  securityMiddleware,
+  validateOptionalJWT
 } from '../_shared/security.ts';
 
 import { encryptField } from '../_shared/encryption.ts';
@@ -41,6 +42,23 @@ serve(async (req) => {
 
   try {
     console.log('🔒 [CREATE-ORDER] Starting secure order creation');
+
+    // =========================================
+    // FASE 0: JWT VALIDATION (optional — allows guest checkout)
+    // =========================================
+    const jwtCheck = await validateOptionalJWT(req, corsHeaders);
+    if (jwtCheck.error) {
+      await logger.logIncident({
+        incident_type: 'VALIDATION_FAILURE',
+        severity: 'high',
+        ip_address: ip,
+        user_agent: userAgent,
+        endpoint: 'create-order',
+        details: { reason: 'INVALID_JWT' }
+      });
+      return jwtCheck.error;
+    }
+    const authenticatedUserId = jwtCheck.userId;
 
     // =========================================
     // FASE 1: SECURITY MIDDLEWARE
@@ -238,7 +256,7 @@ serve(async (req) => {
         order_access_token: JSON.stringify(encryptedToken),
         token_expires_at: orderToken.expiresAt.toISOString(),
         phone_number: JSON.stringify(encryptedPhone),
-        user_id: null // Pedido anônimo
+        user_id: authenticatedUserId // Null for guest, bound to auth user when logged in
       })
       .select()
       .single();
