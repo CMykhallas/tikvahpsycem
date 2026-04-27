@@ -13,7 +13,8 @@ import {
   PriceValidator,
   InputValidator,
   TokenGenerator,
-  securityMiddleware
+  securityMiddleware,
+  validateOptionalJWT
 } from '../_shared/security.ts';
 
 import { encryptField } from '../_shared/encryption.ts';
