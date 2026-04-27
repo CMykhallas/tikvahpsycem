@@ -256,7 +256,7 @@ serve(async (req) => {
         order_access_token: JSON.stringify(encryptedToken),
         token_expires_at: orderToken.expiresAt.toISOString(),
         phone_number: JSON.stringify(encryptedPhone),
-        user_id: null // Pedido anônimo
+        user_id: authenticatedUserId // Null for guest, bound to auth user when logged in
       })
       .select()
       .single();
