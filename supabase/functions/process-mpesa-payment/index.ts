@@ -5,7 +5,7 @@
 
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { SecurityLogger, securityMiddleware } from '../_shared/security.ts';
+import { SecurityLogger, securityMiddleware, validateOptionalJWT } from '../_shared/security.ts';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
