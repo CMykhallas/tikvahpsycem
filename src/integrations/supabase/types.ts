@@ -501,26 +501,68 @@ export type Database = {
       }
       services: {
         Row: {
+          active: boolean | null
+          area_code: string | null
+          area_name: string | null
+          benefits: string[] | null
           created_at: string
+          currency: string | null
           description: string
+          duration_label: string | null
+          hero_image_url: string | null
           icon: string | null
           id: string
+          long_description: string | null
+          modalities: string[] | null
+          price_from: number | null
+          short_description: string | null
+          slug: string | null
+          sort_order: number | null
+          target_audience: string[] | null
           title: string
           updated_at: string
         }
         Insert: {
+          active?: boolean | null
+          area_code?: string | null
+          area_name?: string | null
+          benefits?: string[] | null
           created_at?: string
+          currency?: string | null
           description: string
+          duration_label?: string | null
+          hero_image_url?: string | null
           icon?: string | null
           id?: string
+          long_description?: string | null
+          modalities?: string[] | null
+          price_from?: number | null
+          short_description?: string | null
+          slug?: string | null
+          sort_order?: number | null
+          target_audience?: string[] | null
           title: string
           updated_at?: string
         }
         Update: {
+          active?: boolean | null
+          area_code?: string | null
+          area_name?: string | null
+          benefits?: string[] | null
           created_at?: string
+          currency?: string | null
           description?: string
+          duration_label?: string | null
+          hero_image_url?: string | null
           icon?: string | null
           id?: string
+          long_description?: string | null
+          modalities?: string[] | null
+          price_from?: number | null
+          short_description?: string | null
+          slug?: string | null
+          sort_order?: number | null
+          target_audience?: string[] | null
           title?: string
           updated_at?: string
         }
