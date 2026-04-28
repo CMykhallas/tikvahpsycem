@@ -4,10 +4,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { SecurityProvider } from "@/components/SecurityProvider";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
+import ServiceDetail from "./pages/ServiceDetail";
 import Contact from "./pages/Contact";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
@@ -52,6 +54,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <HelmetProvider>
       <SecurityProvider>
         <TooltipProvider>
           <Toaster />
@@ -83,6 +86,7 @@ function App() {
               <Route path="/services/consultoria" element={<Consultoria />} />
               <Route path="/services/cursos" element={<Cursos />} />
               <Route path="/services/workshops" element={<Workshops />} />
+              <Route path="/services/:slug" element={<ServiceDetail />} />
               
               {/* Shop Routes */}
               <Route path="/loja" element={<Loja />} />
@@ -107,6 +111,7 @@ function App() {
           </BrowserRouter>
         </TooltipProvider>
       </SecurityProvider>
+      </HelmetProvider>
     </QueryClientProvider>
   );
 }
