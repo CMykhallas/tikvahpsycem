@@ -499,6 +499,60 @@ export type Database = {
         }
         Relationships: []
       }
+      service_proposals: {
+        Row: {
+          area_code: string | null
+          area_name: string | null
+          audience: string
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          message: string | null
+          metadata: Json | null
+          modality: string
+          phone: string
+          service_slug: string
+          service_title: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          area_code?: string | null
+          area_name?: string | null
+          audience: string
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          message?: string | null
+          metadata?: Json | null
+          modality: string
+          phone: string
+          service_slug: string
+          service_title: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          area_code?: string | null
+          area_name?: string | null
+          audience?: string
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          message?: string | null
+          metadata?: Json | null
+          modality?: string
+          phone?: string
+          service_slug?: string
+          service_title?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       services: {
         Row: {
           active: boolean | null
