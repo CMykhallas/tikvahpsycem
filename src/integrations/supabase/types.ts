@@ -436,6 +436,44 @@ export type Database = {
         }
         Relationships: []
       }
+      proposal_audit_trail: {
+        Row: {
+          actor: string
+          created_at: string
+          event: string
+          id: string
+          metadata: Json | null
+          notes: string | null
+          proposal_id: string
+        }
+        Insert: {
+          actor?: string
+          created_at?: string
+          event: string
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          proposal_id: string
+        }
+        Update: {
+          actor?: string
+          created_at?: string
+          event?: string
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          proposal_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proposal_audit_trail_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "service_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rate_limits: {
         Row: {
           blocked_until: string | null

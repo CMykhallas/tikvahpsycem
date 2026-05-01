@@ -27,6 +27,7 @@ import Administration from "./pages/Administration";
 import Obrigado from "./pages/Obrigado";
 import PoliticaPrivacidade from "./pages/PoliticaPrivacidade";
 import NotFound from "./pages/NotFound";
+import ProximosPassos from "./pages/ProximosPassos";
 import SecurityDashboard from "./pages/SecurityDashboard";
 import Auth from "./pages/Auth";
 
@@ -80,6 +81,7 @@ function App() {
               <Route path="/administration" element={<Administration />} />
               <Route path="/obrigado" element={<Obrigado />} />
               <Route path="/politica-de-privacidade" element={<PoliticaPrivacidade />} />
+              <Route path="/propostas/proximos-passos" element={<ProximosPassos />} />
               
               {/* Services Routes */}
               <Route path="/services/psicoterapia" element={<Psicoterapia />} />

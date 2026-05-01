@@ -7,9 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle2, Loader2, Send, Sparkles, Copy, Mail, Clock, Phone, AlertCircle } from "lucide-react";
+import { CheckCircle2, Loader2, Send, Sparkles, Copy, Mail, Clock, Phone, AlertCircle, FileDown, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { generateProposalPDF } from "@/utils/proposalPDF";
 
 interface ServiceLite {
   slug: string;
@@ -219,7 +221,37 @@ export const ProposalModal = ({ open, onOpenChange, service }: Props) => {
                 </div>
               </motion.div>
 
-              <Button onClick={() => onOpenChange(false)} className="w-full">Fechar</Button>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    if (!service || !protocol) return;
+                    generateProposalPDF({
+                      protocol,
+                      service_title: service.title,
+                      area_name: service.area_name,
+                      full_name: form.full_name,
+                      email: form.email,
+                      phone: form.phone,
+                      modality: form.modality,
+                      audience: form.audience,
+                      message: form.message || undefined,
+                      created_at: new Date().toISOString(),
+                    });
+                    toast.success("PDF descarregado");
+                  }}
+                  className="w-full"
+                >
+                  <FileDown className="w-4 h-4 mr-2" /> Descarregar PDF
+                </Button>
+                <Button asChild className="w-full" style={{ backgroundColor: "#1e3a8a", color: "#fff" }}>
+                  <Link to="/propostas/proximos-passos" onClick={() => onOpenChange(false)}>
+                    Próximos passos <ArrowRight className="w-4 h-4 ml-2" />
+                  </Link>
+                </Button>
+              </div>
+              <Button onClick={() => onOpenChange(false)} variant="ghost" className="w-full">Fechar</Button>
             </motion.div>
           ) : (
             <motion.div key="form" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
