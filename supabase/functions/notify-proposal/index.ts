@@ -115,7 +115,8 @@ serve(async (req) => {
             <p style="margin:0;font-weight:bold;color:#92400e">⚡ ACÇÃO IMEDIATA: Responder em 60 minutos</p>
           </div>
 
-          <h3 style="color:#1e3a8a;margin-top:24px">📲 Texto pronto para WhatsApp interno</h3>
+          <h3 style="color:#1e3a8a;margin-top:24px">📲 Notificar equipa via WhatsApp</h3>
+          <p><a href="https://wa.me/${TEAM_WHATSAPP}?text=${encodeURIComponent(whatsappText)}" style="display:inline-block;background:#10b981;color:#fff;padding:12px 20px;border-radius:6px;text-decoration:none;font-weight:bold">Abrir WhatsApp da equipa →</a></p>
           <pre style="background:#0f172a;color:#e2e8f0;padding:14px;border-radius:6px;font-size:12px;white-space:pre-wrap;font-family:monospace">${escapeHtml(whatsappText)}</pre>
 
           <p style="margin-top:24px;color:#64748b;font-size:12px">
