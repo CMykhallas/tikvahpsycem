@@ -12,6 +12,9 @@ const EMAIL_CLINICA = "geral.consultoriotekvah@gmail.com";
 const EMAIL_EXECUTIVO = "ceo.consultoriotekvah@gmail.com";
 const EMAIL_FORMACAO = "recrutamento.tikvahpsycem@proton.me";
 
+// Numero WhatsApp da equipa Tikvah (notificacao automatica via link wa.me)
+const TEAM_WHATSAPP = "258827592980";
+
 // FROM: trocar para notify@tikvahpsycem.com quando domínio estiver verificado
 const FROM_EMAIL = "Tikvah Psycem <onboarding@resend.dev>";
 
@@ -149,16 +152,34 @@ serve(async (req) => {
       console.warn("RESEND_API_KEY not set; skipping email send");
     }
 
-    // Audit trail
+    // Link wa.me clicavel para a equipa abrir num click
+    const waLink = `https://wa.me/${TEAM_WHATSAPP}?text=${encodeURIComponent(whatsappText)}`;
+
+    // Audit trail: email
     await supabase.from("proposal_audit_trail").insert({
       proposal_id: proposal.id,
       event: "notificada",
       actor: "system",
       notes: sent ? `Email enviado para ${EMAIL_PRIMARY} (CC: ${cc.join(", ")})` : "Email não enviado (RESEND_API_KEY ausente ou erro)",
-      metadata: { protocol, priority, cc, sent, resend_id: resendResult?.id },
+      metadata: { protocol, priority, cc, sent, resend_id: resendResult?.id, channel: "email" },
     });
 
-    return new Response(JSON.stringify({ ok: true, sent, protocol, priority, cc }), {
+    // Audit trail: WhatsApp (link pronto + texto registados)
+    await supabase.from("proposal_audit_trail").insert({
+      proposal_id: proposal.id,
+      event: "whatsapp_pronto",
+      actor: "system",
+      notes: `Notificação WhatsApp pronta para equipa (${TEAM_WHATSAPP}). Abrir link para enviar.`,
+      metadata: {
+        protocol,
+        channel: "whatsapp",
+        team_number: TEAM_WHATSAPP,
+        wa_link: waLink,
+        message_text: whatsappText,
+      },
+    });
+
+    return new Response(JSON.stringify({ ok: true, sent, protocol, priority, cc, wa_link: waLink }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e: any) {
