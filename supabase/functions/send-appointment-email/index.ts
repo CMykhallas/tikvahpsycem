@@ -47,6 +47,7 @@ const validateAppointmentData = (data: any): { isValid: boolean; errors: string[
 };
 
 serve(async (req) => {
+  const corsHeaders = buildCorsHeaders(req);
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
