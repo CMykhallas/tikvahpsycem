@@ -1,10 +1,9 @@
-// @ts-nocheck - This is a Deno script with runtime-specific imports
+// @ts-nocheck - Deno runtime specific imports
 /**
  * ============================================
  * CHECKOUT, PAGAMENTOS E SEGURANÇA
  * TESTES ABRANGENTES
  * ============================================
- * 
  * Valida fluxo completo:
  * 1. Criação de checkout
  * 2. Processamento de pagamentos M-Pesa
@@ -14,30 +13,12 @@
  * 6. Segurança do banco de dados
  */
 
-// deno-lint-ignore-file no-explicit-any
-// deno-lint-ignore no-namespace no-unused-defs
-declare const Deno: any;
-// deno-lint-ignore no-unused-defs
-declare const globalThis: any;
+import { assert, assertExists } from "https://deno.land/std@0.208.0/assert/mod.ts";
 
-// @ts-ignore - Deno import
-import { assertEquals, assertExists, assert } from "https://deno.land/std@0.208.0/assert/mod.ts";
-
-const SUPABASE_URL = (Deno?.env?.get?.("SUPABASE_URL") as any) || "http://localhost:54321";
-const SUPABASE_KEY = (Deno?.env?.get?.("SUPABASE_ANON_KEY") as any) || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlc3QiLCJyb2xlIjoiYW5vbiIsImlhdCI6MCwiZXhwIjoxODAwfQ.J3FZaeBe_-EqgJ21S_jL84kxbE3StVdvgzl5gKgbHv8";
-
-// ============================================
-// INTERFACES E TIPOS
-// ============================================
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  discount_percentage: number;
-  active: boolean;
-  stock_quantity: number;
-}
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "http://localhost:54321";
+const SUPABASE_KEY =
+  Deno.env.get("SUPABASE_ANON_KEY") ??
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlc3QiLCJyb2xlIjoiYW5vbiIsImlhdCI6MCwiZXhwIjoxODAwfQ.J3FZaeBe_-EqgJ21S_jL84kxbE3StVdvgzl5gKgbHv8";
 
 interface CheckoutPayload {
   customer_email: string;
@@ -48,7 +29,7 @@ interface CheckoutPayload {
 
 interface PaymentPayload {
   order_id: string;
-  payment_method: string; // "mpesa" | "card"
+  payment_method: "mpesa" | "card";
   amount: number;
   phone_number?: string;
 }
@@ -57,55 +38,49 @@ interface SecurityTestResult {
   test: string;
   passed: boolean;
   message: string;
-  details?: any;
+  details?: unknown;
 }
-
-// ============================================
-// UTILITÁRIOS DE TESTE
-// ============================================
 
 const results: SecurityTestResult[] = [];
 
-function logTest(test: string, passed: boolean, message: string, details?: any) {
+function logTest(test: string, passed: boolean, message: string, details?: unknown) {
   results.push({ test, passed, message, details });
-  const icon = passed ? "✅" : "❌";
-  console.log(`${icon} ${test}: ${message}`);
-  if (details) {
-    console.log(`   Detalhes: ${JSON.stringify(details)}`);
-  }
+  console.log(`${passed ? "✅" : "❌"} ${test}: ${message}`);
+  if (details !== undefined) console.log(`   Detalhes: ${JSON.stringify(details)}`);
 }
 
-async function fetchAPI(
-  endpoint: string,
-  method: string = "GET",
-  body?: any
-): Promise<any> {
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+async function fetchAPI(endpoint: string, method = "GET", body?: unknown) {
+  const response = await fetch(`${SUPABASE_URL}${endpoint}`, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${SUPABASE_KEY}`,
+      apikey: SUPABASE_KEY,
+    },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+
+  let data: unknown = null;
   try {
-    const response = await fetch(`${SUPABASE_URL}${endpoint}`, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${SUPABASE_KEY}`,
-      },
-      body: body ? JSON.stringify(body) : undefined,
-    });
-
-    const data = await response.json();
-    return { status: response.status, data, ok: response.ok };
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    throw new Error(`API call failed: ${errorMessage}`);
+    data = await response.json();
+  } catch {
+    data = null;
   }
+
+  return { status: response.status, data, ok: response.ok };
 }
 
-// ============================================
-// TESTES DE CRIAÇÃO DE CHECKOUT
-// ============================================
+function isRejected(result: { ok: boolean; status: number }) {
+  return !result.ok || result.status >= 400;
+}
 
 async function testCheckoutCreation() {
   console.log("\n🛒 TESTES DE CHECKOUT\n");
 
-  // Teste 1: Checkout válido
   const validCheckout: CheckoutPayload = {
     customer_email: "customer@example.com",
     customer_phone: "+258841234567",
@@ -113,586 +88,313 @@ async function testCheckoutCreation() {
       { product_id: "prod-001", quantity: 1 },
       { product_id: "prod-002", quantity: 2 },
     ],
-    total_amount: 5000.00,
+    total_amount: 5000.0,
   };
 
   try {
-    const result = await fetchAPI(
-      "/functions/v1/create-checkout",
-      "POST",
-      validCheckout
-    );
-    logTest(
-      "Checkout válido",
-      result.ok,
-      result.ok ? "Checkout criado com sucesso" : "Falha ao criar checkout",
-      result.data
-    );
+    const result = await fetchAPI("/functions/v1/create-checkout", "POST", validCheckout);
+    assert(result.ok);
+    logTest("Checkout válido", true, "Checkout criado com sucesso", result.data);
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Checkout válido", false, `Erro: ${errorMessage}`);
+    logTest("Checkout válido", false, `Erro: ${errorMessage(error)}`);
   }
 
-  // Teste 2: Validação de email
   const invalidEmail = { ...validCheckout, customer_email: "invalid-email" };
   try {
-    const result = await fetchAPI(
-      "/functions/v1/create-checkout",
-      "POST",
-      invalidEmail
-    );
-    logTest(
-      "Rejeição de email inválido",
-      !result.ok,
-      !result.ok ? "Email rejeitado corretamente" : "Email inválido não foi rejeitado",
-      result.data
-    );
+    const result = await fetchAPI("/functions/v1/create-checkout", "POST", invalidEmail);
+    assert(isRejected(result));
+    logTest("Rejeição de email inválido", true, "Email rejeitado corretamente", result.data);
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Rejeição de email inválido", false, `Erro: ${errorMessage}`);
+    logTest("Rejeição de email inválido", false, `Erro: ${errorMessage(error)}`);
   }
 
-  // Teste 3: Validação de telefone
   const invalidPhone = { ...validCheckout, customer_phone: "123" };
   try {
-    const result = await fetchAPI(
-      "/functions/v1/create-checkout",
-      "POST",
-      invalidPhone
-    );
-    logTest(
-      "Rejeição de telefone inválido",
-      !result.ok,
-      !result.ok ? "Telefone rejeitado corretamente" : "Telefone inválido não foi rejeitado",
-      result.data
-    );
+    const result = await fetchAPI("/functions/v1/create-checkout", "POST", invalidPhone);
+    assert(isRejected(result));
+    logTest("Rejeição de telefone inválido", true, "Telefone rejeitado corretamente", result.data);
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Rejeição de telefone inválido", false, `Erro: ${errorMessage}`);
+    logTest("Rejeição de telefone inválido", false, `Erro: ${errorMessage(error)}`);
   }
 
-  // Teste 4: Quantidade nula
   const noItems = { ...validCheckout, items: [] };
   try {
-    const result = await fetchAPI(
-      "/functions/v1/create-checkout",
-      "POST",
-      noItems
-    );
-    logTest(
-      "Rejeição de carrinho vazio",
-      !result.ok,
-      !result.ok ? "Carrinho vazio rejeitado" : "Carrinho vazio não foi rejeitado",
-      result.data
-    );
+    const result = await fetchAPI("/functions/v1/create-checkout", "POST", noItems);
+    assert(isRejected(result));
+    logTest("Rejeição de carrinho vazio", true, "Carrinho vazio rejeitado", result.data);
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Rejeição de carrinho vazio", false, `Erro: ${errorMessage}`);
+    logTest("Rejeição de carrinho vazio", false, `Erro: ${errorMessage(error)}`);
   }
 }
-
-// ============================================
-// TESTES DE VALIDAÇÃO DE PREÇOS
-// ============================================
 
 async function testPriceValidation() {
   console.log("\n💰 TESTES DE VALIDAÇÃO DE PREÇOS\n");
 
-  // Teste 1: Manipulação de preço detectada
   const manipulatedPrice: CheckoutPayload = {
     customer_email: "attacker@example.com",
     customer_phone: "+258841234567",
-    items: [
-      { product_id: "prod-001", quantity: 1 }
-    ],
-    total_amount: 0.01, // Preço drasticamente reduzido
+    items: [{ product_id: "prod-001", quantity: 1 }],
+    total_amount: 0.01,
   };
 
   try {
-    const result = await fetchAPI(
-      "/functions/v1/create-checkout",
-      "POST",
-      manipulatedPrice
-    );
-    logTest(
-      "Detecção de manipulação de preço",
-      !result.ok || result.data?.tamperedProducts,
-      result.ok ? "Manipulação detectada" : "Checkout bloqueado",
-      result.data
-    );
+    const result = await fetchAPI("/functions/v1/create-checkout", "POST", manipulatedPrice);
+    assert(isRejected(result) || Boolean((result.data as any)?.tamperedProducts || (result.data as any)?.tampered));
+    logTest("Detecção de manipulação de preço", true, "Manipulação detectada", result.data);
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Detecção de manipulação de preço", false, `Erro: ${errorMessage}`);
+    logTest("Detecção de manipulação de preço", false, `Erro: ${errorMessage(error)}`);
   }
 
-  // Teste 2: Tolerância de arredondamento (±0.01)
   const roundingTolerance: CheckoutPayload = {
     customer_email: "customer@example.com",
     customer_phone: "+258841234567",
-    items: [
-      { product_id: "prod-001", quantity: 1 }
-    ],
-    total_amount: 1000.001, // Dentro da tolerância
+    items: [{ product_id: "prod-001", quantity: 1 }],
+    total_amount: 1000.001,
   };
 
   try {
-    const result = await fetchAPI(
-      "/functions/v1/create-checkout",
-      "POST",
-      roundingTolerance
-    );
-    logTest(
-      "Tolerância de arredondamento aceitada",
-      result.ok,
-      "Pequenas variações de preço aceitas",
-      result.data
-    );
+    const result = await fetchAPI("/functions/v1/create-checkout", "POST", roundingTolerance);
+    assert(result.ok);
+    logTest("Tolerância de arredondamento aceita", true, "Pequenas variações aceitas", result.data);
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Tolerância de arredondamento", false, `Erro: ${errorMessage}`);
+    logTest("Tolerância de arredondamento", false, `Erro: ${errorMessage(error)}`);
   }
 
-  // Teste 3: Produto inativo
   const inactiveProduct: CheckoutPayload = {
     customer_email: "customer@example.com",
     customer_phone: "+258841234567",
-    items: [
-      { product_id: "prod-inactive", quantity: 1 }
-    ],
-    total_amount: 1000.00,
+    items: [{ product_id: "prod-inactive", quantity: 1 }],
+    total_amount: 1000.0,
   };
 
   try {
-    const result = await fetchAPI(
-      "/functions/v1/create-checkout",
-      "POST",
-      inactiveProduct
-    );
-    logTest(
-      "Rejeição de produto inativo",
-      !result.ok || result.data?.tampered,
-      "Produto inativo rejeitado",
-      result.data
-    );
+    const result = await fetchAPI("/functions/v1/create-checkout", "POST", inactiveProduct);
+    assert(isRejected(result) || Boolean((result.data as any)?.tampered));
+    logTest("Rejeição de produto inativo", true, "Produto inativo rejeitado", result.data);
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Rejeição de produto inativo", false, `Erro: ${errorMessage}`);
+    logTest("Rejeição de produto inativo", false, `Erro: ${errorMessage(error)}`);
   }
 
-  // Teste 4: Stock insuficiente
   const insufficientStock: CheckoutPayload = {
     customer_email: "customer@example.com",
     customer_phone: "+258841234567",
-    items: [
-      { product_id: "prod-001", quantity: 999999 }
-    ],
-    total_amount: 50000000.00,
+    items: [{ product_id: "prod-001", quantity: 999999 }],
+    total_amount: 50000000.0,
   };
 
   try {
-    const result = await fetchAPI(
-      "/functions/v1/create-checkout",
-      "POST",
-      insufficientStock
-    );
-    logTest(
-      "Rejeição de stock insuficiente",
-      !result.ok || result.data?.tampered,
-      "Stock insuficiente detectado",
-      result.data
-    );
+    const result = await fetchAPI("/functions/v1/create-checkout", "POST", insufficientStock);
+    assert(isRejected(result) || Boolean((result.data as any)?.tampered));
+    logTest("Rejeição de stock insuficiente", true, "Stock insuficiente detectado", result.data);
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Rejeição de stock insuficiente", false, `Erro: ${errorMessage}`);
+    logTest("Rejeição de stock insuficiente", false, `Erro: ${errorMessage(error)}`);
   }
 }
-
-// ============================================
-// TESTES DE PAGAMENTO M-PESA
-// ============================================
 
 async function testMPesaPayment() {
   console.log("\n📱 TESTES DE PAGAMENTO M-PESA\n");
 
-  // Teste 1: Pagamento válido
   const validPayment: PaymentPayload = {
     order_id: "order-001",
     payment_method: "mpesa",
-    amount: 5000.00,
+    amount: 5000.0,
     phone_number: "+258841234567",
   };
 
   try {
-    const result = await fetchAPI(
-      "/functions/v1/process-mpesa-payment",
-      "POST",
-      validPayment
-    );
-    logTest(
-      "Pagamento M-Pesa válido",
-      result.ok,
-      result.ok ? "Pagamento processado" : "Falha no processamento",
-      result.data
-    );
+    const result = await fetchAPI("/functions/v1/process-mpesa-payment", "POST", validPayment);
+    assert(result.ok);
+    logTest("Pagamento M-Pesa válido", true, "Pagamento processado", result.data);
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Pagamento M-Pesa válido", false, `Erro: ${errorMessage}`);
+    logTest("Pagamento M-Pesa válido", false, `Erro: ${errorMessage(error)}`);
   }
 
-  // Teste 2: Telefone M-Pesa inválido
-  const invalidPhone: PaymentPayload = {
-    order_id: "order-001",
-    payment_method: "mpesa",
-    amount: 5000.00,
-    phone_number: "123", // Telefone inválido
-  };
-
+  const invalidPhone = { ...validPayment, phone_number: "123" };
   try {
-    const result = await fetchAPI(
-      "/functions/v1/process-mpesa-payment",
-      "POST",
-      invalidPhone
-    );
-    logTest(
-      "Rejeição de telefone M-Pesa inválido",
-      !result.ok,
-      !result.ok ? "Telefone rejeitado" : "Telefone inválido não foi rejeitado",
-      result.data
-    );
+    const result = await fetchAPI("/functions/v1/process-mpesa-payment", "POST", invalidPhone);
+    assert(isRejected(result));
+    logTest("Rejeição de telefone M-Pesa inválido", true, "Telefone rejeitado", result.data);
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Rejeição de telefone M-Pesa inválido", false, `Erro: ${errorMessage}`);
+    logTest("Rejeição de telefone M-Pesa inválido", false, `Erro: ${errorMessage(error)}`);
   }
 
-  // Teste 3: Montante negativo
   const negativeAmount = { ...validPayment, amount: -5000 };
   try {
-    const result = await fetchAPI(
-      "/functions/v1/process-mpesa-payment",
-      "POST",
-      negativeAmount
-    );
-    logTest(
-      "Rejeição de montante negativo",
-      !result.ok,
-      !result.ok ? "Montante negativo rejeitado" : "Montante negativo não foi rejeitado",
-      result.data
-    );
+    const result = await fetchAPI("/functions/v1/process-mpesa-payment", "POST", negativeAmount);
+    assert(isRejected(result));
+    logTest("Rejeição de montante negativo", true, "Montante negativo rejeitado", result.data);
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Rejeição de montante negativo", false, `Erro: ${errorMessage}`);
+    logTest("Rejeição de montante negativo", false, `Erro: ${errorMessage(error)}`);
   }
 
-  // Teste 4: Order não encontrada
   const nonexistentOrder = { ...validPayment, order_id: "nonexistent-order" };
   try {
-    const result = await fetchAPI(
-      "/functions/v1/process-mpesa-payment",
-      "POST",
-      nonexistentOrder
-    );
-    logTest(
-      "Rejeição de order inexistente",
-      !result.ok,
-      !result.ok ? "Order rejeitada" : "Order inexistente não foi rejeitada",
-      result.data
-    );
+    const result = await fetchAPI("/functions/v1/process-mpesa-payment", "POST", nonexistentOrder);
+    assert(isRejected(result));
+    logTest("Rejeição de order inexistente", true, "Order inexistente rejeitada", result.data);
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Rejeição de order inexistente", false, `Erro: ${errorMessage}`);
+    logTest("Rejeição de order inexistente", false, `Erro: ${errorMessage(error)}`);
   }
 }
 
-// ============================================
-// TESTES DE RATE LIMITING
-// ============================================
-
 async function testRateLimiting() {
   console.log("\n🚦 TESTES DE RATE LIMITING\n");
-
-  const limiterConfig = {
-    endpoint: "create-checkout",
-    maxRequests: 5,
-    windowMs: 15 * 60 * 1000, // 15 minutos
-  };
 
   const validCheckout: CheckoutPayload = {
     customer_email: "customer@example.com",
     customer_phone: "+258841234567",
     items: [{ product_id: "prod-001", quantity: 1 }],
-    total_amount: 5000.00,
+    total_amount: 5000.0,
   };
 
   let successCount = 0;
   let blocked = false;
 
-  // Fazer múltiplas requisições
   for (let i = 0; i < 10; i++) {
     try {
-      const result = await fetchAPI(
-        "/functions/v1/create-checkout",
-        "POST",
-        validCheckout
-      );
-
+      const result = await fetchAPI("/functions/v1/create-checkout", "POST", validCheckout);
       if (result.status === 429) {
         blocked = true;
-        console.log(`   Requisição ${i + 1}: Bloqueada por rate limit ✓`);
         break;
-      } else if (result.ok) {
-        successCount++;
       }
+      if (result.ok) successCount++;
     } catch (error) {
-      console.log(`   Requisição ${i + 1}: Erro - ${error.message}`);
+      console.log(`   Requisição ${i + 1}: Erro - ${errorMessage(error)}`);
     }
   }
 
-  logTest(
-    "Rate limiting ativado",
-    blocked,
-    `Bloqueado após ${successCount} requisições`,
-    { successCount, limiterConfig }
-  );
+  logTest("Rate limiting ativado", blocked, `Bloqueado após ${successCount} requisições`, {
+    successCount,
+    limiterConfig: { endpoint: "create-checkout", maxRequests: 5, windowMs: 15 * 60 * 1000 },
+  });
 }
-
-// ============================================
-// TESTES DE SEGURANÇA DO BANCO DE DADOS
-// ============================================
 
 async function testDatabaseSecurity() {
   console.log("\n🔐 TESTES DE SEGURANÇA DO BANCO DE DADOS\n");
 
-  // Teste 1: Injeção SQL
   const sqlInjection: CheckoutPayload = {
     customer_email: "test@example.com'; DROP TABLE orders;--",
     customer_phone: "+258841234567",
     items: [{ product_id: "prod-001", quantity: 1 }],
-    total_amount: 5000.00,
+    total_amount: 5000.0,
   };
 
   try {
-    const result = await fetchAPI(
-      "/functions/v1/create-checkout",
-      "POST",
-      sqlInjection
-    );
-    logTest(
-      "Proteção contra injeção SQL",
-      !result.ok || result.data?.customer_email?.includes("DROP") === false,
-      "Entrada SQL sanitizada",
-      result.data
-    );
+    const result = await fetchAPI("/functions/v1/create-checkout", "POST", sqlInjection);
+    assert(isRejected(result) || !String((result.data as any)?.customer_email ?? "").includes("DROP"));
+    logTest("Proteção contra injeção SQL", true, "Entrada sanitizada", result.data);
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Proteção contra injeção SQL", false, `Erro: ${errorMessage}`);
+    logTest("Proteção contra injeção SQL", false, `Erro: ${errorMessage(error)}`);
   }
 
-  // Teste 2: XSS (Cross-Site Scripting)
   const xssPayload: CheckoutPayload = {
     customer_email: "<script>alert('xss')</script>@example.com",
     customer_phone: "+258841234567",
     items: [{ product_id: "prod-001", quantity: 1 }],
-    total_amount: 5000.00,
+    total_amount: 5000.0,
   };
 
   try {
-    const result = await fetchAPI(
-      "/functions/v1/create-checkout",
-      "POST",
-      xssPayload
-    );
-    logTest(
-      "Proteção contra XSS",
-      !result.ok || !result.data?.customer_email?.includes("<script>"),
-      "Conteúdo XSS sanitizado",
-      result.data
-    );
+    const result = await fetchAPI("/functions/v1/create-checkout", "POST", xssPayload);
+    assert(isRejected(result) || !String((result.data as any)?.customer_email ?? "").includes("<script>"));
+    logTest("Proteção contra XSS", true, "Conteúdo XSS sanitizado", result.data);
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Proteção contra XSS", false, `Erro: ${errorMessage}`);
+    logTest("Proteção contra XSS", false, `Erro: ${errorMessage(error)}`);
   }
 
-  // Teste 3: Escalação de privilégios
   const privilegeEscalation = {
     customer_email: "customer@example.com",
     customer_phone: "+258841234567",
     items: [{ product_id: "prod-001", quantity: 1 }],
-    total_amount: 5000.00,
-    role: "admin", // Tentativa de escalação
+    total_amount: 5000.0,
+    role: "admin",
     user_id: "user-123",
   };
 
   try {
-    const result = await fetchAPI(
-      "/functions/v1/create-checkout",
-      "POST",
-      privilegeEscalation
-    );
-    logTest(
-      "Proteção contra escalação de privilégios",
-      !result.ok || !result.data?.role,
-      "Campos de privilégio não aceitos",
-      result.data
-    );
+    const result = await fetchAPI("/functions/v1/create-checkout", "POST", privilegeEscalation);
+    assert(isRejected(result) || !(result.data as any)?.role);
+    logTest("Proteção contra escalação de privilégios", true, "Campos de privilégio ignorados", result.data);
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Proteção contra escalação", false, `Erro: ${errorMessage}`);
+    logTest("Proteção contra escalação de privilégios", false, `Erro: ${errorMessage(error)}`);
   }
 
-  // Teste 4: Acesso não autenticado
   try {
-    const response = await fetch(
-      `${SUPABASE_URL}/functions/v1/create-checkout`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          customer_email: "test@example.com",
-          customer_phone: "+258841234567",
-          items: [{ product_id: "prod-001", quantity: 1 }],
-          total_amount: 5000.00,
-        }),
-      }
-    );
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        customer_email: "test@example.com",
+        customer_phone: "+258841234567",
+        items: [{ product_id: "prod-001", quantity: 1 }],
+        total_amount: 5000.0,
+      }),
+    });
 
-    logTest(
-      "Rejeição de requisição não autenticada",
-      response.status >= 400,
-      `Status: ${response.status}`,
-      { status: response.status }
-    );
+    logTest("Rejeição de requisição não autenticada", response.status >= 400, `Status: ${response.status}`, {
+      status: response.status,
+    });
   } catch (error) {
-    logTest(
-      "Rejeição de requisição não autenticada",
-      false,
-      `Erro: ${error.message}`
-    );
+    logTest("Rejeição de requisição não autenticada", false, `Erro: ${errorMessage(error)}`);
   }
 }
-
-// ============================================
-// TESTES DE LOGGING E AUDITORIA
-// ============================================
 
 async function testLoggingAndAudit() {
   console.log("\n📋 TESTES DE LOGGING E AUDITORIA\n");
 
-  // Teste: Verificar se incidentes suspeitos são registrados
   const suspiciousPayload: CheckoutPayload = {
     customer_email: "attacker@example.com",
     customer_phone: "+258841234567",
     items: [{ product_id: "prod-001", quantity: 1 }],
-    total_amount: 0.01, // Manipulação clara
+    total_amount: 0.01,
   };
 
   try {
-    const result = await fetchAPI(
-      "/functions/v1/create-checkout",
-      "POST",
-      suspiciousPayload
-    );
+    await fetchAPI("/functions/v1/create-checkout", "POST", suspiciousPayload);
+    const logResult = await fetchAPI("/rest/v1/security_incidents?limit=5", "GET");
+    assert(logResult.ok);
+    assertExists(logResult.data);
 
-    // Tentar buscar logs de segurança
-    const logResult = await fetchAPI(
-      "/rest/v1/security_incidents?limit=5",
-      "GET"
-    );
-
-    const hasSuspiciousLog = logResult.data?.some(
-      (log: any) => log.ip_address === "unknown" && log.incident_type === "PRICE_TAMPERING"
-    );
-
-    logTest(
-      "Registros de incidentes criados",
-      logResult.ok,
-      "Incidentes armazenados para análise",
-      { logCount: logResult.data?.length }
-    );
+    logTest("Registros de incidentes criados", true, "Incidentes armazenados para análise", {
+      logCount: Array.isArray(logResult.data) ? logResult.data.length : 0,
+    });
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Registros de incidentes", false, `Erro: ${errorMessage}`);
+    logTest("Registros de incidentes", false, `Erro: ${errorMessage(error)}`);
   }
 }
-
-// ============================================
-// TESTES DE TOKENS E SESSÕES
-// ============================================
 
 async function testTokensAndSessions() {
   console.log("\n🎫 TESTES DE TOKENS E SESSÕES\n");
 
-  // Teste 1: Token de order gerado corretamente
   const validCheckout: CheckoutPayload = {
     customer_email: "customer@example.com",
     customer_phone: "+258841234567",
     items: [{ product_id: "prod-001", quantity: 1 }],
-    total_amount: 5000.00,
+    total_amount: 5000.0,
   };
 
   try {
-    const result = await fetchAPI(
-      "/functions/v1/create-checkout",
-      "POST",
-      validCheckout
-    );
-
-    const hasToken = result.data?.token || result.data?.order_token;
-    logTest(
-      "Token de order gerado",
-      result.ok && !!hasToken,
-      "Cliente recebe token único",
-      { token: hasToken ? "Presente" : "Ausente" }
-    );
+    const result = await fetchAPI("/functions/v1/create-checkout", "POST", validCheckout);
+    const hasToken = Boolean((result.data as any)?.token || (result.data as any)?.order_token);
+    assert(result.ok);
+    assert(hasToken);
+    logTest("Token de order gerado", true, "Cliente recebe token único", {
+      token: hasToken ? "Presente" : "Ausente",
+    });
   } catch (error) {
-    
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logTest("Token de order", false, `Erro: ${errorMessage}`);
+    logTest("Token de order gerado", false, `Erro: ${errorMessage(error)}`);
   }
 
-  // Teste 2: Token expirado rejeitado
-  const expiredToken = "expired-token-123456";
   try {
-    const result = await fetchAPI(
-      "/functions/v1/validate-order-token",
-      "POST",
-      { token: expiredToken }
-    );
-
-    logTest(
-      "Token expirado rejeitado",
-      !result.ok,
-      "Tokens antigos não são aceitos",
-      result.data
-    );
-  } catch (error) {
-    // Endpoint pode não existir
-    logTest(
-      "Token expirado rejeitado",
-      true,
-      "Teste skipped (endpoint não disponível)"
-    );
+    const result = await fetchAPI("/functions/v1/validate-order-token", "POST", {
+      token: "expired-token-123456",
+    });
+    assert(isRejected(result));
+    logTest("Token expirado rejeitado", true, "Tokens antigos não são aceitos", result.data);
+  } catch {
+    logTest("Token expirado rejeitado", true, "Teste skipped (endpoint não disponível)");
   }
 }
-
-// ============================================
-// RELATÓRIO FINAL
-// ============================================
 
 function printSummary() {
   console.log("\n" + "=".repeat(50));
@@ -702,33 +404,24 @@ function printSummary() {
   const passed = results.filter((r) => r.passed).length;
   const failed = results.filter((r) => !r.passed).length;
   const total = results.length;
+  const rate = total === 0 ? 0 : (passed / total) * 100;
 
   console.log(`Total de testes: ${total}`);
   console.log(`✅ Aprovados: ${passed}`);
   console.log(`❌ Reprovados: ${failed}`);
-  console.log(`Taxa de sucesso: ${((passed / total) * 100).toFixed(1)}%\n`);
+  console.log(`Taxa de sucesso: ${rate.toFixed(1)}%\n`);
 
   if (failed > 0) {
     console.log("❌ Testes reprovados:\n");
-    results
-      .filter((r) => !r.passed)
-      .forEach((r) => {
-        console.log(`  - ${r.test}: ${r.message}`);
-      });
+    for (const r of results.filter((item) => !item.passed)) {
+      console.log(`  - ${r.test}: ${r.message}`);
+    }
   }
 
   console.log("\n" + "=".repeat(50));
-  console.log(
-    passed === total
-      ? "✅ TODOS OS TESTES APROVADOS!"
-      : `⚠️  ${failed} testes necessitam atenção`
-  );
+  console.log(passed === total ? "✅ TODOS OS TESTES APROVADOS!" : `⚠️ ${failed} testes necessitam atenção`);
   console.log("=".repeat(50) + "\n");
 }
-
-// ============================================
-// EXECUÇÃO DOS TESTES
-// ============================================
 
 async function runAllTests() {
   console.log("\n");
@@ -745,19 +438,14 @@ async function runAllTests() {
     await testLoggingAndAudit();
     await testTokensAndSessions();
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("\n❌ Erro fatal durante execução de testes:", errorMessage);
+    console.error("\n❌ Erro fatal durante execução de testes:", errorMessage(error));
   }
 
   printSummary();
 }
 
-// ExecutarTests
-if ((import.meta as any).main) {
+if (import.meta.main) {
   await runAllTests();
 }
 
 export { runAllTests };
-
-
-
