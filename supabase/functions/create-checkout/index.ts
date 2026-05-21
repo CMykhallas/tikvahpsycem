@@ -1,11 +1,8 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "npm:@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+import { validateOptionalJWT } from "../_shared/security.ts";
+import { buildCorsHeaders } from "../_shared/cors.ts";
 
 const logStep = (step: string, details?: any) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
@@ -84,12 +81,21 @@ const SERVICE_PRICES: Record<string, { priceId: string; name: string }> = {
 };
 
 serve(async (req) => {
+  const corsHeaders = buildCorsHeaders(req);
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
     logStep("Function started");
+
+    // Server-side JWT validation (optional — guest checkout allowed).
+    // If an Authorization header is provided, it MUST be a valid Supabase JWT.
+    const jwtCheck = await validateOptionalJWT(req, corsHeaders);
+    if (jwtCheck.error) {
+      logStep("Rejected: invalid JWT");
+      return jwtCheck.error;
+    }
 
     // Validate content-type
     const contentType = req.headers.get("content-type");

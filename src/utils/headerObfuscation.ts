@@ -70,7 +70,7 @@ export const headerObfuscationMiddleware = (req, res, next) => {
 // Não expor stack traces em produção
 // =========================================
 export const errorMaskingMiddleware = (err, req, res, next) => {
-  const isDevelopment = process.env.NODE_ENV === 'development';
+  const isDevelopment = import.meta.env.DEV;
   
   const errorResponse = {
     error: 'Internal Server Error',
