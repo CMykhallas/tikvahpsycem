@@ -13,12 +13,19 @@
  * 6. Segurança do banco de dados
  */
 
-import { assert, assertExists } from "https://deno.land/std@0.208.0/assert/mod.ts";
+const isLocal = !Deno.env.get("SUPABASE_URL");
 
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "http://localhost:54321";
-const SUPABASE_KEY =
-  Deno.env.get("SUPABASE_ANON_KEY") ??
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlc3QiLCJyb2xlIjoiYW5vbiIsImlhdCI6MCwiZXhwIjoxODAwfQ.J3FZaeBe_-EqgJ21S_jL84kxbE3StVdvgzl5gKgbHv8";
+export const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "http://127.0.0.1:54321";
+
+export const SUPABASE_KEY = (() => {
+  const key = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!key) throw new Error("SUPABASE_ANON_KEY is required");
+  return key;
+})();
+
+if (!isLocal) {
+  console.info("Running with remote Supabase configuration");
+}
 
 interface CheckoutPayload {
   customer_email: string;
