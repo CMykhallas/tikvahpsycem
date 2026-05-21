@@ -12,10 +12,18 @@ const validateEmail = (email: string): boolean => {
 };
 
 const sanitizeString = (input: string, maxLength: number = 1000): string => {
-  return input
-    .replace(/[<>]/g, '')
-    .replace(/javascript:/gi, '')
-    .replace(/on\w+=/gi, '')
+  let sanitized = input;
+  let previous: string;
+
+  do {
+    previous = sanitized;
+    sanitized = sanitized
+      .replace(/[<>]/g, '')
+      .replace(/javascript:/gi, '')
+      .replace(/on\w+=/gi, '');
+  } while (sanitized !== previous);
+
+  return sanitized
     .trim()
     .slice(0, maxLength);
 };
