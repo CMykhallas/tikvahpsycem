@@ -84,10 +84,17 @@ async function verifyWebhookSignature(payload: string, signature: string, secret
 
 function sanitizeInput(input: unknown): string {
   if (typeof input === 'string') {
-    return input
+    let sanitized = input
       .replace(/[<>]/g, '')
       .replace(/javascript:/gi, '')
-      .replace(/on\w+=/gi, '')
+
+    let previous: string
+    do {
+      previous = sanitized
+      sanitized = sanitized.replace(/on\w+=/gi, '')
+    } while (sanitized !== previous)
+
+    return sanitized
       .trim()
       .slice(0, 500)
   }
