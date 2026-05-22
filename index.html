@@ -14,30 +14,37 @@
   />
   <meta name="author" content="Tikvah Psychological Center & Multiservice" />
   <meta name="google-site-verification" content="lhU3xg-sfFpCH7MbDcrwxPRkNNe_yt-vjkKP2Oq9FXE" />
-  <link rel="canonical" href="https://tikvahpsycem-mz.lovable.app/" />
+  <link rel="canonical" href="https://tikvahpsycem.vercel.app/" />
 
+  <!-- Open Graph Tags for Social Media -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://tikvahpsycem-mz.lovable.app/" />
+  <meta property="og:url" content="https://tikvahpsycem.vercel.app/" />
   <meta property="og:title" content="Tikvah Psychological Center & Multiservice" />
   <meta
     property="og:description"
     content="Psicologia, consultoria organizacional e multiserviços em Maputo, com foco em qualidade, ética e atendimento integrado."
   />
-  <meta property="og:image" content="https://tikvahpsycem-mz.lovable.app/og-image.jpg" />
+  <meta property="og:image" content="https://tikvahpsycem.vercel.app/og-image.jpg" />
   <meta property="og:locale" content="pt_MZ" />
 
+  <!-- Twitter Card Tags -->
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@TikvahMZ" />
+  <meta name="twitter:creator" content="@TikvahMZ" />
   <meta name="twitter:title" content="Tikvah Psychological Center & Multiservice" />
   <meta
     name="twitter:description"
     content="Psicologia, consultoria organizacional e multiserviços em Maputo."
   />
-  <meta name="twitter:image" content="https://tikvahpsycem-mz.lovable.app/og-image.jpg" />
+  <meta name="twitter:image" content="https://tikvahpsycem.vercel.app/og-image.jpg" />
+  <meta name="twitter:image:alt" content="Tikvah Psychological Center & Multiservice Logo" />
 
+  <!-- Icons and Web App Manifest -->
   <link rel="icon" href="/tikvah-logo.jpg" type="image/jpeg" />
   <link rel="apple-touch-icon" href="/tikvah-logo.jpg" />
   <link rel="manifest" href="/manifest.json" />
 
+  <!-- Preconnect to External Resources -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -45,15 +52,16 @@
     rel="stylesheet"
   />
 
+  <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "Tikvah Psychological Center & Multiservice",
     "alternateName": "Tikvah Center",
-    "url": "https://tikvahpsycem-mz.lovable.app/",
-    "logo": "https://tikvahpsycem-mz.lovable.app/tikvah-logo.jpg",
-    "image": "https://tikvahpsycem-mz.lovable.app/og-image.jpg",
+    "url": "https://tikvahpsycem.vercel.app/",
+    "logo": "https://tikvahpsycem.vercel.app/tikvah-logo.jpg",
+    "image": "https://tikvahpsycem.vercel.app/og-image.jpg",
     "telephone": "+258827592980",
     "email": "suporte.oficina.psicologo@proton.me",
     "address": {
@@ -100,7 +108,7 @@
         "@type": "ListItem",
         "position": 1,
         "name": "Início",
-        "item": "https://tikvahpsycem-mz.lovable.app/"
+        "item": "https://tikvahpsycem.vercel.app/"
       }
     ]
   }
@@ -129,6 +137,8 @@
       color: var(--text);
       background: var(--bg);
       line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     a { color: var(--primary); text-decoration: none; }
@@ -265,6 +275,7 @@
       font-weight: 700;
       text-decoration: none;
       border: 1px solid transparent;
+      transition: all 0.2s ease-in-out;
     }
 
     .btn-primary {
@@ -275,6 +286,8 @@
     .btn-primary:hover {
       background: var(--primary-dark);
       text-decoration: none;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(31, 60, 136, 0.2);
     }
 
     .btn-secondary {
@@ -286,6 +299,7 @@
     .btn-secondary:hover {
       background: #f3f7ff;
       text-decoration: none;
+      transform: translateY(-2px);
     }
 
     .section {
@@ -320,6 +334,13 @@
       border-radius: 16px;
       padding: 20px;
       background: #fbfcff;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(31, 60, 136, 0.1);
+      border-color: var(--accent);
     }
 
     .card h3 {
