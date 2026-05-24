@@ -2,14 +2,40 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, User, Clock, BookOpen, Shield, Users } from "lucide-react";
 
 const TraumaCulturalResiliencia = () => {
+  const url = "https://tikvahpsycem.lovable.app/blog/trauma-cultural-resiliencia-pos-colonial";
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: "Trauma Cultural e Resiliência Pós-Colonial em Moçambique",
+    description: "Análise dos impactos psicológicos do período colonial e pós-independência, com estratégias terapêuticas contextualizadas.",
+    author: { "@type": "Organization", name: "Tikvah Psychological Center" },
+    publisher: {
+      "@type": "Organization",
+      name: "Tikvah Psychological Center & Multiservice",
+      logo: { "@type": "ImageObject", url: "https://tikvahpsycem.lovable.app/tikvah-logo.jpg" },
+    },
+    datePublished: "2024-07-28",
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    url,
+    inLanguage: "pt-MZ",
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEOHead
+        title="Trauma Cultural e Resiliência Pós-Colonial | Blog Tikvah"
+        description="Trauma cultural, resiliência pós-colonial e estratégias terapêuticas contextualizadas para Moçambique."
+        canonicalUrl={url}
+        ogType="article"
+        structuredData={structuredData}
+      />
       <Navbar />
       <BreadcrumbNavigation />
+      
       
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <header className="mb-12">
