@@ -2,6 +2,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, User, Clock, BookOpen, Brain, Heart } from "lucide-react";
 import { motion } from "framer-motion";
@@ -9,10 +10,35 @@ import { BlogImageGallery } from "@/components/BlogImageGallery";
 import { AnimatedImage } from "@/components/AnimatedImage";
 
 const MBSRMetaAnalise = () => {
+  const url = "https://tikvahpsycem.lovable.app/blog/mbsr-meta-analise-eficacia";
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: "MBSR: Meta-Análise da Eficácia em Contextos Africanos",
+    description: "Meta-análise de estudos randomizados sobre Mindfulness-Based Stress Reduction (MBSR) com foco na população moçambicana.",
+    author: { "@type": "Organization", name: "Tikvah Psychological Center" },
+    publisher: {
+      "@type": "Organization",
+      name: "Tikvah Psychological Center & Multiservice",
+      logo: { "@type": "ImageObject", url: "https://tikvahpsycem.lovable.app/tikvah-logo.jpg" },
+    },
+    datePublished: "2024-08-01",
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    url,
+    inLanguage: "pt-MZ",
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEOHead
+        title="MBSR: Meta-Análise da Eficácia | Blog Tikvah"
+        description="Meta-análise da eficácia clínica do Mindfulness-Based Stress Reduction (MBSR) em contextos africanos."
+        canonicalUrl={url}
+        ogType="article"
+        structuredData={structuredData}
+      />
       <Navbar />
       <BreadcrumbNavigation />
+      
       
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header do Artigo com animação */}

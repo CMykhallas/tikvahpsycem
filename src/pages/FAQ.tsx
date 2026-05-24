@@ -96,12 +96,23 @@ const FAQ = () => {
     return matchesSearch && matchesCategory;
   });
 
+  const faqStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <SEOHead
         title="FAQ — Perguntas Frequentes | Tikvah"
         description="Respostas às dúvidas mais comuns sobre consultas, pagamentos, atendimento online e serviços da Tikvah Psychological Center em Maputo."
         canonicalUrl="https://tikvahpsycem.lovable.app/faq"
+        structuredData={faqStructuredData}
       />
       <Navbar />
       

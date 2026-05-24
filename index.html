@@ -24,7 +24,7 @@
     property="og:description"
     content="Psicologia, consultoria organizacional e multiserviços em Maputo, com foco em qualidade, ética e atendimento integrado."
   />
-  <meta property="og:image" content="https://tikvahpsycem.vercel.app/og-image.jpg" />
+  <meta property="og:image" content="https://tikvahpsycem.lovable.app/og-image.jpg" />
   <meta property="og:locale" content="pt_MZ" />
 
   <!-- Twitter Card Tags -->
@@ -36,7 +36,7 @@
     name="twitter:description"
     content="Psicologia, consultoria organizacional e multiserviços em Maputo."
   />
-  <meta name="twitter:image" content="https://tikvahpsycem.vercel.app/og-image.jpg" />
+  <meta name="twitter:image" content="https://tikvahpsycem.lovable.app/og-image.jpg" />
   <meta name="twitter:image:alt" content="Tikvah Psychological Center & Multiservice Logo" />
 
   <!-- Icons and Web App Manifest -->
@@ -52,16 +52,43 @@
     rel="stylesheet"
   />
 
-  <!-- Structured Data (JSON-LD) -->
+  <!-- Structured Data (JSON-LD) — Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Tikvah Psychological Center & Multiservice",
+    "alternateName": "Tikvah Center",
+    "url": "https://tikvahpsycem.lovable.app/",
+    "logo": "https://tikvahpsycem.lovable.app/tikvah-logo.jpg",
+    "email": "suporte.oficina.psicologo@proton.me",
+    "telephone": "+258827592980",
+    "sameAs": [
+      "https://facebook.com/consultoriotikvah",
+      "https://instagram.com/tikvah_center",
+      "https://twitter.com/TikvahMZ"
+    ],
+    "contactPoint": [{
+      "@type": "ContactPoint",
+      "telephone": "+258827592980",
+      "contactType": "customer service",
+      "email": "suporte.oficina.psicologo@proton.me",
+      "areaServed": "MZ",
+      "availableLanguage": ["Portuguese", "English"]
+    }]
+  }
+  </script>
+
+  <!-- Structured Data (JSON-LD) — LocalBusiness -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
+    "@id": "https://tikvahpsycem.lovable.app/#localbusiness",
     "name": "Tikvah Psychological Center & Multiservice",
-    "alternateName": "Tikvah Center",
-    "url": "https://tikvahpsycem.vercel.app/",
-    "logo": "https://tikvahpsycem.vercel.app/tikvah-logo.jpg",
-    "image": "https://tikvahpsycem.vercel.app/og-image.jpg",
+    "url": "https://tikvahpsycem.lovable.app/",
+    "logo": "https://tikvahpsycem.lovable.app/tikvah-logo.jpg",
+    "image": "https://tikvahpsycem.lovable.app/og-image.jpg",
     "telephone": "+258827592980",
     "email": "suporte.oficina.psicologo@proton.me",
     "address": {
@@ -76,40 +103,20 @@
       "latitude": -25.9655,
       "longitude": 32.5832
     },
-    "openingHoursSpecification": [
-      {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        "opens": "08:00",
-        "closes": "17:00"
-      }
-    ],
+    "openingHoursSpecification": [{
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+      "opens": "08:00",
+      "closes": "17:00"
+    }],
     "priceRange": "$$",
     "currenciesAccepted": "MZN",
     "paymentAccepted": "Cash, M-Pesa, E-mola",
-    "areaServed": {
-      "@type": "City",
-      "name": "Maputo"
-    },
+    "areaServed": { "@type": "City", "name": "Maputo" },
     "sameAs": [
       "https://facebook.com/consultoriotikvah",
       "https://instagram.com/tikvah_center",
       "https://twitter.com/TikvahMZ"
-    ]
-  }
-  </script>
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Início",
-        "item": "https://tikvahpsycem.vercel.app/"
-      }
     ]
   }
   </script>
