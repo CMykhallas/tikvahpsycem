@@ -1,0 +1,39 @@
+# Tikvah Psychological Center & Multiservice
+
+> Centro de psicologia, consultoria organizacional e multisserviços em Maputo, Moçambique, com atendimento presencial e online.
+
+A Tikvah Psychological Center & Multiservice oferece psicoterapia individual, familiar e organizacional, consultoria em recursos humanos, formações, workshops e loja de produtos psicoeducativos, com forte enfoque em ética, confidencialidade e desenvolvimento humano integral.
+
+## Pages
+
+- [Início](/): Apresentação institucional e principais serviços.
+- [Sobre](/about): Identidade, história e equipa do centro.
+- [Missão](/mission): Missão, visão e propósito institucional.
+- [Valores](/values): Valores que orientam a prática profissional.
+- [Abordagem](/approach): Metodologia híbrida e princípios clínicos.
+- [Equipa](/team): Psicólogos e consultores da Tikvah.
+- [Serviços](/services): Catálogo geral de serviços.
+- [Psicoterapia](/services/psicoterapia): Acompanhamento psicológico individual e familiar.
+- [Consultoria](/services/consultoria): Consultoria organizacional e em recursos humanos.
+- [Cursos](/services/cursos): Cursos de formação psicoeducativa.
+- [Workshops](/services/workshops): Workshops temáticos para grupos e empresas.
+- [Loja](/loja): Produtos psicoeducativos e materiais clínicos.
+- [Agendamento](/appointment): Marcação de consultas presenciais ou online.
+- [Contacto](/contact): Canais oficiais de contacto.
+- [Localização](/location): Endereço físico em Maputo.
+- [Carreiras](/career): Oportunidades profissionais e programa PEP.
+- [FAQ](/faq): Perguntas frequentes sobre serviços e atendimento.
+- [Testemunhos](/testimonials): Depoimentos de clientes.
+- [Blog](/blog): Artigos sobre psicologia, saúde mental e organizações.
+
+## Blog
+
+- [ACT em Contextos Africanos](/blog/act-terapia-contextos-africanos): Terapia de Aceitação e Compromisso aplicada ao contexto cultural.
+- [MBSR — Meta-análise de Eficácia](/blog/mbsr-meta-analise-eficacia): Evidências sobre mindfulness e redução do stress.
+- [Psicologia Organizacional e Transformação Digital](/blog/psicologia-organizacional-transformacao-digital): Impacto humano da digitalização.
+- [Trauma Cultural e Resiliência Pós-Colonial](/blog/trauma-cultural-resiliencia-pos-colonial): Memória, identidade e resiliência.
+
+## Optional
+
+- [Política de Privacidade](/politica-de-privacidade): Tratamento de dados pessoais.
+- [Feedback](/feedback): Formulário de feedback dos serviços.
