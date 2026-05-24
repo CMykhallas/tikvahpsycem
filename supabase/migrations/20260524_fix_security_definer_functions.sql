@@ -220,11 +220,40 @@ GRANT EXECUTE ON FUNCTION public.trigger_security_alert() TO authenticated, serv
 -- 4. EXISTING CORE FUNCTIONS (Already Fixed)
 -- =========================================
 
--- Verify has_role() has proper search_path (should already be in migration 20250821100803)
--- Verify get_current_user_role() has proper search_path (should already be in migration 20250821100803)
--- Verify clean_old_rate_limits() has proper search_path
+-- Ensure has_role has proper search_path
+CREATE OR REPLACE FUNCTION public.has_role(_user_id uuid, _role app_role)
+RETURNS boolean
+LANGUAGE sql
+STABLE SECURITY DEFINER
+SET search_path TO 'public'
+AS $function$
+  SELECT EXISTS (
+    SELECT 1
+    FROM public.user_roles
+    WHERE user_id = _user_id
+      AND role = _role
+  )
+$function$;
 
--- Ensure clean_old_rate_limits has search_path
+-- Ensure get_current_user_role has proper search_path
+CREATE OR REPLACE FUNCTION public.get_current_user_role()
+RETURNS app_role
+LANGUAGE sql
+STABLE SECURITY DEFINER
+SET search_path TO 'public'
+AS $function$
+  SELECT role
+  FROM public.user_roles
+  WHERE user_id = auth.uid()
+  ORDER BY CASE role
+    WHEN 'admin' THEN 1
+    WHEN 'staff' THEN 2
+    WHEN 'user' THEN 3
+  END
+  LIMIT 1
+$function$;
+
+-- Ensure clean_old_rate_limits has proper search_path
 CREATE OR REPLACE FUNCTION public.clean_old_rate_limits()
 RETURNS void
 LANGUAGE plpgsql
@@ -298,7 +327,7 @@ END;
 $$;
 
 -- =========================================
--- 6. VERIFICATION SUMMARY
+-- VERIFICATION SUMMARY
 -- =========================================
 -- All SECURITY DEFINER functions now have:
 -- ✓ SET search_path = 'public' to prevent SQL injection
