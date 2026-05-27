@@ -47,7 +47,14 @@ const Psicoterapia = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEOHead
+        title="Psicoterapia em Maputo | Tikvah Psycem"
+        description="Psicoterapia individual, de casal e familiar com abordagens baseadas em evidência. Atendimento presencial em Maputo e online."
+        canonicalUrl="https://tikvahpsycem.lovable.app/services/psicoterapia"
+        structuredData={PSICOTERAPIA_SCHEMA}
+      />
       <Navbar />
+      <BreadcrumbNavigation />
       
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
