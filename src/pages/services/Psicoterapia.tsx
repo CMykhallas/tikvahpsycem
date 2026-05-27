@@ -1,10 +1,21 @@
 
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Heart, Users, Home, Brain } from "lucide-react";
+import { getService } from "@/lib/seo/jsonld";
+
+const PSICOTERAPIA_SCHEMA = getService({
+  name: "Psicoterapia em Maputo",
+  description:
+    "Atendimento psicoterapêutico individual, de casal e familiar com abordagens baseadas em evidência (TCC, ACT, MBSR) em Maputo, presencial e online.",
+  path: "/services/psicoterapia",
+  serviceType: "Psychotherapy",
+});
 
 const Psicoterapia = () => {
   const services = [
