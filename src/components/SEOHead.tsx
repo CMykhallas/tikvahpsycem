@@ -9,7 +9,7 @@ interface SEOHeadProps {
   canonicalUrl?: string;
   ogImage?: string;
   ogType?: string;
-  structuredData?: any;
+  structuredData?: any | any[];
 }
 
 const toAbsolute = (url: string) => {
