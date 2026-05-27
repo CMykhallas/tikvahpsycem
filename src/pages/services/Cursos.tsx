@@ -1,11 +1,22 @@
 
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { Brain, Users, MessageCircle, Trophy } from "lucide-react";
+import { getService } from "@/lib/seo/jsonld";
+
+const CURSOS_SCHEMA = getService({
+  name: "Cursos de Psicologia e Desenvolvimento Humano",
+  description:
+    "Cursos certificados em psicologia aplicada, mindfulness, inteligência emocional e desenvolvimento humano em Maputo.",
+  path: "/services/cursos",
+  serviceType: "Educational Course",
+});
 
 const Cursos = () => {
   const courses = [

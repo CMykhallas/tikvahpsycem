@@ -1,10 +1,21 @@
 
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Building, Users, TrendingUp, Target } from "lucide-react";
+import { getService } from "@/lib/seo/jsonld";
+
+const CONSULTORIA_SCHEMA = getService({
+  name: "Consultoria Organizacional em Maputo",
+  description:
+    "Consultoria organizacional, gestão de RH, coaching executivo e assessment psicológico para empresas em Moçambique.",
+  path: "/services/consultoria",
+  serviceType: "Business Consulting",
+});
 
 const Consultoria = () => {
   const services = [

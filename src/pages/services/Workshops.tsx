@@ -1,11 +1,22 @@
 
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { Compass, Zap, Users, Shield } from "lucide-react";
+import { getService } from "@/lib/seo/jsonld";
+
+const WORKSHOPS_SCHEMA = getService({
+  name: "Workshops e Formações Práticas",
+  description:
+    "Workshops experienciais sobre liderança, gestão de stress, comunicação e bem-estar, conduzidos por psicólogos da Tikvah em Maputo.",
+  path: "/services/workshops",
+  serviceType: "Workshop",
+});
 
 const Workshops = () => {
   const workshops = [
