@@ -9,24 +9,13 @@ import { motion } from "framer-motion";
 import { BlogImageGallery } from "@/components/BlogImageGallery";
 import { AnimatedImage } from "@/components/AnimatedImage";
 
+import { getBlogPost } from "@/data/blog-posts";
+import { getBlogPosting } from "@/lib/seo/jsonld";
+
 const MBSRMetaAnalise = () => {
-  const url = "https://tikvahpsycem.lovable.app/blog/mbsr-meta-analise-eficacia";
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: "MBSR: Meta-Análise da Eficácia em Contextos Africanos",
-    description: "Meta-análise de estudos randomizados sobre Mindfulness-Based Stress Reduction (MBSR) com foco na população moçambicana.",
-    author: { "@type": "Organization", name: "Tikvah Psychological Center" },
-    publisher: {
-      "@type": "Organization",
-      name: "Tikvah Psychological Center & Multiservice",
-      logo: { "@type": "ImageObject", url: "https://tikvahpsycem.lovable.app/tikvah-logo.jpg" },
-    },
-    datePublished: "2024-08-01",
-    mainEntityOfPage: { "@type": "WebPage", "@id": url },
-    url,
-    inLanguage: "pt-MZ",
-  };
+  const post = getBlogPost("mbsr-meta-analise-eficacia")!;
+  const url = `https://tikvahpsycem.lovable.app/blog/${post.slug}`;
+  const structuredData = getBlogPosting(post);
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <SEOHead
