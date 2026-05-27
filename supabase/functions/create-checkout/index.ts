@@ -2,7 +2,9 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { validateOptionalJWT } from "../_shared/security.ts";
-import { buildCorsHeaders } from "../_shared/cors.ts";
+import { buildCorsHeaders, isAllowedOrigin } from "../_shared/cors.ts";
+
+const TRUSTED_FALLBACK_ORIGIN = "https://tikvahpsycem.lovable.app";
 
 const logStep = (step: string, details?: any) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
@@ -259,8 +261,8 @@ serve(async (req) => {
         },
       ],
       mode: "payment",
-      success_url: `${req.headers.get("origin")}/obrigado?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get("origin")}/appointment`,
+      success_url: `${(() => { const o = req.headers.get("origin"); return o && isAllowedOrigin(o) ? o : TRUSTED_FALLBACK_ORIGIN; })()}/obrigado?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${(() => { const o = req.headers.get("origin"); return o && isAllowedOrigin(o) ? o : TRUSTED_FALLBACK_ORIGIN; })()}/appointment`,
       metadata: {
         client_name: sanitizedData.client_name,
         phone: sanitizedData.phone,

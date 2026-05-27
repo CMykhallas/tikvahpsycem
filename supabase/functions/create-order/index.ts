@@ -18,7 +18,9 @@ import {
 } from '../_shared/security.ts';
 
 import { encryptField } from '../_shared/encryption.ts';
-import { buildCorsHeaders } from '../_shared/cors.ts';
+import { buildCorsHeaders, isAllowedOrigin } from '../_shared/cors.ts';
+
+const TRUSTED_FALLBACK_ORIGIN = 'https://tikvahpsycem.lovable.app';
 
 serve(async (req) => {
   const corsHeaders = buildCorsHeaders(req);
@@ -292,8 +294,8 @@ serve(async (req) => {
         payment_method_types: ['card'],
         line_items: lineItems,
         mode: 'payment',
-        success_url: `${req.headers.get('origin')}/success?session_id={CHECKOUT_SESSION_ID}&order_id=${order.id}`,
-        cancel_url: `${req.headers.get('origin')}/loja`,
+        success_url: `${(() => { const o = req.headers.get('origin'); return o && isAllowedOrigin(o) ? o : TRUSTED_FALLBACK_ORIGIN; })()}/success?session_id={CHECKOUT_SESSION_ID}&order_id=${order.id}`,
+        cancel_url: `${(() => { const o = req.headers.get('origin'); return o && isAllowedOrigin(o) ? o : TRUSTED_FALLBACK_ORIGIN; })()}/loja`,
         metadata: {
           order_id: order.id,
         },
