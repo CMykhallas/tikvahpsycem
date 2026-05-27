@@ -9,7 +9,7 @@ interface SEOHeadProps {
   canonicalUrl?: string;
   ogImage?: string;
   ogType?: string;
-  structuredData?: any;
+  structuredData?: any | any[];
 }
 
 const toAbsolute = (url: string) => {
@@ -81,13 +81,19 @@ const updateCanonicalTag = (url: string) => {
   element.href = url;
 };
 
-const updateStructuredData = (data: any) => {
-  let element = document.querySelector('script[data-seo="route"]') as HTMLScriptElement | null;
-  if (!element) {
-    element = document.createElement('script');
-    element.type = 'application/ld+json';
-    element.setAttribute('data-seo', 'route');
-    document.head.appendChild(element);
-  }
-  element.textContent = JSON.stringify(data);
+const updateStructuredData = (data: any | any[]) => {
+  // Remove previous route-scoped JSON-LD scripts
+  document
+    .querySelectorAll('script[data-seo="route"]')
+    .forEach((el) => el.remove());
+
+  const items = Array.isArray(data) ? data : [data];
+  items.forEach((item, idx) => {
+    const el = document.createElement("script");
+    el.type = "application/ld+json";
+    el.setAttribute("data-seo", "route");
+    el.setAttribute("data-seo-index", String(idx));
+    el.textContent = JSON.stringify(item);
+    document.head.appendChild(el);
+  });
 };

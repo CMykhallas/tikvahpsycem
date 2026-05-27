@@ -6,24 +6,13 @@ import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, User, Clock, BookOpen, Shield, Users } from "lucide-react";
 
+import { getBlogPost } from "@/data/blog-posts";
+import { getBlogPosting } from "@/lib/seo/jsonld";
+
 const TraumaCulturalResiliencia = () => {
-  const url = "https://tikvahpsycem.lovable.app/blog/trauma-cultural-resiliencia-pos-colonial";
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: "Trauma Cultural e Resiliência Pós-Colonial em Moçambique",
-    description: "Análise dos impactos psicológicos do período colonial e pós-independência, com estratégias terapêuticas contextualizadas.",
-    author: { "@type": "Organization", name: "Tikvah Psychological Center" },
-    publisher: {
-      "@type": "Organization",
-      name: "Tikvah Psychological Center & Multiservice",
-      logo: { "@type": "ImageObject", url: "https://tikvahpsycem.lovable.app/tikvah-logo.jpg" },
-    },
-    datePublished: "2024-07-28",
-    mainEntityOfPage: { "@type": "WebPage", "@id": url },
-    url,
-    inLanguage: "pt-MZ",
-  };
+  const post = getBlogPost("trauma-cultural-resiliencia-pos-colonial")!;
+  const url = `https://tikvahpsycem.lovable.app/blog/${post.slug}`;
+  const structuredData = getBlogPosting(post);
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <SEOHead

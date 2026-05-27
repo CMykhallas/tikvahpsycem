@@ -5,25 +5,13 @@ import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, User, Clock, BookOpen, Target, Heart } from "lucide-react";
+import { getBlogPost } from "@/data/blog-posts";
+import { getBlogPosting } from "@/lib/seo/jsonld";
 
 const ACTTerapiaContextos = () => {
-  const url = "https://tikvahpsycem.lovable.app/blog/act-terapia-contextos-africanos";
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: "ACT: Terapia de Aceitação e Compromisso em Contextos Africanos",
-    description: "Aplicação da Acceptance and Commitment Therapy (ACT) em contextos africanos, com adaptação cultural e integração com valores comunitários tradicionais.",
-    author: { "@type": "Organization", name: "Tikvah Psychological Center" },
-    publisher: {
-      "@type": "Organization",
-      name: "Tikvah Psychological Center & Multiservice",
-      logo: { "@type": "ImageObject", url: "https://tikvahpsycem.lovable.app/tikvah-logo.jpg" },
-    },
-    datePublished: "2024-08-19",
-    mainEntityOfPage: { "@type": "WebPage", "@id": url },
-    url,
-    inLanguage: "pt-MZ",
-  };
+  const post = getBlogPost("act-terapia-contextos-africanos")!;
+  const url = `https://tikvahpsycem.lovable.app/blog/${post.slug}`;
+  const structuredData = getBlogPosting(post);
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <SEOHead

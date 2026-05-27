@@ -1,10 +1,21 @@
 
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Building, Users, TrendingUp, Target } from "lucide-react";
+import { getService } from "@/lib/seo/jsonld";
+
+const CONSULTORIA_SCHEMA = getService({
+  name: "Consultoria Organizacional em Maputo",
+  description:
+    "Consultoria organizacional, gestão de RH, coaching executivo e assessment psicológico para empresas em Moçambique.",
+  path: "/services/consultoria",
+  serviceType: "Business Consulting",
+});
 
 const Consultoria = () => {
   const services = [
@@ -36,7 +47,14 @@ const Consultoria = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEOHead
+        title="Consultoria Organizacional em Maputo | Tikvah Psycem"
+        description="Consultoria organizacional, gestão de RH e coaching executivo para empresas em Moçambique."
+        canonicalUrl="https://tikvahpsycem.lovable.app/services/consultoria"
+        structuredData={CONSULTORIA_SCHEMA}
+      />
       <Navbar />
+      <BreadcrumbNavigation />
       
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">

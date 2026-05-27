@@ -6,24 +6,13 @@ import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, User, Clock, BookOpen, Building2, Zap } from "lucide-react";
 
+import { getBlogPost } from "@/data/blog-posts";
+import { getBlogPosting } from "@/lib/seo/jsonld";
+
 const PsicologiaOrganizacional = () => {
-  const url = "https://tikvahpsycem.lovable.app/blog/psicologia-organizacional-transformacao-digital";
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: "Psicologia Organizacional na Era da Transformação Digital",
-    description: "Como a transformação digital redefine o capital humano nas organizações moçambicanas e estratégias psicológicas para a nova realidade corporativa.",
-    author: { "@type": "Organization", name: "Tikvah Psychological Center" },
-    publisher: {
-      "@type": "Organization",
-      name: "Tikvah Psychological Center & Multiservice",
-      logo: { "@type": "ImageObject", url: "https://tikvahpsycem.lovable.app/tikvah-logo.jpg" },
-    },
-    datePublished: "2024-08-19",
-    mainEntityOfPage: { "@type": "WebPage", "@id": url },
-    url,
-    inLanguage: "pt-MZ",
-  };
+  const post = getBlogPost("psicologia-organizacional-transformacao-digital")!;
+  const url = `https://tikvahpsycem.lovable.app/blog/${post.slug}`;
+  const structuredData = getBlogPosting(post);
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <SEOHead
