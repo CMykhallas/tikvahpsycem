@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SEOHead } from "@/components/SEOHead";
+import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { getFAQPage } from "@/lib/seo/jsonld";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -96,15 +98,9 @@ const FAQ = () => {
     return matchesSearch && matchesCategory;
   });
 
-  const faqStructuredData = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map((f) => ({
-      "@type": "Question",
-      name: f.question,
-      acceptedAnswer: { "@type": "Answer", text: f.answer },
-    })),
-  };
+  const faqStructuredData = getFAQPage(
+    faqs.map((f) => ({ question: f.question, answer: f.answer })),
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
@@ -115,6 +111,7 @@ const FAQ = () => {
         structuredData={faqStructuredData}
       />
       <Navbar />
+      <BreadcrumbNavigation />
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
