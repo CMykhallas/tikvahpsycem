@@ -56,7 +56,14 @@ const Workshops = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEOHead
+        title="Workshops e Formações Práticas | Tikvah Psycem"
+        description="Workshops experienciais sobre liderança, gestão de stress, comunicação e bem-estar em Maputo."
+        canonicalUrl="https://tikvahpsycem.lovable.app/services/workshops"
+        structuredData={WORKSHOPS_SCHEMA}
+      />
       <Navbar />
+      <BreadcrumbNavigation />
       
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
