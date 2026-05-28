@@ -336,6 +336,10 @@ const Services = () => {
         </div>
       </section>
 
+      {/* Ecossistema Tikvah — modelo de intervenção 360° (documento institucional) */}
+      <TikvahEcosystem />
+
+
       {/* Sticky Footer Bar */}
       <div className="sticky bottom-0 z-40 bg-primary text-white border-t border-primary/30 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs md:text-sm">
