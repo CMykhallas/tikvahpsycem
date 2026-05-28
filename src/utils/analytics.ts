@@ -26,8 +26,20 @@ class AnalyticsService {
     this.initializePerformanceMonitoring();
   }
 
+  // CORREÇÃO ALERTA #4: Substituição do Math.random() por criptografia segura (UUIDv4)
   private generateSessionId(): string {
-    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    if (typeof crypto !== 'undefined') {
+      if (typeof crypto.randomUUID === 'function') {
+        return `session_${crypto.randomUUID()}`;
+      }
+      // Fallback seguro usando getRandomValues caso randomUUID não esteja ativo
+      const typedArray = new Uint8Array(16);
+      crypto.getRandomValues(typedArray);
+      const hexString = Array.from(typedArray, num => num.toString(16).padStart(2, '0')).join('');
+      return `session_${hexString}`;
+    }
+    // Fallback de contingência para ambientes legados sem suporte a Crypto
+    return `session_${Date.now()}_${String(Date.now() % 100000)}`;
   }
 
   private initializePerformanceMonitoring() {

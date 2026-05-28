@@ -4,10 +4,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { SecurityProvider } from "@/components/SecurityProvider";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
+import ServiceDetail from "./pages/ServiceDetail";
 import Contact from "./pages/Contact";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
@@ -25,6 +27,7 @@ import Administration from "./pages/Administration";
 import Obrigado from "./pages/Obrigado";
 import PoliticaPrivacidade from "./pages/PoliticaPrivacidade";
 import NotFound from "./pages/NotFound";
+import ProximosPassos from "./pages/ProximosPassos";
 import SecurityDashboard from "./pages/SecurityDashboard";
 import Auth from "./pages/Auth";
 
@@ -52,6 +55,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <HelmetProvider>
       <SecurityProvider>
         <TooltipProvider>
           <Toaster />
@@ -77,12 +81,14 @@ function App() {
               <Route path="/administration" element={<Administration />} />
               <Route path="/obrigado" element={<Obrigado />} />
               <Route path="/politica-de-privacidade" element={<PoliticaPrivacidade />} />
+              <Route path="/propostas/proximos-passos" element={<ProximosPassos />} />
               
               {/* Services Routes */}
               <Route path="/services/psicoterapia" element={<Psicoterapia />} />
               <Route path="/services/consultoria" element={<Consultoria />} />
               <Route path="/services/cursos" element={<Cursos />} />
               <Route path="/services/workshops" element={<Workshops />} />
+              <Route path="/services/:slug" element={<ServiceDetail />} />
               
               {/* Shop Routes */}
               <Route path="/loja" element={<Loja />} />
@@ -107,6 +113,7 @@ function App() {
           </BrowserRouter>
         </TooltipProvider>
       </SecurityProvider>
+      </HelmetProvider>
     </QueryClientProvider>
   );
 }

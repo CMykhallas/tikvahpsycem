@@ -1,13 +1,20 @@
 
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { SEOHead } from "@/components/SEOHead";
 import consultationRoom from "@/assets/consultation-room-luxury.jpg";
 import psicologoProfissional from "@/assets/psicologo-profissional-mozambique.jpg";
 
 const About = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEOHead
+        title="Sobre a Tikvah — Centro de Psicologia em Maputo"
+        description="Conheça a Tikvah Psychological Center & Multiservice: história, missão e equipa multidisciplinar dedicada à saúde mental em Maputo."
+        canonicalUrl="https://tikvahpsycem.lovable.app/about"
+      />
       <Navbar />
+
       
       {/* Hero Section with Image */}
       <section className="relative">

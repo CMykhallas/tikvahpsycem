@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      applications: {
+        Row: {
+          area: string
+          created_at: string
+          document_name: string | null
+          document_url: string | null
+          education_level: string
+          email: string
+          full_name: string
+          id: string
+          motivation: string | null
+          phone: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          area: string
+          created_at?: string
+          document_name?: string | null
+          document_url?: string | null
+          education_level: string
+          email: string
+          full_name: string
+          id?: string
+          motivation?: string | null
+          phone: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          area?: string
+          created_at?: string
+          document_name?: string | null
+          document_url?: string | null
+          education_level?: string
+          email?: string
+          full_name?: string
+          id?: string
+          motivation?: string | null
+          phone?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       appointments: {
         Row: {
           client_name: string
@@ -391,6 +436,44 @@ export type Database = {
         }
         Relationships: []
       }
+      proposal_audit_trail: {
+        Row: {
+          actor: string
+          created_at: string
+          event: string
+          id: string
+          metadata: Json | null
+          notes: string | null
+          proposal_id: string
+        }
+        Insert: {
+          actor?: string
+          created_at?: string
+          event: string
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          proposal_id: string
+        }
+        Update: {
+          actor?: string
+          created_at?: string
+          event?: string
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          proposal_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proposal_audit_trail_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "service_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rate_limits: {
         Row: {
           blocked_until: string | null
@@ -454,28 +537,124 @@ export type Database = {
         }
         Relationships: []
       }
+      service_proposals: {
+        Row: {
+          area_code: string | null
+          area_name: string | null
+          audience: string
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          message: string | null
+          metadata: Json | null
+          modality: string
+          phone: string
+          service_slug: string
+          service_title: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          area_code?: string | null
+          area_name?: string | null
+          audience: string
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          message?: string | null
+          metadata?: Json | null
+          modality: string
+          phone: string
+          service_slug: string
+          service_title: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          area_code?: string | null
+          area_name?: string | null
+          audience?: string
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          message?: string | null
+          metadata?: Json | null
+          modality?: string
+          phone?: string
+          service_slug?: string
+          service_title?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       services: {
         Row: {
+          active: boolean | null
+          area_code: string | null
+          area_name: string | null
+          benefits: string[] | null
           created_at: string
+          currency: string | null
           description: string
+          duration_label: string | null
+          hero_image_url: string | null
           icon: string | null
           id: string
+          long_description: string | null
+          modalities: string[] | null
+          price_from: number | null
+          short_description: string | null
+          slug: string | null
+          sort_order: number | null
+          target_audience: string[] | null
           title: string
           updated_at: string
         }
         Insert: {
+          active?: boolean | null
+          area_code?: string | null
+          area_name?: string | null
+          benefits?: string[] | null
           created_at?: string
+          currency?: string | null
           description: string
+          duration_label?: string | null
+          hero_image_url?: string | null
           icon?: string | null
           id?: string
+          long_description?: string | null
+          modalities?: string[] | null
+          price_from?: number | null
+          short_description?: string | null
+          slug?: string | null
+          sort_order?: number | null
+          target_audience?: string[] | null
           title: string
           updated_at?: string
         }
         Update: {
+          active?: boolean | null
+          area_code?: string | null
+          area_name?: string | null
+          benefits?: string[] | null
           created_at?: string
+          currency?: string | null
           description?: string
+          duration_label?: string | null
+          hero_image_url?: string | null
           icon?: string | null
           id?: string
+          long_description?: string | null
+          modalities?: string[] | null
+          price_from?: number | null
+          short_description?: string | null
+          slug?: string | null
+          sort_order?: number | null
+          target_audience?: string[] | null
           title?: string
           updated_at?: string
         }
@@ -551,7 +730,7 @@ export type Database = {
         }[]
       }
       get_security_stats: {
-        Args: { time_window?: unknown }
+        Args: { time_window?: string }
         Returns: {
           blocked_ips: number
           critical_incidents: number

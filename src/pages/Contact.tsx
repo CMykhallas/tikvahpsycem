@@ -1,6 +1,7 @@
 
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,7 +68,13 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Contacto — Tikvah Psychological Center, Maputo"
+        description="Fale com a Tikvah em Maputo: telefone, WhatsApp, email e morada. Atendimento presencial e online com confidencialidade garantida."
+        canonicalUrl="https://tikvahpsycem.lovable.app/contact"
+      />
       <Navbar />
+      
       
       {/* Ultra Professional Hero Section */}
       <section className="contact-hero relative">

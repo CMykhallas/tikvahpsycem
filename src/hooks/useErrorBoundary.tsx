@@ -58,7 +58,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   Voltar
                 </Button>
               </div>
-              {process.env.NODE_ENV === 'development' && this.state.error && (
+              {import.meta.env.DEV && this.state.error && (
                 <details className="mt-6 text-left">
                   <summary className="cursor-pointer text-sm text-muted-foreground">
                     Detalhes técnicos

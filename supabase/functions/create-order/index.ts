@@ -13,17 +13,17 @@ import {
   PriceValidator,
   InputValidator,
   TokenGenerator,
-  securityMiddleware
+  securityMiddleware,
+  validateOptionalJWT
 } from '../_shared/security.ts';
 
 import { encryptField } from '../_shared/encryption.ts';
+import { buildCorsHeaders, isAllowedOrigin } from '../_shared/cors.ts';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+const TRUSTED_FALLBACK_ORIGIN = 'https://tikvahpsycem.lovable.app';
 
 serve(async (req) => {
+  const corsHeaders = buildCorsHeaders(req);
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -41,6 +41,23 @@ serve(async (req) => {
 
   try {
     console.log('🔒 [CREATE-ORDER] Starting secure order creation');
+
+    // =========================================
+    // FASE 0: JWT VALIDATION (optional — allows guest checkout)
+    // =========================================
+    const jwtCheck = await validateOptionalJWT(req, corsHeaders);
+    if (jwtCheck.error) {
+      await logger.logIncident({
+        incident_type: 'VALIDATION_FAILURE',
+        severity: 'high',
+        ip_address: ip,
+        user_agent: userAgent,
+        endpoint: 'create-order',
+        details: { reason: 'INVALID_JWT' }
+      });
+      return jwtCheck.error;
+    }
+    const authenticatedUserId = jwtCheck.userId;
 
     // =========================================
     // FASE 1: SECURITY MIDDLEWARE
@@ -238,7 +255,7 @@ serve(async (req) => {
         order_access_token: JSON.stringify(encryptedToken),
         token_expires_at: orderToken.expiresAt.toISOString(),
         phone_number: JSON.stringify(encryptedPhone),
-        user_id: null // Pedido anônimo
+        user_id: authenticatedUserId // Null for guest, bound to auth user when logged in
       })
       .select()
       .single();
@@ -277,8 +294,8 @@ serve(async (req) => {
         payment_method_types: ['card'],
         line_items: lineItems,
         mode: 'payment',
-        success_url: `${req.headers.get('origin')}/success?session_id={CHECKOUT_SESSION_ID}&order_id=${order.id}`,
-        cancel_url: `${req.headers.get('origin')}/loja`,
+        success_url: `${(() => { const o = req.headers.get('origin'); return o && isAllowedOrigin(o) ? o : TRUSTED_FALLBACK_ORIGIN; })()}/success?session_id={CHECKOUT_SESSION_ID}&order_id=${order.id}`,
+        cancel_url: `${(() => { const o = req.headers.get('origin'); return o && isAllowedOrigin(o) ? o : TRUSTED_FALLBACK_ORIGIN; })()}/loja`,
         metadata: {
           order_id: order.id,
         },

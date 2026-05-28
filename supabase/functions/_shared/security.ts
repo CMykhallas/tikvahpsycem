@@ -448,7 +448,7 @@ export class InputValidator {
   private logger: SecurityLogger;
   
   private static readonly XSS_PATTERNS = [
-    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    /<script\b[^<]*(?:(?!<\/script\b[^>]*>)<[^<]*)*<\/script\b[^>]*>/gi,
     /javascript:/gi,
     /on\w+\s*=/gi,
     /<iframe/gi,
@@ -625,3 +625,71 @@ export async function securityMiddleware(
   
   return null; // Permitir requisição
 }
+
+// =========================================
+// JWT VALIDATION (Server-side)
+// =========================================
+// Validates the Authorization bearer token when present.
+// - If header is missing/empty → returns { userId: null } (allows guest flows).
+// - If header is present but invalid/expired → returns { error: Response }
+//   and the caller must short-circuit with a 401.
+// Uses the anon client + getClaims() to verify the JWT signature server-side.
+export async function validateOptionalJWT(
+  req: Request,
+  corsHeaders: Record<string, string>
+): Promise<{ userId: string | null; email: string | null; error: Response | null }> {
+  const authHeader = req.headers.get('Authorization') || req.headers.get('authorization');
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return { userId: null, email: null, error: null };
+  }
+
+  const token = authHeader.replace('Bearer ', '').trim();
+
+  // Treat common public/anon sentinels as "no user"
+  if (!token || token.length < 20) {
+    return { userId: null, email: null, error: null };
+  }
+
+  try {
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+    );
+
+    const { data, error } = await supabase.auth.getClaims(token);
+
+    if (error || !data?.claims) {
+      // Header provided but invalid → reject
+      return {
+        userId: null,
+        email: null,
+        error: new Response(
+          JSON.stringify({ error: 'Unauthorized: invalid or expired token' }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        ),
+      };
+    }
+
+    return {
+      userId: (data.claims.sub as string) ?? null,
+      email: (data.claims.email as string) ?? null,
+      error: null,
+    };
+  } catch (_e) {
+    // If it looks like a JWT but verification threw, reject
+    if (token.split('.').length === 3) {
+      return {
+        userId: null,
+        email: null,
+        error: new Response(
+          JSON.stringify({ error: 'Unauthorized: token verification failed' }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        ),
+      };
+    }
+    // Non-JWT (e.g. anon publishable key) → treat as guest
+    return { userId: null, email: null, error: null };
+  }
+}
+
