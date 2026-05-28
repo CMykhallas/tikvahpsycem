@@ -1,13 +1,53 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
+import { createClient } from "npm:@supabase/supabase-js@2";
+import { buildCorsHeaders } from "../_shared/cors.ts";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+// Simple per-IP rate limit using the rate_limits table (max 3 / 10 min).
+async function checkRateLimit(ip: string): Promise<boolean> {
+  try {
+    const admin = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      { auth: { persistSession: false } }
+    );
+    const windowMs = 10 * 60 * 1000;
+    const max = 3;
+    const key = `send-appointment-email:${ip}`;
+    const now = new Date();
+    const { data } = await admin
+      .from("rate_limits")
+      .select("id, request_count, reset_time, blocked_until")
+      .eq("identifier", key)
+      .maybeSingle();
+    if (data?.blocked_until && new Date(data.blocked_until) > now) return false;
+    if (!data || new Date(data.reset_time) < now) {
+      await admin.from("rate_limits").upsert({
+        identifier: key,
+        request_count: 1,
+        reset_time: new Date(now.getTime() + windowMs).toISOString(),
+        blocked_until: null,
+      }, { onConflict: "identifier" });
+      return true;
+    }
+    if (data.request_count >= max) {
+      await admin.from("rate_limits").update({
+        blocked_until: new Date(now.getTime() + windowMs).toISOString(),
+      }).eq("id", data.id);
+      return false;
+    }
+    await admin.from("rate_limits").update({
+      request_count: data.request_count + 1,
+    }).eq("id", data.id);
+    return true;
+  } catch (e) {
+    console.warn("rate limit check failed (allowing):", (e as Error).message);
+    return true;
+  }
+}
 
 // Input validation schemas
 const validateEmail = (email: string): boolean => {
@@ -16,10 +56,18 @@ const validateEmail = (email: string): boolean => {
 };
 
 const sanitizeString = (input: string, maxLength: number = 1000): string => {
-  return input
-    .replace(/[<>]/g, '')
-    .replace(/javascript:/gi, '')
-    .replace(/on\w+=/gi, '')
+  let sanitized = input;
+  let previous: string;
+
+  do {
+    previous = sanitized;
+    sanitized = sanitized
+      .replace(/[<>]/g, '')
+      .replace(/javascript:/gi, '')
+      .replace(/on\w+=/gi, '');
+  } while (sanitized !== previous);
+
+  return sanitized
     .trim()
     .slice(0, maxLength);
 };
@@ -51,11 +99,25 @@ const validateAppointmentData = (data: any): { isValid: boolean; errors: string[
 };
 
 serve(async (req) => {
+  const corsHeaders = buildCorsHeaders(req);
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
 
   try {
+    // Per-IP rate limit (mitigates email relay / quota abuse).
+    const clientIP =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-real-ip") ||
+      "unknown";
+    const allowed = await checkRateLimit(clientIP);
+    if (!allowed) {
+      return new Response(
+        JSON.stringify({ error: "Too many requests" }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 429 }
+      );
+    }
+
     // Check content type
     const contentType = req.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {

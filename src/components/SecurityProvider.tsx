@@ -8,39 +8,29 @@ interface SecurityProviderProps {
 
 export const SecurityProvider = ({ children }: SecurityProviderProps) => {
   useEffect(() => {
-    // Set enhanced security headers
+    // Set enhanced security headers (only those valid via <meta>)
+    // X-Frame-Options and Strict-Transport-Security are IGNORED in <meta> by browsers —
+    // they must be sent as HTTP headers. We use CSP frame-ancestors instead for clickjacking.
     const setSecurityHeaders = () => {
-      // Enhanced Content Security Policy for production - Corrigida para não bloquear conteúdo
+      // Content Security Policy — frame-ancestors replaces X-Frame-Options
       const cspMeta = document.createElement('meta')
       cspMeta.httpEquiv = 'Content-Security-Policy'
-      cspMeta.content = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; connect-src 'self' https://rccfbawvirzdarzblirj.supabase.co wss://rccfbawvirzdarzblirj.supabase.co https://api.pwnedpasswords.com https://*.lovable.dev; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; media-src 'self' https: blob:; frame-src 'self' https://lovable.app https://*.lovable.app https://*.lovable.dev; worker-src 'self' blob:; upgrade-insecure-requests;"
+      cspMeta.content = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net https://*.lovable.app https://*.lovable.dev; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; connect-src 'self' https://rrlwabtzwvurhhfwpmiq.supabase.co wss://rrlwabtzwvurhhfwpmiq.supabase.co https://api.pwnedpasswords.com https://*.lovable.dev https://*.lovable.app; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; media-src 'self' https: blob:; frame-src 'self' https://lovable.app https://*.lovable.app https://*.lovable.dev; frame-ancestors 'self' https://*.lovable.app https://*.lovable.dev; worker-src 'self' blob:; upgrade-insecure-requests;"
       document.head.appendChild(cspMeta)
 
-      // X-Content-Type-Options
+      // X-Content-Type-Options (valid in <meta>)
       const noSniffMeta = document.createElement('meta')
       noSniffMeta.httpEquiv = 'X-Content-Type-Options'
       noSniffMeta.content = 'nosniff'
       document.head.appendChild(noSniffMeta)
 
-      // X-Frame-Options - Allow iframe for Lovable development
-      const frameOptionsMeta = document.createElement('meta')
-      frameOptionsMeta.httpEquiv = 'X-Frame-Options'
-      frameOptionsMeta.content = 'SAMEORIGIN'
-      document.head.appendChild(frameOptionsMeta)
-
-      // Referrer Policy
+      // Referrer Policy (valid in <meta>)
       const referrerMeta = document.createElement('meta')
       referrerMeta.name = 'referrer'
       referrerMeta.content = 'strict-origin-when-cross-origin'
       document.head.appendChild(referrerMeta)
 
-      // Strict Transport Security
-      const stsMeta = document.createElement('meta')
-      stsMeta.httpEquiv = 'Strict-Transport-Security'
-      stsMeta.content = 'max-age=31536000; includeSubDomains'
-      document.head.appendChild(stsMeta)
-
-      // Permissions Policy
+      // Permissions Policy (valid in <meta> in modern browsers)
       const permissionsMeta = document.createElement('meta')
       permissionsMeta.httpEquiv = 'Permissions-Policy'
       permissionsMeta.content = 'camera=(), microphone=(), geolocation=()'

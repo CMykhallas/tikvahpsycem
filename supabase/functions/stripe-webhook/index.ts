@@ -1,5 +1,5 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@18.5.0";
+import { serve } from "https://deno.land";
+import Stripe from "https://esm.sh";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import React from "npm:react@18.3.1";
 import { Resend } from "npm:resend@4.0.0";
@@ -16,7 +16,12 @@ const resend = new Resend(Deno.env.get("RESEND_API_KEY") as string);
 
 const logStep = (step: string, details?: any) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
-  console.log(`[STRIPE-WEBHOOK] ${step}${detailsStr}`);
+  console.log(`[STRIPE-WEBHOOK] \${step}\${detailsStr}`);
+};
+
+// Declaração do EdgeRuntime global para compatibilidade com compiladores e linters
+declare const EdgeRuntime: {
+  waitUntil: (promise: Promise<any>) => void;
 };
 
 serve(async (req) => {
@@ -29,7 +34,6 @@ serve(async (req) => {
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
-
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
     
     const signature = req.headers.get("stripe-signature");
@@ -55,9 +59,9 @@ serve(async (req) => {
         }
       );
     }
-    
+ 
     let event: Stripe.Event;
-    
+ 
     try {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
       logStep("Webhook signature verified", { type: event.type });
@@ -155,7 +159,6 @@ serve(async (req) => {
         (async () => {
           try {
             logStep("Starting email notifications");
-
             const currency = session.currency || "usd";
             const amount = session.amount_total || 0;
 
@@ -202,7 +205,7 @@ serve(async (req) => {
             const { error: adminEmailError } = await resend.emails.send({
               from: "Tikvah Sistema <onboarding@resend.dev>",
               to: ["suporte.oficina.psicologo@proton.me"],
-              subject: `Novo Pagamento - ${session.metadata?.client_name || appointment.client_name}`,
+              subject: `Novo Pagamento - \${session.metadata?.client_name || appointment.client_name}`,
               html: adminHtml,
             });
 
@@ -211,6 +214,7 @@ serve(async (req) => {
             } else {
               logStep("Admin notification email sent successfully");
             }
+
           } catch (emailError) {
             const emailErrorMsg = emailError instanceof Error ? emailError.message : String(emailError);
             logStep("Error in email sending process", { error: emailErrorMsg });
@@ -223,12 +227,19 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
+
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logStep("ERROR in stripe-webhook", { message: errorMessage });
-    return new Response(JSON.stringify({ error: errorMessage }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 500,
-    });
+    // CORREÇÃO ALERTA #10: Proteção contra exposição do Stack Trace na API pública
+    console.error("[CRITICAL ERROR IN STRIPE-WEBHOOK SERVER-SIDE]:", error);
+    
+    return new Response(
+      JSON.stringify({ 
+        error: "Ocorreu um erro interno ao processar a notificação de pagamento." 
+      }), 
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+      }
+    );
   }
 });

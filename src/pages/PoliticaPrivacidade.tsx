@@ -1,20 +1,35 @@
 
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield, FileText, Lock, Users, Eye, Mail } from "lucide-react";
 import { SEOHead } from "@/components/SEOHead";
+import { getWebPage } from "@/lib/seo/jsonld";
+
+const PRIVACY_LAST_UPDATED = "2024-01-15";
 
 const PoliticaPrivacidade = () => {
+  const structuredData = getWebPage({
+    name: "Política de Privacidade — Tikvah Psychological Center",
+    description:
+      "Política de Privacidade da Tikvah Psycem: como recolhemos, tratamos e protegemos os seus dados pessoais.",
+    path: "/politica-de-privacidade",
+    dateModified: PRIVACY_LAST_UPDATED,
+  });
+
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead 
+      <SEOHead
         title="Política de Privacidade - Tikvah Psychological Center & Multiservice"
         description="Política de Privacidade da Tikvah Psycem. Conheça como protegemos e tratamos os seus dados pessoais em conformidade com as melhores práticas de segurança."
         keywords="política de privacidade, proteção de dados, GDPR, segurança de dados, Tikvah, privacidade"
+        canonicalUrl="https://tikvahpsycem.lovable.app/politica-de-privacidade"
+        structuredData={structuredData}
       />
-      
+
       <Navbar />
+      <BreadcrumbNavigation />
       
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary/10 via-secondary/20 to-accent/10 py-16">

@@ -230,7 +230,7 @@ export class SRIValidator {
         if (!isValid) {
           console.error(`SRI Verification FAILED for ${resource.url}`);
           // Bloquear a página se houver falha em produção
-          if (process.env.NODE_ENV === 'production') {
+          if (import.meta.env.PROD) {
             throw new Error(`SRI integrity check failed for ${resource.url}`);
           }
         }
