@@ -114,9 +114,18 @@ export const getBlogPosting = (post: BlogPostMeta) => {
 };
 
 
-// Strip HTML from FAQ answers/questions — Google accepts limited HTML but
-// inconsistent markup is the #1 cause of "Invalid HTML" warnings in Rich Results.
-const stripHtml = (s: string) => s.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+// CORREÇÃO ALERTA #14: Remoção recursiva de HTML para evitar evasão de tags ocultas
+const stripHtml = (s: string) => {
+  let sanitized = s;
+  let previous: string;
+
+  do {
+    previous = sanitized;
+    sanitized = sanitized.replace(/<[^>]*>/g, "");
+  } while (sanitized !== previous); // Continua a limpar se tags aninhadas forem desmascaradas
+
+  return sanitized.replace(/\s+/g, " ").trim();
+};
 
 export const getFAQPage = (
   faqs: Array<{ question: string; answer: string }>,
