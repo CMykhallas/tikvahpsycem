@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import { useServicesCatalog, type CatalogService } from "@/hooks/useServicesCatalog";
 import { ProposalModal } from "@/components/services/ProposalModal";
+import { TikvahEcosystem } from "@/components/TikvahEcosystem";
+
 
 const AREA_META: Record<string, { name: string; short: string; icon: React.ComponentType<{ className?: string }>; nav: string; tagline: string }> = {
   "01": { name: "Psicoterapia Clínica", short: "Clínica", icon: Brain, nav: "area-01", tagline: "Saúde mental baseada em evidência (TCC, ACT, EMDR)." },
