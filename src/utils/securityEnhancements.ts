@@ -174,7 +174,7 @@ export const validateFormDataAdvanced = (
     } else {
       sanitizedData[key] = value
     }
-  })
+  }); // <--- Fecho correto do forEach
   
   // Enhanced email validation
   if (sanitizedData.email) {
@@ -191,9 +191,10 @@ export const validateFormDataAdvanced = (
   if (sanitizedData.name && (sanitizedData.name.length < 2 || sanitizedData.name.length > config.validation.maxFieldLength)) {
     errors.push(`Name must be between 2 and \${config.validation.maxFieldLength} characters`)
   }
+  
   return {
     isValid: errors.length === 0,
     errors,
     sanitizedData
   }
-}
+} // <--- Fecho correto da função
