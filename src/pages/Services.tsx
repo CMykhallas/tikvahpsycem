@@ -6,6 +6,43 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { 
+  Brain, 
+  Building, 
+  GraduationCap, 
+  Users, 
+  Stethoscope,
+  Heart,
+  DollarSign,
+  Scale,
+  Code,
+  Shield,
+  TreePine,
+  Globe,
+  Target,
+  Briefcase,
+  TrendingUp,
+  Lightbulb,
+  HeadphonesIcon,
+  BookOpen,
+  Award,
+  Wrench,
+  MessageCircle,
+  FileText,
+  BarChart3,
+  Compass,
+  Handshake,
+  Building2,
+  Wallet,
+  Coins,
+  Newspaper,
+  UserCheck,
+  Laptop,
+  Book,
+  UsersRound,
+  HandHeart,
+  BriefcaseBusiness,
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -19,6 +56,8 @@ import {
 } from "lucide-react";
 import { useServicesCatalog, type CatalogService } from "@/hooks/useServicesCatalog";
 import { ProposalModal } from "@/components/services/ProposalModal";
+import { TikvahEcosystem } from "@/components/TikvahEcosystem";
+
 
 const AREA_META: Record<string, { name: string; short: string; icon: React.ComponentType<{ className?: string }>; nav: string; tagline: string }> = {
   "01": { name: "Psicoterapia Clínica", short: "Clínica", icon: Brain, nav: "area-01", tagline: "Saúde mental baseada em evidência (TCC, ACT, EMDR)." },
@@ -101,6 +140,156 @@ const TRUST_STATS = [
 ];
 
 const Services = () => {
+  const mainServices = [
+    {
+      icon: Brain,
+      title: "Psicoterapia & Saúde Mental",
+      description: "Serviços psicológicos integrados para promoção de saúde mental, prevenção e intervenção em crises.",
+      link: "/services/psicoterapia",
+      services: [
+        "Psicoterapia Clínica, Social e Organizacional",
+        "Avaliação Psicológica e Diagnóstico Funcional",
+        "Terapia Individual, Familiar e de Grupo",
+        "Intervenção em Crises e Trauma",
+      ]
+    },
+    {
+      icon: Building2,
+      title: "Gestão Empresarial & de Negócios",
+      description: "Consultoria estratégica e operativa para organizações, ONGs e PME, com foco em crescimento sustentável.",
+      link: "/services/gestao",
+      services: [
+        "Gestão Empresarial e Diagnóstico Organizacional",
+        "Planeamento Estratégico e Gestão de Mudança",
+        "Gestão de Negócios e Modelagem de Negócio",
+        "Gestão de Recursos Humanos e Clima Organizacional",
+      ]
+    },
+    {
+      icon: GraduationCap,
+      title: "Formação & Desenvolvimento",
+      description: "Programas de formação, capacitação e estágios supervisionados para profissionais e organizações.",
+      link: "/services/formacao",
+      services: [
+        "Cursos Técnicos, Psicológicos e Organizacionais",
+        "Programa de Primeiros Socorros Psicológicos (PSP)",
+        "Estágios Supervisionados (incl. PEP)",
+        "Monitoria e Avaliação de Projetos (M&E)",
+      ]
+    },
+    {
+      icon: UsersRound,
+      title: "Comunidade & Responsabilidade Social",
+      description: "Intervenções comunitárias, programas de responsabilidade social e apoio psicossocial em contextos vulneráveis.",
+      link: "/services/comunidade",
+      services: [
+        "Programas de Responsabilidade Social e Sustentabilidade",
+        "Outreach e Suporte Comunitário",
+        "Voluntariado Estruturado e Campanhas de Sensibilização",
+        "Pesquisa Aplicada em Políticas Sociais",
+      ]
+    }
+  ];
+
+  const comprehensiveServices = [
+    {
+      category: "Saúde Mental, Terapias e Reabilitação",
+      icon: Stethoscope,
+      services: [
+        "Psicologia Clínica, Social e Organizacional",
+        "Terapia da Fala",
+        "Terapia da Fala em Língua Gestual",
+        "Terapia Ocupacional",
+        "Apoio Psicológico em Crises",
+        "Programa de Primeiros Socorros Psicológicos (PSP)",
+      ]
+    },
+    {
+      category: "Gestão Empresarial, Negócios & Economia",
+      icon: TrendingUp,
+      services: [
+        "Gestão Empresarial",
+        "Gestão de Negócios",
+        "Consultoria em Negócios",
+        "Gestão e Administração de Recursos Humanos",
+        "Planeamento de Recursos Humanos",
+        "Gestão de Clima Organizacional",
+        "Análise Económica Aplicada",
+        "Economia de Recursos Humanos",
+      ]
+    },
+    {
+      category: "Financeiro, Fiscalidade & Jurídico",
+      icon: Wallet,
+      services: [
+        "Contabilidade e Auditoria",
+        "Fiscalidade Corporativa e Planeamento Fiscal",
+        "Jurisprudência Aplicada e Pareceres Jurídicos",
+        "Assessoria Empresarial e Institucional",
+        "Governação, Compliance e Gestão de Risco",
+      ]
+    },
+    {
+      category: "Tecnologia, Inovação & Dados",
+      icon: Laptop,
+      services: [
+        "Tecnologias de Informação (TI)",
+        "Desenvolvimento de Soluções Digitais para Saúde e Gestão",
+        "Gestão de Segurança de Dados e Privacidade",
+        "Plataformas de Gestão de Projetos e M&E",
+      ]
+    },
+    {
+      category: "Formação, P&D & Educação",
+      icon: Book,
+      services: [
+        "Cursos e Treinamentos Técnicos e Psicológicos",
+        "Programa de Primeiros Socorros Psicológicos (PSP)",
+        "Estágios Supervisionados em Psicologia, Terapia da Fala e Ocupacional",
+        "Programas de Estágio Profissional (PEP)",
+        "Monitoria e Avaliação de Projetos (M&E)",
+        "Pesquisa e Desenvolvimento (P&D) Aplicada",
+      ]
+    },
+    {
+      category: "Consultoria Estratégica & Organizacional",
+      icon: Target,
+      services: [
+        "Consultoria Psicológica Organizacional",
+        "Consultoria Científica e Técnica",
+        "Consultoria em Gestão de Projetos Sociais",
+        "Coaching Executivo e Individual",
+        "Mentoria e Reciclagem Profissional",
+      ]
+    },
+    {
+      category: "Administração, Operações & Projetos",
+      icon: FileText,
+      services: [
+        "Gestão Completa de Projetos Sociais e de Saúde",
+        "Administração e Operações Institucionais",
+        "Gestão de Processos e Documentação",
+        "Parcerias e Colaborações Estratégicas",
+      ]
+    },
+    {
+      category: "Responsabilidade Social & Comunidade",
+      icon: Heart,
+      services: [
+        "Programas de Sustentabilidade Organizacional",
+        "Responsabilidade Social e Impacto Social Medido",
+        "Outreach e Suporte Comunitário",
+        "Voluntariado Estruturado e Campanhas de Apoio",
+      ]
+    },
+    {
+      category: "Comunicação, Publicações & Mídia",
+      icon: Newspaper,
+      services: [
+        "Publicações Técnicas, Relatórios e Estudos",
+        "Produção de Conteúdos Educativos e de Sensibilização",
+        "Gestão de Comunicação Institucional e Mídia",
+      ]
   const { data: services = [], isLoading } = useServicesCatalog();
   const [modality, setModality] = useState<string>(ALL);
   const [audience, setAudience] = useState<string>(ALL);
@@ -168,6 +357,26 @@ const Services = () => {
       </Helmet>
 
       <Navbar />
+      
+      {/* Hero Section with Image */}
+      <section className="services-hero relative">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${consultoriaNegocios})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+          <div className="animate-slide-up">
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight">
+              Serviços <span className="text-gradient-accent">Tikvah</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
+              Ecossistema Estratégico de Apoio e Crescimento
+            </p>
+            <p className="text-lg text-white/80 max-w-3xl mx-auto mt-4">
+              A Tikvah integra saúde mental, gestão empresarial, recursos humanos, fiscalidade, tecnologia, responsabilidade social e comunidade num modelo de intervenção 360°, com foco em resultados mensuráveis e sustentáveis.
+            </p>
 
       {/* Sticky Executive Nav */}
       <div className="sticky top-16 z-40 bg-background/95 backdrop-blur border-b border-border">
@@ -190,6 +399,17 @@ const Services = () => {
         </div>
       </div>
 
+      {/* Main Services */}
+      <section className="py-20 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              Serviços <span className="text-gradient-primary">Principais</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Nossos eixos centrais de intervenção, integrados num modelo de apoio contínuo a pessoas, organizações e comunidades.
+            </p>
+          </div>
       {/* Hero */}
       <section className="relative bg-gradient-to-br from-primary/95 via-primary to-primary/80 text-white py-16 md:py-24 overflow-hidden">
         <motion.div
@@ -278,6 +498,31 @@ const Services = () => {
             <p className="text-center text-muted-foreground py-12">Nenhum serviço corresponde aos filtros.</p>
           )}
 
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <Award className="w-12 h-12 text-primary mx-auto mb-4" />
+                <h4 className="text-lg font-semibold text-foreground mb-3">Qualidade Certificada</h4>
+                <p className="text-sm text-muted-foreground">
+                  Serviços baseados em padrões internacionais de qualidade e avaliação de impacto.
+                </p>
+              </div>
+              
+              <div className="text-center">
+                <Target className="w-12 h-12 text-accent mx-auto mb-4" />
+                <h4 className="text-lg font-semibold text-foreground mb-3">Abordagem Personalizada</h4>
+                <p className="text-sm text-muted-foreground">
+                  Soluções adaptadas às necessidades específicas de cada cliente e contexto organizacional.
+                </p>
+              </div>
+              
+              <div className="text-center">
+                <Lightbulb className="w-12 h-12 text-primary mx-auto mb-4" />
+                <h4 className="text-lg font-semibold text-foreground mb-3">Inovação Contínua</h4>
+                <p className="text-sm text-muted-foreground">
+                  Constantemente atualizados com as últimas metodologias em psicologia, gestão, economia e tecnologia.
+                </p>
+              </div>
+            </div>
           {grouped.map(([code, items]) => {
             const meta = AREA_META[code];
             if (!meta) return null;
@@ -333,6 +578,10 @@ const Services = () => {
           )}
         </div>
       </section>
+
+      {/* Ecossistema Tikvah — modelo de intervenção 360° (documento institucional) */}
+      <TikvahEcosystem />
+
 
       {/* Sticky Footer Bar */}
       <div className="sticky bottom-0 z-40 bg-primary text-white border-t border-primary/30 shadow-lg">
