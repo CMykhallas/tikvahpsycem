@@ -243,7 +243,7 @@ serve(async (req) => {
       message: sanitizeString(appointmentData.message || "", 2000),
     };
 
-    // CORREÇÃO ALERTA #2: Proteção das URLs contra injeção de scripts maliciosos
+    // CORREÇÃO ALERTA #2: Proteção das URLs contra redirecionamentos com protocolos perigosos
     const successUrl = validateRedirectUrl(requestData.successUrl || `${TRUSTED_FALLBACK_ORIGIN}/checkout/success`);
     const cancelUrl = validateRedirectUrl(requestData.cancelUrl || `${TRUSTED_FALLBACK_ORIGIN}/checkout/cancel`);
 
@@ -270,7 +270,7 @@ serve(async (req) => {
       logStep("New customer created", { customerId });
     }
 
-    // Criar sessão de checkout com dados sanitizados e URLs validadas
+    // Criar sessão de checkout com dados e URLs seguras
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       line_items: [
@@ -303,16 +303,3 @@ serve(async (req) => {
     );
 
   } catch (error: any) {
-
-
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logStep("ERROR in create-checkout", { message: errorMessage });
-    return new Response(
-      JSON.stringify({ error: errorMessage }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
-      }
-    );
-  }
-});
