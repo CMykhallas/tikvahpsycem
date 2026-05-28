@@ -78,7 +78,6 @@ export const getBreadcrumbList = (
 });
 
 export const getBlogPosting = (post: BlogPostMeta) => {
-export const getBlogPosting = (post: BlogPostMeta) => {
   const url = `${SITE_ORIGIN}/blog/${post.slug}`;
   return {
     "@context": "https://schema.org",
