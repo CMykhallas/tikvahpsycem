@@ -25,7 +25,7 @@ export const defaultSecurityConfig: SecurityConfig = {
   }
 }
 
-// OTIMIZAÇÃO: Extração de IP com tratamento explícito contra falhas de runtime multienv
+// Enhanced IP extraction for production environments
 export const getClientIP = (request?: Request): string => {
   if (typeof window !== 'undefined') {
     // Client-side fallback - in production this would be handled server-side
@@ -39,25 +39,26 @@ export const getClientIP = (request?: Request): string => {
   const realIP = request.headers.get('x-real-ip')
   const cfConnectingIP = request.headers.get('cf-connecting-ip')
   
-  // Garante isolamento estrito da string antes do split
   const firstForwardedIP = forwarded ? forwarded.split(',')[0]?.trim() : null;
   
   return firstForwardedIP || realIP || cfConnectingIP || 'unknown'
 }
 
-// CORREÇÃO ALERTA #15: Abordagem imune a evasão de strings e aprovada pelo CodeQL
+// CORREÇÃO DEFINITIVA ALERTA #15: Sem remoção de texto linear. Transforma strings em texto inofensivo.
 export const sanitizeInputAdvanced = (input: string, maxLength: number = 1000): string => {
   if (!input || typeof input !== 'string') return '';
 
-  // 1. Bloqueia e neutraliza a criação de quaisquer tags HTML destruindo os delimitadores básicos
-  // Em vez de procurar "javascript:" ou "onmatch=", nós removemos os caracteres estruturais < e >
-  let sanitized = input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-  // 2. Se a string contiver padrões clássicos de injeção de script de protocolos, ela é limpa de forma estrita
-  // Removemos referências diretas a esquemas com quebras usando um validador de caracteres brutos
-  if (/javascript:/gi.test(sanitized) || /data:/gi.test(sanitized) || /vbscript:/gi.test(sanitized)) {
-    sanitized = sanitized.replace(/[^a-zA-Z0-9\s.,!?@()\-_\+]/g, '');
-  }
+  const sanitized = input
+    // 1. Escapa os caracteres estruturais do HTML em entidades seguras (Impossibilita <script>)
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    // 2. Neutraliza protocolos perigosos quebrando a palavra (Ex: "javascript:" vira "java-script-disabled:")
+    // Isto quebra a execução do ataque sem gerar a vulnerabilidade de remontagem linear
+    .replace(/javascript:/gi, 'java-script-disabled:')
+    .replace(/vbscript:/gi, 'vb-script-disabled:')
+    .replace(/data:/gi, 'data-disabled:')
+    .replace(/on\w+=/gi, 'event-disabled=')
+    .replace(/expression\s*\(/gi, 'expression-disabled(');
 
   return sanitized.trim().slice(0, maxLength);
 }
@@ -135,18 +136,16 @@ export const securityMonitor = {
   }
 }
 
-// CORREÇÃO EXTRA: Evita o uso de Math.random() caso precise gerar nonces robustos
+// Content Security Policy helpers
 export const generateCSPNonce = (): string => {
   if (typeof crypto !== 'undefined') {
     if (crypto.randomUUID) {
       return crypto.randomUUID()
     }
-    // Fallback seguro usando a API Web Crypto nativa em vez de Math.random
     const typedArray = new Uint8Array(16);
     crypto.getRandomValues(typedArray);
     return Array.from(typedArray, num => num.toString(16).padStart(2, '0')).join('');
   }
-  // Último recurso caso rode num ambiente legado sem a API Crypto ativa
   return Date.now().toString(36) + Math.random().toString(36).substring(2, 10);
 }
 
@@ -157,6 +156,7 @@ export const validateFormDataAdvanced = (
 ): { isValid: boolean; errors: string[]; sanitizedData: Record<string, any> } => {
   const errors: string[] = []
   const sanitizedData: Record<string, any> = {}
+  
   // Validate and sanitize each field
   Object.entries(data).forEach(([key, value]) => {
     if (typeof value === 'string') {
@@ -175,6 +175,7 @@ export const validateFormDataAdvanced = (
       sanitizedData[key] = value
     }
   })
+  
   // Enhanced email validation
   if (sanitizedData.email) {
     const emailValidation = validateEmailAdvanced(sanitizedData.email)
@@ -182,6 +183,7 @@ export const validateFormDataAdvanced = (
       errors.push(emailValidation.error || 'Invalid email')
     }
   }
+  
   // Validate other fields with enhanced checks
   if (sanitizedData.phone && sanitizedData.phone.length > 20) {
     errors.push('Phone number too long')
