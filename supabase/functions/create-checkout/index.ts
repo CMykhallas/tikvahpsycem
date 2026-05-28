@@ -1,14 +1,14 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@18.5.0";
+import { serve } from "https://deno.land";
+import Stripe from "https://esm.sh";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { validateOptionalJWT } from "../_shared/security.ts";
 import { buildCorsHeaders, isAllowedOrigin } from "../_shared/cors.ts";
 
-const TRUSTED_FALLBACK_ORIGIN = "https://tikvahpsycem.lovable.app";
+const TRUSTED_FALLBACK_ORIGIN = "https://lovable.app";
 
 const logStep = (step: string, details?: any) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
-  console.log(`[CREATE-CHECKOUT] ${step}${detailsStr}`);
+  console.log(`[CREATE-CHECKOUT] \${step}\${detailsStr}`);
 };
 
 // Validation utilities
@@ -51,7 +51,6 @@ const validateRedirectUrl = (urlStr: string): string => {
 
 // Rate limiting store
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
-
 const checkRateLimit = (identifier: string, maxRequests: number = 5, windowMs: number = 15 * 60 * 1000): boolean => {
   const now = Date.now();
   const record = rateLimitStore.get(identifier);
@@ -244,12 +243,11 @@ serve(async (req) => {
       message: sanitizeString(appointmentData.message || "", 2000),
     };
 
-    // CORREÇÃO ALERTA #2: Proteção estrita das URLs de redirecionamento vindas do cliente
+    // CORREÇÃO ALERTA #2: Proteção das URLs contra injeção de scripts maliciosos
     const successUrl = validateRedirectUrl(requestData.successUrl || `${TRUSTED_FALLBACK_ORIGIN}/checkout/success`);
     const cancelUrl = validateRedirectUrl(requestData.cancelUrl || `${TRUSTED_FALLBACK_ORIGIN}/checkout/cancel`);
 
     logStep("Input validation passed", { email: sanitizedData.email });
-
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
     logStep("Stripe client initialized");
 
@@ -305,6 +303,7 @@ serve(async (req) => {
     );
 
   } catch (error: any) {
+
 
     const errorMessage = error instanceof Error ? error.message : String(error);
     logStep("ERROR in create-checkout", { message: errorMessage });
