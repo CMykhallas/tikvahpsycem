@@ -78,21 +78,33 @@ export const getBreadcrumbList = (
 });
 
 export const getBlogPosting = (post: BlogPostMeta) => {
+export const getBlogPosting = (post: BlogPostMeta) => {
   const url = `${SITE_ORIGIN}/blog/${post.slug}`;
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    headline: post.title,
+    headline: post.title.length > 110 ? post.title.slice(0, 107) + "…" : post.title,
     description: post.description,
-    image: absUrl(post.image),
+    image: {
+      "@type": "ImageObject",
+      url: absUrl(post.image),
+      width: 1200,
+      height: 630,
+    },
     author: {
       "@type": "Organization",
       name: post.author ?? SITE_NAME,
+      url: `${SITE_ORIGIN}/`,
     },
     publisher: {
       "@type": "Organization",
       name: SITE_NAME,
-      logo: { "@type": "ImageObject", url: SITE_LOGO },
+      logo: {
+        "@type": "ImageObject",
+        url: SITE_LOGO,
+        width: 600,
+        height: 60,
+      },
     },
     datePublished: post.datePublished,
     dateModified: post.dateModified ?? post.datePublished,
@@ -102,6 +114,11 @@ export const getBlogPosting = (post: BlogPostMeta) => {
   };
 };
 
+
+// Strip HTML from FAQ answers/questions — Google accepts limited HTML but
+// inconsistent markup is the #1 cause of "Invalid HTML" warnings in Rich Results.
+const stripHtml = (s: string) => s.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+
 export const getFAQPage = (
   faqs: Array<{ question: string; answer: string }>,
 ) => ({
@@ -109,10 +126,11 @@ export const getFAQPage = (
   "@type": "FAQPage",
   mainEntity: faqs.map((f) => ({
     "@type": "Question",
-    name: f.question,
-    acceptedAnswer: { "@type": "Answer", text: f.answer },
+    name: stripHtml(f.question),
+    acceptedAnswer: { "@type": "Answer", text: stripHtml(f.answer) },
   })),
 });
+
 
 export interface ServiceInput {
   name: string;
