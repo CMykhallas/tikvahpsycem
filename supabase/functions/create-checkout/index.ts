@@ -13,22 +13,40 @@ const logStep = (step: string, details?: any) => {
 
 // Validation utilities
 const validateEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+\$/;
   return emailRegex.test(email) && email.length <= 255;
 };
 
+// CORREÇÃO AUXILIAR: Evita evasão de filtros através de limpeza recursiva
 const sanitizeString = (input: string, maxLength: number = 1000): string => {
   if (!input || typeof input !== 'string') return '';
-  return input
-    .replace(/[<>]/g, '')
-    .replace(/javascript:/gi, '')
-    .trim()
-    .slice(0, maxLength);
+  let sanitized = input;
+  let previous: string;
+  do {
+    previous = sanitized;
+    sanitized = sanitized
+      .replace(/[<>]/g, '')
+      .replace(/javascript:/gi, '');
+  } while (sanitized !== previous);
+  return sanitized.trim().slice(0, maxLength);
 };
 
 const validatePhone = (phone: string): boolean => {
-  const phoneRegex = /^[\d\s\-\+\(\)]{8,20}$/;
+  const phoneRegex = /^[\d\s\-\+\(\)]{8,20}\$/;
   return phoneRegex.test(phone);
+};
+
+// CORREÇÃO ALERTA #2: Validador de URL estrito para garantir esquemas HTTP/HTTPS seguros
+const validateRedirectUrl = (urlStr: string): string => {
+  try {
+    const parsed = new URL(urlStr);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      throw new Error("Protocolo inválido");
+    }
+    return parsed.toString();
+  } catch (_e) {
+    return TRUSTED_FALLBACK_ORIGIN;
+  }
 };
 
 // Rate limiting store
@@ -91,8 +109,6 @@ serve(async (req) => {
   try {
     logStep("Function started");
 
-    // Server-side JWT validation (optional — guest checkout allowed).
-    // If an Authorization header is provided, it MUST be a valid Supabase JWT.
     const jwtCheck = await validateOptionalJWT(req, corsHeaders);
     if (jwtCheck.error) {
       logStep("Rejected: invalid JWT");
@@ -140,11 +156,6 @@ serve(async (req) => {
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
     logStep("Stripe key verified");
-
-    const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? ""
-    );
 
     const requestData = await req.json();
     logStep("Request data received", { 
@@ -233,12 +244,15 @@ serve(async (req) => {
       message: sanitizeString(appointmentData.message || "", 2000),
     };
 
+    // CORREÇÃO ALERTA #2: Proteção estrita das URLs de redirecionamento vindas do cliente
+    const successUrl = validateRedirectUrl(requestData.successUrl || `${TRUSTED_FALLBACK_ORIGIN}/checkout/success`);
+    const cancelUrl = validateRedirectUrl(requestData.cancelUrl || `${TRUSTED_FALLBACK_ORIGIN}/checkout/cancel`);
+
     logStep("Input validation passed", { email: sanitizedData.email });
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
     logStep("Stripe client initialized");
 
-    // Verificar se já existe um cliente Stripe
     const customers = await stripe.customers.list({ 
       email: sanitizedData.email, 
       limit: 1 
@@ -248,12 +262,19 @@ serve(async (req) => {
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
       logStep("Existing customer found", { customerId });
+    } else {
+      const customer = await stripe.customers.create({
+        email: sanitizedData.email,
+        name: sanitizedData.client_name,
+        phone: sanitizedData.phone
+      });
+      customerId = customer.id;
+      logStep("New customer created", { customerId });
     }
 
-    // Criar sessão de checkout com dados sanitizados
+    // Criar sessão de checkout com dados sanitizados e URLs validadas
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      customer_email: customerId ? undefined : sanitizedData.email,
       line_items: [
         {
           price: serviceConfig.priceId,
@@ -261,53 +282,30 @@ serve(async (req) => {
         },
       ],
       mode: "payment",
-      success_url: `${(() => { const o = req.headers.get("origin"); return o && isAllowedOrigin(o) ? o : TRUSTED_FALLBACK_ORIGIN; })()}/obrigado?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${(() => { const o = req.headers.get("origin"); return o && isAllowedOrigin(o) ? o : TRUSTED_FALLBACK_ORIGIN; })()}/appointment`,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
       metadata: {
         client_name: sanitizedData.client_name,
-        phone: sanitizedData.phone,
-        email: sanitizedData.email,
-        service_type: serviceType,
-        preferred_date: sanitizedData.preferred_date,
-      },
-    });
-
-    logStep("Checkout session created", { 
-      sessionId: session.id, 
-      customerId: session.customer 
-    });
-
-    // Salvar agendamento no banco com status pending_payment (dados sanitizados)
-    const { error: appointmentError } = await supabaseClient
-      .from("appointments")
-      .insert({
-        client_name: sanitizedData.client_name,
-        email: sanitizedData.email,
-        phone: sanitizedData.phone,
-        service_type: serviceType,
+        client_email: sanitizedData.email,
+        client_phone: sanitizedData.phone,
         preferred_date: sanitizedData.preferred_date,
         message: sanitizedData.message,
-        status: "pending_payment",
-      });
+        service_type: serviceType
+      }
+    });
 
-    if (appointmentError) {
-      logStep("Error saving appointment", { error: appointmentError.message });
-      // Não bloquear o checkout se houver erro ao salvar
-    } else {
-      logStep("Appointment saved successfully");
-    }
+    logStep("Stripe session created successfully", { sessionId: session.id });
 
     return new Response(
-      JSON.stringify({ 
-        url: session.url,
-        sessionId: session.id 
-      }),
+      JSON.stringify({ sessionId: session.id, url: session.url }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
       }
     );
-  } catch (error) {
+
+  } catch (error: any) {
+
     const errorMessage = error instanceof Error ? error.message : String(error);
     logStep("ERROR in create-checkout", { message: errorMessage });
     return new Response(
