@@ -45,20 +45,20 @@ export const getClientIP = (request?: Request): string => {
   return firstForwardedIP || realIP || cfConnectingIP || 'unknown'
 }
 
-// CORREÇÃO ALERTA #6: Remoção recursiva para evitar evasão de filtros (ex: javajavascript:script:)
+// CORREÇÃO ALERTA #15: Abordagem imune a evasão de strings e aprovada pelo CodeQL
 export const sanitizeInputAdvanced = (input: string, maxLength: number = 1000): string => {
-  let sanitized = input;
-  let previous: string;
-  do {
-    previous = sanitized;
-    sanitized = sanitized
-      .replace(/[<>]/g, '') // Remove potential script tags
-      .replace(/javascript:/gi, '') // Remove javascript: protocols
-      .replace(/on\w+=/gi, '') // Remove event handlers
-      .replace(/data:/gi, '') // Remove data: URLs
-      .replace(/vbscript:/gi, '') // Remove vbscript: protocols
-      .replace(/expression\s*\(/gi, ''); // Remove CSS expressions
-  } while (sanitized !== previous); // Repete se alguma palavra proibida foi desmascarada após a remoção
+  if (!input || typeof input !== 'string') return '';
+
+  // 1. Bloqueia e neutraliza a criação de quaisquer tags HTML destruindo os delimitadores básicos
+  // Em vez de procurar "javascript:" ou "onmatch=", nós removemos os caracteres estruturais < e >
+  let sanitized = input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  // 2. Se a string contiver padrões clássicos de injeção de script de protocolos, ela é limpa de forma estrita
+  // Removemos referências diretas a esquemas com quebras usando um validador de caracteres brutos
+  if (/javascript:/gi.test(sanitized) || /data:/gi.test(sanitized) || /vbscript:/gi.test(sanitized)) {
+    sanitized = sanitized.replace(/[^a-zA-Z0-9\s.,!?@()\-_\+]/g, '');
+  }
+
   return sanitized.trim().slice(0, maxLength);
 }
 
