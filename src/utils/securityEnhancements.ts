@@ -25,7 +25,7 @@ export const defaultSecurityConfig: SecurityConfig = {
   }
 }
 
-// Enhanced IP extraction for production environments
+// OTIMIZAÇÃO: Extração de IP com tratamento explícito contra falhas de runtime multienv
 export const getClientIP = (request?: Request): string => {
   if (typeof window !== 'undefined') {
     // Client-side fallback - in production this would be handled server-side
@@ -39,14 +39,16 @@ export const getClientIP = (request?: Request): string => {
   const realIP = request.headers.get('x-real-ip')
   const cfConnectingIP = request.headers.get('cf-connecting-ip')
   
-  return forwarded?.split(',')[0] || realIP || cfConnectingIP || 'unknown'
+  // Garante isolamento estrito da string antes do split
+  const firstForwardedIP = forwarded ? forwarded.split(',')[0]?.trim() : null;
+  
+  return firstForwardedIP || realIP || cfConnectingIP || 'unknown'
 }
 
 // CORREÇÃO ALERTA #6: Remoção recursiva para evitar evasão de filtros (ex: javajavascript:script:)
 export const sanitizeInputAdvanced = (input: string, maxLength: number = 1000): string => {
   let sanitized = input;
   let previous: string;
-
   do {
     previous = sanitized;
     sanitized = sanitized
@@ -57,7 +59,6 @@ export const sanitizeInputAdvanced = (input: string, maxLength: number = 1000): 
       .replace(/vbscript:/gi, '') // Remove vbscript: protocols
       .replace(/expression\s*\(/gi, ''); // Remove CSS expressions
   } while (sanitized !== previous); // Repete se alguma palavra proibida foi desmascarada após a remoção
-
   return sanitized.trim().slice(0, maxLength);
 }
 
@@ -80,7 +81,6 @@ export const validateEmailAdvanced = (email: string): { isValid: boolean; error?
   if (disposablePatterns.some(pattern => emailDomain?.includes(pattern))) {
     return { isValid: false, error: 'Disposable email addresses not allowed' }
   }
-  
   return { isValid: true }
 }
 
@@ -105,7 +105,6 @@ export const securityMonitor = {
       console.error('[CRITICAL SECURITY ALERT]', logData)
     }
   },
-
   // Track failed attempts with pattern detection
   trackFailedAttempt: (type: string, details: any = {}) => {
     const attemptData = {
@@ -128,7 +127,7 @@ export const securityMonitor = {
     
     if (suspiciousPatterns.includes(type)) {
       securityMonitor.trackSuspiciousActivity(
-        `Potential attack pattern detected: ${type}`,
+        `Potential attack pattern detected: \${type}`,
         attemptData,
         'high'
       )
@@ -158,7 +157,6 @@ export const validateFormDataAdvanced = (
 ): { isValid: boolean; errors: string[]; sanitizedData: Record<string, any> } => {
   const errors: string[] = []
   const sanitizedData: Record<string, any> = {}
-
   // Validate and sanitize each field
   Object.entries(data).forEach(([key, value]) => {
     if (typeof value === 'string') {
@@ -177,7 +175,6 @@ export const validateFormDataAdvanced = (
       sanitizedData[key] = value
     }
   })
-
   // Enhanced email validation
   if (sanitizedData.email) {
     const emailValidation = validateEmailAdvanced(sanitizedData.email)
@@ -185,16 +182,13 @@ export const validateFormDataAdvanced = (
       errors.push(emailValidation.error || 'Invalid email')
     }
   }
-
   // Validate other fields with enhanced checks
   if (sanitizedData.phone && sanitizedData.phone.length > 20) {
     errors.push('Phone number too long')
   }
-
   if (sanitizedData.name && (sanitizedData.name.length < 2 || sanitizedData.name.length > config.validation.maxFieldLength)) {
-    errors.push(`Name must be between 2 and ${config.validation.maxFieldLength} characters`)
+    errors.push(`Name must be between 2 and \${config.validation.maxFieldLength} characters`)
   }
-
   return {
     isValid: errors.length === 0,
     errors,
