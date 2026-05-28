@@ -1,4 +1,3 @@
-
 // Enhanced security utilities for production environments
 export interface SecurityConfig {
   rateLimits: {
@@ -43,17 +42,23 @@ export const getClientIP = (request?: Request): string => {
   return forwarded?.split(',')[0] || realIP || cfConnectingIP || 'unknown'
 }
 
-// Enhanced input sanitization with additional security checks
+// CORREÇÃO ALERTA #6: Remoção recursiva para evitar evasão de filtros (ex: javajavascript:script:)
 export const sanitizeInputAdvanced = (input: string, maxLength: number = 1000): string => {
-  return input
-    .replace(/[<>]/g, '') // Remove potential script tags
-    .replace(/javascript:/gi, '') // Remove javascript: protocols
-    .replace(/on\w+=/gi, '') // Remove event handlers
-    .replace(/data:/gi, '') // Remove data: URLs
-    .replace(/vbscript:/gi, '') // Remove vbscript: protocols
-    .replace(/expression\s*\(/gi, '') // Remove CSS expressions
-    .trim()
-    .slice(0, maxLength)
+  let sanitized = input;
+  let previous: string;
+
+  do {
+    previous = sanitized;
+    sanitized = sanitized
+      .replace(/[<>]/g, '') // Remove potential script tags
+      .replace(/javascript:/gi, '') // Remove javascript: protocols
+      .replace(/on\w+=/gi, '') // Remove event handlers
+      .replace(/data:/gi, '') // Remove data: URLs
+      .replace(/vbscript:/gi, '') // Remove vbscript: protocols
+      .replace(/expression\s*\(/gi, ''); // Remove CSS expressions
+  } while (sanitized !== previous); // Repete se alguma palavra proibida foi desmascarada após a remoção
+
+  return sanitized.trim().slice(0, maxLength);
 }
 
 // Enhanced email validation with additional security checks
@@ -131,13 +136,19 @@ export const securityMonitor = {
   }
 }
 
-// Content Security Policy helpers
+// CORREÇÃO EXTRA: Evita o uso de Math.random() caso precise gerar nonces robustos
 export const generateCSPNonce = (): string => {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return crypto.randomUUID()
+  if (typeof crypto !== 'undefined') {
+    if (crypto.randomUUID) {
+      return crypto.randomUUID()
+    }
+    // Fallback seguro usando a API Web Crypto nativa em vez de Math.random
+    const typedArray = new Uint8Array(16);
+    crypto.getRandomValues(typedArray);
+    return Array.from(typedArray, num => num.toString(16).padStart(2, '0')).join('');
   }
-  // Fallback for environments without crypto.randomUUID
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+  // Último recurso caso rode num ambiente legado sem a API Crypto ativa
+  return Date.now().toString(36) + Math.random().toString(36).substring(2, 10);
 }
 
 // Form validation with enhanced security checks
