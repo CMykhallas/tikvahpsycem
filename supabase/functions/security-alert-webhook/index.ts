@@ -23,6 +23,11 @@ interface SecurityIncident {
   details?: any;
 }
 
+const escapeHtml = (s: unknown): string =>
+  String(s ?? '').replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!)
+  );
+
 const formatIncidentDetailsHtml = (incident: SecurityIncident): string => {
   const severityColor = incident.severity === 'critical' ? '#dc2626' : '#f97316';
   const severityLabel = incident.severity === 'critical' ? '🔴 CRÍTICO' : '🟠 ALTO';
@@ -58,38 +63,38 @@ const formatIncidentDetailsHtml = (incident: SecurityIncident): string => {
           </div>
           <div class="field">
             <div class="field-label">Tipo de Incidente</div>
-            <div class="field-value">${incident.incident_type}</div>
+            <div class="field-value">${escapeHtml(incident.incident_type)}</div>
           </div>
           <div class="field">
             <div class="field-label">Endereço IP</div>
-            <div class="field-value">${incident.ip_address}</div>
+            <div class="field-value">${escapeHtml(incident.ip_address)}</div>
           </div>
           ${incident.endpoint ? `
           <div class="field">
             <div class="field-label">Endpoint</div>
-            <div class="field-value">${incident.endpoint}</div>
+            <div class="field-value">${escapeHtml(incident.endpoint)}</div>
           </div>
           ` : ''}
           ${incident.user_agent ? `
           <div class="field">
             <div class="field-label">User Agent</div>
-            <div class="field-value">${incident.user_agent}</div>
+            <div class="field-value">${escapeHtml(incident.user_agent)}</div>
           </div>
           ` : ''}
           <div class="field">
             <div class="field-label">Data/Hora</div>
-            <div class="field-value">${new Date(incident.created_at).toLocaleString('pt-PT', { timeZone: 'Africa/Maputo' })}</div>
+            <div class="field-value">${escapeHtml(new Date(incident.created_at).toLocaleString('pt-PT', { timeZone: 'Africa/Maputo' }))}</div>
           </div>
           ${incident.details ? `
           <div class="field">
             <div class="field-label">Detalhes Técnicos</div>
-            <div class="details-box">${JSON.stringify(incident.details, null, 2)}</div>
+            <div class="details-box">${escapeHtml(JSON.stringify(incident.details, null, 2))}</div>
           </div>
           ` : ''}
         </div>
         <div class="footer">
           <p>Este é um alerta automático do sistema de segurança Tikvah Psicologia.</p>
-          <p>ID do Incidente: ${incident.id}</p>
+          <p>ID do Incidente: ${escapeHtml(incident.id)}</p>
         </div>
       </div>
     </body>
@@ -100,6 +105,15 @@ const formatIncidentDetailsHtml = (incident: SecurityIncident): string => {
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  // Caller authentication: only the DB trigger (using service_role key) may invoke this.
+  const expectedAuth = `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''}`;
+  if (req.headers.get('authorization') !== expectedAuth) {
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized' }),
+      { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
   }
 
   const supabase = createClient(
