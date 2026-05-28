@@ -84,10 +84,17 @@ async function verifyWebhookSignature(payload: string, signature: string, secret
 
 function sanitizeInput(input: unknown): string {
   if (typeof input === 'string') {
-    return input
+    let sanitized = input
       .replace(/[<>]/g, '')
       .replace(/javascript:/gi, '')
-      .replace(/on\w+=/gi, '')
+
+    let previous: string
+    do {
+      previous = sanitized
+      sanitized = sanitized.replace(/on\w+=/gi, '')
+    } while (sanitized !== previous)
+
+    return sanitized
       .trim()
       .slice(0, 500)
   }
@@ -154,30 +161,33 @@ serve(async (req) => {
       throw new Error(errorMessage)
     }
 
-    // Enhanced webhook signature verification
+    // Enhanced webhook signature verification - MANDATORY (fail closed)
     const signature = req.headers.get('x-google-ads-signature') || ''
     const webhookSecret = Deno.env.get('GOOGLE_ADS_WEBHOOK_SECRET') || ''
-    
-    // Skip signature verification if no secret is configured (development mode)
-    if (webhookSecret) {
-      const isValidSignature = await verifyWebhookSignature(body, signature, webhookSecret)
-      if (!isValidSignature) {
-        responseStatus = 401
-        errorMessage = 'Invalid webhook signature'
-        logStep('Invalid signature', { ip: clientIP })
-        
-        // Log security incident
-        await supabase.from('security_incidents').insert({
-          incident_type: 'INVALID_WEBHOOK_SIGNATURE',
-          severity: 'high',
-          ip_address: clientIP,
-          user_agent: req.headers.get('user-agent') || '',
-          endpoint: '/google-ads-webhook',
-          details: { signature_present: !!signature }
-        })
-        
-        throw new Error(errorMessage)
-      }
+
+    if (!webhookSecret) {
+      console.error('GOOGLE_ADS_WEBHOOK_SECRET not configured — refusing all requests')
+      responseStatus = 503
+      errorMessage = 'Webhook not configured'
+      throw new Error(errorMessage)
+    }
+
+    const isValidSignature = await verifyWebhookSignature(body, signature, webhookSecret)
+    if (!isValidSignature) {
+      responseStatus = 401
+      errorMessage = 'Invalid webhook signature'
+      logStep('Invalid signature', { ip: clientIP })
+
+      await supabase.from('security_incidents').insert({
+        incident_type: 'INVALID_WEBHOOK_SIGNATURE',
+        severity: 'high',
+        ip_address: clientIP,
+        user_agent: req.headers.get('user-agent') || '',
+        endpoint: '/google-ads-webhook',
+        details: { signature_present: !!signature }
+      })
+
+      throw new Error(errorMessage)
     }
 
     // Sanitize and validate lead data

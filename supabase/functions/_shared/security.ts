@@ -448,7 +448,7 @@ export class InputValidator {
   private logger: SecurityLogger;
   
   private static readonly XSS_PATTERNS = [
-    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    /<script\b[^<]*(?:(?!<\/script\b[^>]*>)<[^<]*)*<\/script\b[^>]*>/gi,
     /javascript:/gi,
     /on\w+\s*=/gi,
     /<iframe/gi,
