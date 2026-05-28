@@ -98,10 +98,14 @@ export const Hero = () => {
             <div className="relative max-w-lg mx-auto">
               {/* Main Image - African Business Meeting */}
               <div className="relative z-20">
-                <LazyImage
+                <img
                   src={africanBusinessMeeting}
                   alt="Reunião profissional de negócios em Maputo com executivos africanos discutindo estratégias em ambiente corporativo moderno"
                   className="w-full h-96 object-cover rounded-3xl shadow-2xl"
+                  width={800}
+                  height={600}
+                  fetchPriority="high"
+                  decoding="async"
                 />
               </div>
 

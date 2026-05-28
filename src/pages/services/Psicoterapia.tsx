@@ -1,10 +1,21 @@
 
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Heart, Users, Home, Brain } from "lucide-react";
+import { getService } from "@/lib/seo/jsonld";
+
+const PSICOTERAPIA_SCHEMA = getService({
+  name: "Psicoterapia em Maputo",
+  description:
+    "Atendimento psicoterapêutico individual, de casal e familiar com abordagens baseadas em evidência (TCC, ACT, MBSR) em Maputo, presencial e online.",
+  path: "/services/psicoterapia",
+  serviceType: "Psychotherapy",
+});
 
 const Psicoterapia = () => {
   const services = [
@@ -36,7 +47,14 @@ const Psicoterapia = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEOHead
+        title="Psicoterapia em Maputo | Tikvah Psycem"
+        description="Psicoterapia individual, de casal e familiar com abordagens baseadas em evidência. Atendimento presencial em Maputo e online."
+        canonicalUrl="https://tikvahpsycem.lovable.app/services/psicoterapia"
+        structuredData={PSICOTERAPIA_SCHEMA}
+      />
       <Navbar />
+      <BreadcrumbNavigation />
       
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
