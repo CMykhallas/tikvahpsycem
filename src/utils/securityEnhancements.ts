@@ -1,4 +1,3 @@
-
 // Enhanced security utilities for production environments
 export interface SecurityConfig {
   rateLimits: {
@@ -40,20 +39,28 @@ export const getClientIP = (request?: Request): string => {
   const realIP = request.headers.get('x-real-ip')
   const cfConnectingIP = request.headers.get('cf-connecting-ip')
   
-  return forwarded?.split(',')[0] || realIP || cfConnectingIP || 'unknown'
+  const firstForwardedIP = forwarded ? forwarded.split(',')[0]?.trim() : null;
+  
+  return firstForwardedIP || realIP || cfConnectingIP || 'unknown'
 }
 
-// Enhanced input sanitization with additional security checks
+// CORREÇÃO DEFINITIVA ALERTA #15: Sem remoção de texto linear. Transforma strings em texto inofensivo.
 export const sanitizeInputAdvanced = (input: string, maxLength: number = 1000): string => {
-  return input
-    .replace(/[<>]/g, '') // Remove potential script tags
-    .replace(/javascript:/gi, '') // Remove javascript: protocols
-    .replace(/on\w+=/gi, '') // Remove event handlers
-    .replace(/data:/gi, '') // Remove data: URLs
-    .replace(/vbscript:/gi, '') // Remove vbscript: protocols
-    .replace(/expression\s*\(/gi, '') // Remove CSS expressions
-    .trim()
-    .slice(0, maxLength)
+  if (!input || typeof input !== 'string') return '';
+
+  const sanitized = input
+    // 1. Escapa os caracteres estruturais do HTML em entidades seguras (Impossibilita <script>)
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    // 2. Neutraliza protocolos perigosos quebrando a palavra (Ex: "javascript:" vira "java-script-disabled:")
+    // Isto quebra a execução do ataque sem gerar a vulnerabilidade de remontagem linear
+    .replace(/javascript:/gi, 'java-script-disabled:')
+    .replace(/vbscript:/gi, 'vb-script-disabled:')
+    .replace(/data:/gi, 'data-disabled:')
+    .replace(/on\w+=/gi, 'event-disabled=')
+    .replace(/expression\s*\(/gi, 'expression-disabled(');
+
+  return sanitized.trim().slice(0, maxLength);
 }
 
 // Enhanced email validation with additional security checks
@@ -75,7 +82,6 @@ export const validateEmailAdvanced = (email: string): { isValid: boolean; error?
   if (disposablePatterns.some(pattern => emailDomain?.includes(pattern))) {
     return { isValid: false, error: 'Disposable email addresses not allowed' }
   }
-  
   return { isValid: true }
 }
 
@@ -100,7 +106,6 @@ export const securityMonitor = {
       console.error('[CRITICAL SECURITY ALERT]', logData)
     }
   },
-
   // Track failed attempts with pattern detection
   trackFailedAttempt: (type: string, details: any = {}) => {
     const attemptData = {
@@ -123,7 +128,7 @@ export const securityMonitor = {
     
     if (suspiciousPatterns.includes(type)) {
       securityMonitor.trackSuspiciousActivity(
-        `Potential attack pattern detected: ${type}`,
+        `Potential attack pattern detected: \${type}`,
         attemptData,
         'high'
       )
@@ -133,11 +138,15 @@ export const securityMonitor = {
 
 // Content Security Policy helpers
 export const generateCSPNonce = (): string => {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return crypto.randomUUID()
+  if (typeof crypto !== 'undefined') {
+    if (crypto.randomUUID) {
+      return crypto.randomUUID()
+    }
+    const typedArray = new Uint8Array(16);
+    crypto.getRandomValues(typedArray);
+    return Array.from(typedArray, num => num.toString(16).padStart(2, '0')).join('');
   }
-  // Fallback for environments without crypto.randomUUID
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+  return Date.now().toString(36) + Math.random().toString(36).substring(2, 10);
 }
 
 // Form validation with enhanced security checks
@@ -147,7 +156,7 @@ export const validateFormDataAdvanced = (
 ): { isValid: boolean; errors: string[]; sanitizedData: Record<string, any> } => {
   const errors: string[] = []
   const sanitizedData: Record<string, any> = {}
-
+  
   // Validate and sanitize each field
   Object.entries(data).forEach(([key, value]) => {
     if (typeof value === 'string') {
@@ -165,8 +174,8 @@ export const validateFormDataAdvanced = (
     } else {
       sanitizedData[key] = value
     }
-  })
-
+  }); // <--- Fecho correto do forEach
+  
   // Enhanced email validation
   if (sanitizedData.email) {
     const emailValidation = validateEmailAdvanced(sanitizedData.email)
@@ -174,19 +183,18 @@ export const validateFormDataAdvanced = (
       errors.push(emailValidation.error || 'Invalid email')
     }
   }
-
+  
   // Validate other fields with enhanced checks
   if (sanitizedData.phone && sanitizedData.phone.length > 20) {
     errors.push('Phone number too long')
   }
-
   if (sanitizedData.name && (sanitizedData.name.length < 2 || sanitizedData.name.length > config.validation.maxFieldLength)) {
-    errors.push(`Name must be between 2 and ${config.validation.maxFieldLength} characters`)
+    errors.push(`Name must be between 2 and \${config.validation.maxFieldLength} characters`)
   }
-
+  
   return {
     isValid: errors.length === 0,
     errors,
     sanitizedData
   }
-}
+} // <--- Fecho correto da função

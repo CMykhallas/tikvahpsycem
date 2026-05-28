@@ -2,14 +2,29 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, User, Clock, BookOpen, Shield, Users } from "lucide-react";
 
+import { getBlogPost } from "@/data/blog-posts";
+import { getBlogPosting } from "@/lib/seo/jsonld";
+
 const TraumaCulturalResiliencia = () => {
+  const post = getBlogPost("trauma-cultural-resiliencia-pos-colonial")!;
+  const url = `https://tikvahpsycem.lovable.app/blog/${post.slug}`;
+  const structuredData = getBlogPosting(post);
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEOHead
+        title="Trauma Cultural e Resiliência Pós-Colonial | Blog Tikvah"
+        description="Trauma cultural, resiliência pós-colonial e estratégias terapêuticas contextualizadas para Moçambique."
+        canonicalUrl={url}
+        ogType="article"
+        structuredData={structuredData}
+      />
       <Navbar />
       <BreadcrumbNavigation />
+      
       
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <header className="mb-12">
