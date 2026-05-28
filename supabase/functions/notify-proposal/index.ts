@@ -177,7 +177,8 @@ serve(async (req) => {
       },
     });
 
-    return new Response(JSON.stringify({ ok: true, sent, protocol, priority, cc, wa_link: waLink }), {
+    // Do NOT echo PII (wa.me link with client name/phone/email) in the response — keep it server-side only (audit trail).
+    return new Response(JSON.stringify({ ok: true, sent, protocol, priority }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e: any) {

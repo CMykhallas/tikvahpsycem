@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, User, Calendar } from "lucide-react";
@@ -100,6 +101,11 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEOHead
+        title="Blog Tikvah — Psicologia, Saúde Mental e Organizações"
+        description="Artigos científicos sobre psicoterapia, MBSR, ACT, trauma cultural e psicologia organizacional, escritos por especialistas em Maputo."
+        canonicalUrl="https://tikvahpsycem.lovable.app/blog"
+      />
       <Navbar />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
