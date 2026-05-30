@@ -1,0 +1,16 @@
+node_modules/
+.next/
+out/
+dist/
+build/
+coverage/
+.vercel/
+.firebase/
+docs/
+tests/
+public/
+*.log
+*.lcov
+.env
+.env.local
+.env.*.local
