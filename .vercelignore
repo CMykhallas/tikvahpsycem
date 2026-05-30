@@ -15,9 +15,13 @@ yarn-debug.log*
 yarn-error.log*
 .eslintcache
 
+<<<<<<< HEAD
 # Novo: Ignorar pasta de documentação corporativa e normas ISO
 docs/
 
 # Ignorar pastas de documentação geral ou testes locais se existirem
+=======
+# Ignorar pastas de documentação ou testes locais se existirem
+>>>>>>> a861c0b3b9ddfa91d07dcbf633b72e20d3991424
 README.md
 tests/

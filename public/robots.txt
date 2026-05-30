@@ -21,4 +21,8 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+<<<<<<< HEAD
 Sitemap: https://tikvahpsycem.lovable.app/sitemap.xml
+=======
+Sitemap: https://tikvahpsycem.lovable.app/sitemap.xml
+>>>>>>> a861c0b3b9ddfa91d07dcbf633b72e20d3991424

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+<<<<<<< HEAD
     "target": "ES2022",
     "lib": ["ES2023"],
     "module": "ESNext",
@@ -13,6 +14,18 @@
     "noEmit": true,
 
     /* Linting */
+=======
+    "composite": true,
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+>>>>>>> a861c0b3b9ddfa91d07dcbf633b72e20d3991424
     "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
