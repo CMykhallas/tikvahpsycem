@@ -1,3 +1,4 @@
+```yaml name=.github/workflows/security-audit.yml url=https://github.com/CMykhallas/tikvahpsycem/blob/774f03fd9cc2ba4900eda43f6a774738f68c3d0c/.github/workflows/security-audit.yml
 name: Security Audit & CI
 
 on:
@@ -70,3 +71,4 @@ jobs:
             MPESA_SHORTCODE="${{ secrets.MPESA_SHORTCODE }}"
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+```
