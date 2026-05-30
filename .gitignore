@@ -1,20 +1,12 @@
-# Dependências
+# Dependências e Pacotes
 node_modules/
-
-# Build outputs
-.next/
-out/
 dist/
+dist-ssr/
 build/
+out/
+.next/
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-*.log
-
-# Environment files
+# Ficheiros de Configuração Local e Variáveis de Ambiente
 .env
 .env.local
 .env.development.local
@@ -22,37 +14,47 @@ pnpm-debug.log*
 .env.production.local
 .env.*.local
 
-# IDE / editor
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
-
-# Vercel
+# Infraestruturas e Configurações de Nuvem Locais
 .vercel/
-
-# Firebase / local cloud config
 .firebase/
 firebase.json
 
-# Coverage / test artifacts
-coverage/
-tests/
-*.lcov
-
-# Cache
+# Cache do Sistema e Ferramentas de Análise
 .eslintcache
 .parcel-cache/
 .turbo/
 
-# Documentation local / generated
+# Logs de Erro e Depuração
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Artefactos de Teste e Cobertura de Código
+coverage/
+tests/
+*.lcov
+
+# Documentação Corporativa e Normas ISO (Mantida no GitHub, ignorada na Vercel se necessário)
 docs/
 
-# Temporary files
+# Ficheiros Temporários e do Sistema Operativo
 tmp/
 temp/
 *.tmp
-
-# OS files
+.DS_Store
+Thumbs.db
 *.swp
 *.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Configurações de Editores (Isola definições do VS Code/Idea)
+.vscode/
+!.vscode/extensions.json
+.idea/
