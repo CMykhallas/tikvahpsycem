@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [ main, master ]
 
-# Define permissões estritas de leitura global para segurança do repositório
 permissions:
   contents: read
 
@@ -28,7 +27,6 @@ jobs:
         run: npm ci
 
       - name: Auditoria de Vulnerabilidades (npm audit)
-        # Filtra dependências e avisa sem quebrar o pipeline por pacotes externos
         run: npm audit --audit-level=high || true
 
       - name: Instalar Supabase CLI
@@ -37,14 +35,11 @@ jobs:
           version: latest
 
       - name: Verificar sintaxe das Edge Functions (Deno Check)
-        run: |
-          # Passa por todas as funções e valida se compilam e cumprem as regras do linter
-          supabase functions info || true
+        run: supabase functions info || true
 
   deploy-functions:
     runs-on: ubuntu-latest
     needs: security-scan
-    # Só executa o deploy se o push for feito na branch principal e houver tokens configurados
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
@@ -61,10 +56,10 @@ jobs:
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
-      - name: Produção: Setar Secrets
+      - name: "Produção: Setar Secrets"
         run: |
-          supabase secrets set --project-ref ${{ secrets.SUPABASE_PROJECT_ID }} \
-          STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }} \
-          MPESA_SHORTCODE=${{ secrets.MPESA_SHORTCODE }}
+          supabase secrets set --project-ref "${{ secrets.SUPABASE_PROJECT_ID }}" \
+            STRIPE_SECRET_KEY="${{ secrets.STRIPE_SECRET_KEY }}" \
+            MPESA_SHORTCODE="${{ secrets.MPESA_SHORTCODE }}"
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
