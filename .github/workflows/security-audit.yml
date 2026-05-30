@@ -2,87 +2,106 @@ name: Security Audit & CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main]
   pull_request:
-    branches: [ main, master ]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
 
 env:
+  CI: true
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
-# CORREÇÃO CRÍTICA: Fornece permissões explícitas de escrita para evitar falhas de runtime e integração
-permissions:
-  contents: write
-  packages: write
-  statuses: write
-  security-events: write
 
 jobs:
   security-scan:
+    name: Security Scan
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
-          cache: 'npm'
+          node-version: "24"
+          cache: "npm"
 
       - name: Instalar dependências
-        run: |
-          npm ci --legacy-peer-deps || npm install --legacy-peer-deps || true
+        run: npm ci --legacy-peer-deps
 
-      - name: Auditoria de Vulnerabilidades (npm audit)
-        run: npm audit --audit-level=high || true
+      - name: Auditoria de vulnerabilidades
+        run: npm audit --audit-level=high
 
       - name: Instalar Supabase CLI
         uses: supabase/setup-cli@v1
         with:
-          version: '1.215.0'
+          version: "1.215.0"
 
-      - name: Verificar sintaxe das Edge Functions (Deno Check)
-        run: supabase functions info || true
-        continue-on-error: true
+      - name: Validar diretório das Edge Functions
+        run: |
+          if [ -d "supabase/functions" ]; then
+            supabase functions list
+          else
+            echo "supabase/functions não encontrado; a etapa foi ignorada."
+          fi
 
   deploy-functions:
+    name: Deploy Supabase Functions
     runs-on: ubuntu-latest
     needs: security-scan
-    # O deploy só avança se o push for na branch correta e as chaves essenciais existirem
-    if: |
-      github.ref == 'refs/heads/main' && 
-      github.event_name == 'push' && 
-      secrets.SUPABASE_ACCESS_TOKEN != '' && 
-      secrets.SUPABASE_PROJECT_ID != ''
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: production
+
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: "24"
+          cache: "npm"
 
       - name: Instalar Supabase CLI
         uses: supabase/setup-cli@v1
         with:
-          version: '1.215.0'
+          version: "1.215.0"
 
-      - name: Deploy de todas as Edge Functions
-        run: supabase functions deploy --project-ref "${{ secrets.SUPABASE_PROJECT_ID }}" || echo "Aviso de Deploy falhou. Verifique as credenciais do Supabase."
+      - name: Validar secrets obrigatórios
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-
-      - name: "Produção: Setar Secrets"
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
         run: |
-          if [ -n "${{ secrets.STRIPE_SECRET_KEY }}" ] && [ -n "${{ secrets.MPESA_SHORTCODE }}" ]; then
-            supabase secrets set --project-ref "${{ secrets.SUPABASE_PROJECT_ID }}" \
-              STRIPE_SECRET_KEY="${{ secrets.STRIPE_SECRET_KEY }}" \
-              MPESA_SHORTCODE="${{ secrets.MPESA_SHORTCODE }}" || echo "Erro ao injetar segredos."
-          else
-            echo "Segredos de produção omitidos ou não configurados no GitHub Actions."
-          fi
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test -n "$SUPABASE_PROJECT_ID"
+
+      - name: Deploy de Edge Functions
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          supabase functions deploy --project-ref "${{ secrets.SUPABASE_PROJECT_ID }}" --no-verify-jwt
+
+      - name: Sincronizar secrets de produção
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          MPESA_SHORTCODE: ${{ secrets.MPESA_SHORTCODE }}
+        run: |
+          if [ -n "$STRIPE_SECRET_KEY" ]; then
+            printf '%s' "$STRIPE_SECRET_KEY" | supabase secrets set --project-ref "$SUPABASE_PROJECT_ID" STRIPE_SECRET_KEY=-
+          fi
+          if [ -n "$MPESA_SHORTCODE" ]; then
+            printf '%s' "$MPESA_SHORTCODE" | supabase secrets set --project-ref "$SUPABASE_PROJECT_ID" MPESA_SHORTCODE=-
+          fi
