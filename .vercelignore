@@ -1,0 +1,23 @@
+# Ignorar o script de testes do Deno para não quebrar o build da Vercel
+test-checkout-payments-security.js
+
+# Ignorar pastas de configuração local e ambientes virtuais
+.env
+.env.local
+.env.*.local
+.firebase/
+firebase.json
+
+# Ignorar logs de erro e cache de pacotes
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
+
+# Novo: Ignorar pasta de documentação corporativa e normas ISO
+docs/
+
+# Ignorar pastas de documentação geral ou testes locais se existirem
+README.md
+tests/

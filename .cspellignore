@@ -1,0 +1,17 @@
+# cspell configuration files
+.cspellrc.json
+.cspellignore
+
+# Lock files
+*.lock
+bun.lockb
+
+# Build outputs
+dist/
+build/
+node_modules/
+.next/
+
+# Temporary files
+*.tmp
+*.temp

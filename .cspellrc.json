@@ -1,0 +1,14 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "useDefaultIgnoreFiles": true,
+  "ignorePaths": [
+    ".cspellrc.json"
+  ],
+  "overrides": [
+    {
+      "filename": "*.ps1",
+      "ignoreRegExpList": ["\\b\\w*[áéíóúãõêôàç]\\w*\\b"]
+    }
+  ]
+}

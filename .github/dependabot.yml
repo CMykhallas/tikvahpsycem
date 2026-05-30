@@ -1,0 +1,12 @@
+# Configuração para atualizar package.json e manter o projeto seguro em 2026
+version: 2
+updates:
+  - package-ecosystem: "npm" # Define que o Dependabot deve olhar para o npm/Node.js
+    directory: "/" # Local onde está o seu package.json (raiz do projeto)
+    schedule:
+      interval: "daily" # Verifica atualizações todos os dias (recomendado para segurança)
+    open-pull-requests-limit: 10 # Limite de PRs abertos simultaneamente
+    groups:
+      dependencies:
+        patterns:
+          - "*" # Agrupa todas as atualizações em um único PR para facilitar o merge

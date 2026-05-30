@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Edge Functions - Tikvah</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .tests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .test-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .test-card h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95em;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e0e0e0;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .result-content {
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.success {
+            background: #28a745;
+        }
+
+        .status-indicator.error {
+            background: #dc3545;
+        }
+
+        .status-indicator.info {
+            background: #17a2b8;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .summary {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+
+        .summary h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .test-list {
+            list-style: none;
+        }
+
+        .test-list li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+
+        .test-list li.passed {
+            border-left-color: #28a745;
+        }
+
+        .test-list li.failed {
+            border-left-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧪 Teste Edge Functions</h1>
+            <p>Validação de Formulário de Contacto e Checkout</p>
+        </header>
+
+        <div class="tests-grid">
+            <!-- TESTE 1: FORMULÁRIO DE CONTACTO -->
+            <div class="test-card">
+                <h2>📧 Formulário de Contacto</h2>
+                
+                <div class="form-group">
+                    <label for="contact-name">Nome Completo *</label>
+                    <input type="text" id="contact-name" placeholder="João Silva" value="João Silva">
+                </div>
+
+                <div class="form-group">
+                    <label for="contact-email">Email *</label>
+                    <input type="email" id="contact-email" placeholder="joao@example.com" value="joao.silva@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="contact-phone">Telefone</label>
+                    <input type="tel" id="contact-phone" placeholder="+258 82 892 6020" value="+258 82 892 6020">
+                </div>
+
+                <div class="form-group">
+                    <label for="contact-subject">Assunto *</label>
+                    <input type="text" id="contact-subject" placeholder="Consulta sobre Terapia" value="Consulta sobre Terapia Individual">
+                </div>
+
+                <div class="form-group">
+                    <label for="contact-message">Mensagem *</label>
+                    <textarea id="contact-message" placeholder="Sua mensagem aqui...">Gostaria de agendar uma sessão de terapia individual. Qual é a disponibilidade?</textarea>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-primary" onclick="testContactForm()">Enviar Contacto</button>
+                    <button class="btn-secondary" onclick="testContactFormSpam()">Testar Spam</button>
+                </div>
+
+                <div id="contact-result" class="result"></div>
+            </div>
+
+            <!-- TESTE 2: CHECKOUT -->
+            <div class="test-card">
+                <h2>💳 Checkout Online</h2>
+                
+                <div class="form-group">
+                    <label for="checkout-service">Tipo de Serviço *</label>
+                    <select id="checkout-service">
+                        <option value="individual">Terapia Individual</option>
+                        <option value="casal">Terapia de Casal</option>
+                        <option value="familiar">Terapia Familiar</option>
+                        <option value="consultoria">Consultoria Organizacional</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="checkout-name">Nome Completo *</label>
+                    <input type="text" id="checkout-name" placeholder="Maria Santos" value="Maria Santos">
+                </div>
+
+                <div class="form-group">
+                    <label for="checkout-email">Email *</label>
+                    <input type="email" id="checkout-email" placeholder="maria@example.com" value="maria.santos@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="checkout-phone">Telefone *</label>
+                    <input type="tel" id="checkout-phone" placeholder="+258 82 892 6020" value="+258 82 892 6020">
+                </div>
+
+                <div class="form-group">
+                    <label for="checkout-date">Data Preferida *</label>
+                    <input type="date" id="checkout-date" value="2025-02-15">
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-primary" onclick="testCheckout()">Criar Checkout</button>
+                    <button class="btn-secondary" onclick="testCheckoutInvalid()">Testar Erro</button>
+                </div>
+
+                <div id="checkout-result" class="result"></div>
+            </div>
+        </div>
+
+        <!-- RESUMO -->
+        <div class="summary">
+            <h2>📊 Resumo de Testes</h2>
+            <div class="summary-stats">
+                <div class="stat">
+                    <div class="stat-value" id="total-tests">0</div>
+                    <div class="stat-label">Total de Testes</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="passed-tests" style="color: #28a745;">0</div>
+                    <div class="stat-label">Passados</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="failed-tests" style="color: #dc3545;">0</div>
+                    <div class="stat-label">Falhados</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="success-rate">0%</div>
+                    <div class="stat-label">Taxa de Sucesso</div>
+                </div>
+            </div>
+            <h3 style="margin-top: 20px; margin-bottom: 10px;">Histórico de Testes:</h3>
+            <ul class="test-list" id="test-history"></ul>
+        </div>
+    </div>
+
+    <script>
+        let testResults = [];
+
+        function showResult(elementId, type, title, message, details = null) {
+            const resultEl = document.getElementById(elementId);
+            resultEl.className = `result show ${type}`;
+            
+            let content = `<strong>${title}</strong><br>${message}`;
+            if (details) {
+                content += `<div class="result-content">${JSON.stringify(details, null, 2)}</div>`;
+            }
+            
+            resultEl.innerHTML = content;
+            updateSummary();
+        }
+
+        function addTestResult(name, passed, details = null) {
+            testResults.push({ name, passed, details, timestamp: new Date() });
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const total = testResults.length;
+            const passed = testResults.filter(r => r.passed).length;
+            const failed = total - passed;
+            const rate = total > 0 ? ((passed / total) * 100).toFixed(1) : 0;
+
+            document.getElementById('total-tests').textContent = total;
+            document.getElementById('passed-tests').textContent = passed;
+            document.getElementById('failed-tests').textContent = failed;
+            document.getElementById('success-rate').textContent = `${rate}%`;
+
+            const historyEl = document.getElementById('test-history');
+            historyEl.innerHTML = testResults.map(r => 
+                `<li class="${r.passed ? 'passed' : 'failed'}">
+                    <span class="status-indicator ${r.passed ? 'success' : 'error'}"></span>
+                    ${r.name}
+                </li>`
+            ).join('');
+        }
+
+        async function testContactForm() {
+            const name = document.getElementById('contact-name').value;
+            const email = document.getElementById('contact-email').value;
+            const phone = document.getElementById('contact-phone').value;
+            const subject = document.getElementById('contact-subject').value;
+            const message = document.getElementById('contact-message').value;
+
+            const resultEl = document.getElementById('contact-result');
+            resultEl.innerHTML = '<div class="loading"></div> Enviando...';
+            resultEl.className = 'result show info';
+
+            try {
+                const submissionToken = btoa(Date.now().toString());
+                
+                const response = await fetch('/functions/v1/send-contact-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('supabase.auth.token') || ''}`,
+                    },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        phone,
+                        subject,
+                        message,
+                        submission_token: submissionToken
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showResult('contact-result', 'success', '✅ Sucesso!', 'Formulário enviado com sucesso!', data);
+                    addTestResult('Formulário de Contacto - Válido', true, data);
+                } else {
+                    showResult('contact-result', 'error', '❌ Erro', data.error || 'Erro ao enviar', data);
+                    addTestResult('Formulário de Contacto - Válido', false, data);
+                }
+            } catch (error) {
+                showResult('contact-result', 'error', '❌ Erro', error.message);
+                addTestResult('Formulário de Contacto - Válido', false, error.message);
+            }
+        }
+
+        async function testContactFormSpam() {
+            const resultEl = document.getElementById('contact-result');
+            resultEl.innerHTML = '<div class="loading"></div> Testando detecção de spam...';
+            resultEl.className = 'result show info';
+
+            try {
+                const submissionToken = btoa(Date.now().toString());
+                
+                const response = await fetch('/functions/v1/send-contact-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: 'Spammer',
+                        email: 'spam@example.com',
+                        subject: 'Free money and viagra',
+                        message: 'Click here for casino poker betting',
+                        submission_token: submissionToken
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || data.error) {
+                    showResult('contact-result', 'success', '✅ Spam Bloqueado!', 'Sistema detectou e bloqueou spam corretamente', data);
+                    addTestResult('Formulário de Contacto - Spam Detection', true, data);
+                } else {
+                    showResult('contact-result', 'error', '❌ Falha', 'Spam não foi bloqueado', data);
+                    addTestResult('Formulário de Contacto - Spam Detection', false, data);
+                }
+            } catch (error) {
+                showResult('contact-result', 'error', '❌ Erro', error.message);
+                addTestResult('Formulário de Contacto - Spam Detection', false, error.message);
+            }
+        }
+
+        async function testCheckout() {
+            const service = document.getElementById('checkout-service').value;
+            const name = document.getElementById('checkout-name').value;
+            const email = document.getElementById('checkout-email').value;
+            const phone = document.getElementById('checkout-phone').value;
+            const date = document.getElementById('checkout-date').value;
+
+            const resultEl = document.getElementById('checkout-result');
+            resultEl.innerHTML = '<div class="loading"></div> Criando sessão de checkout...';
+            resultEl.className = 'result show info';
+
+            try {
+                const response = await fetch('/functions/v1/create-checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('supabase.auth.token') || ''}`,
+                    },
+                    body: JSON.stringify({
+                        serviceType: service,
+                        appointmentData: {
+                            client_name: name,
+                            email,
+                            phone,
+                            preferred_date: date
+                        }
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && (data.url || data.sessionId)) {
+                    showResult('checkout-result', 'success', '✅ Sucesso!', 'Sessão de checkout criada!', { 
+                        hasUrl: !!data.url, 
+                        sessionId: data.sessionId 
+                    });
+                    addTestResult('Checkout - Válido', true, data);
+                } else {
+                    showResult('checkout-result', 'error', '❌ Erro', data.error || 'Erro ao criar checkout', data);
+                    addTestResult('Checkout - Válido', false, data);
+                }
+            } catch (error) {
+                showResult('checkout-result', 'error', '❌ Erro', error.message);
+                addTestResult('Checkout - Válido', false, error.message);
+            }
+        }
+
+        async function testCheckoutInvalid() {
+            const resultEl = document.getElementById('checkout-result');
+            resultEl.innerHTML = '<div class="loading"></div> Testando validação...';
+            resultEl.className = 'result show info';
+
+            try {
+                const response = await fetch('/functions/v1/create-checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        serviceType: 'invalid_service',
+                        appointmentData: {
+                            client_name: 'Test',
+                            email: 'invalid-email',
+                            phone: '123',
+                            preferred_date: '2025-02-15'
+                        }
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || data.error) {
+                    showResult('checkout-result', 'success', '✅ Validação Funcionando!', 'Sistema rejeitou dados inválidos corretamente', data);
+                    addTestResult('Checkout - Validação de Erro', true, data);
+                } else {
+                    showResult('checkout-result', 'error', '❌ Falha', 'Dados inválidos não foram rejeitados', data);
+                    addTestResult('Checkout - Validação de Erro', false, data);
+                }
+            } catch (error) {
+                showResult('checkout-result', 'error', '❌ Erro', error.message);
+                addTestResult('Checkout - Validação de Erro', false, error.message);
+            }
+        }
+    </script>
+</body>
+</html>

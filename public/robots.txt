@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /administration
+Disallow: /auth
+Disallow: /checkout
+Disallow: /carrinho
+Disallow: /success
+Disallow: /obrigado
+Disallow: /security
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+Sitemap: https://tikvahpsycem.lovable.app/sitemap.xml
