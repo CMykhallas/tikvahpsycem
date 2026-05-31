@@ -4,6 +4,10 @@
       "source": "/(.*)",
       "headers": [
         {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        },
+        {
           "key": "Content-Security-Policy",
           "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net https://*.lovable.app https://*.lovable.dev; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; connect-src 'self' https://rrlwabtzwvurhhfwpmiq.supabase.co wss://rrlwabtzwvurhhfwpmiq.supabase.co https://api.pwnedpasswords.com https://*.lovable.dev https://*.lovable.app; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; media-src 'self' https: blob:; frame-src 'self' https://lovable.app https://*.lovable.app https://*.lovable.dev; frame-ancestors 'self' https://*.lovable.app https://*.lovable.dev; worker-src 'self' blob:; upgrade-insecure-requests;"
         },
@@ -44,11 +48,20 @@
           "value": "require-corp"
         }
       ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!assets/|.*\\..*).*)" ,
       "destination": "/"
     }
   ]
