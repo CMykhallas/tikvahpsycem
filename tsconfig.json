@@ -1,24 +1,5 @@
 {
   "files": [],
-<<<<<<< HEAD
-  "exclude": [
-    "test-checkout-payments-security.ts",
-    "test-edge-functions.ts"
-  ],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ],
-  "compilerOptions": {
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-=======
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
@@ -27,7 +8,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
->>>>>>> a861c0b3b9ddfa91d07dcbf633b72e20d3991424
     },
     "strict": true,
     "noImplicitAny": true,
@@ -39,9 +19,9 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true
-  }
-<<<<<<< HEAD
+  },
+  "exclude": [
+    "test-checkout-payments-security.ts",
+    "test-edge-functions.ts"
+  ]
 }
-=======
-}
->>>>>>> a861c0b3b9ddfa91d07dcbf633b72e20d3991424
