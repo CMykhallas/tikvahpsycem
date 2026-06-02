@@ -6,10 +6,10 @@ import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { 
-  Building, 
-  Users, 
-  TrendingUp, 
+import {
+  Building,
+  Users,
+  TrendingUp,
   Target,
   Lightbulb,
   FileText,
@@ -17,10 +17,15 @@ import {
   Compass,
   Handshake,
   Globe,
-} from "lucide-react";
-  Building, Users, TrendingUp, Target, Compass, Heart, Zap, 
-  BarChart3, Briefcase, Lightbulb, Shield, ArrowRight, CheckCircle2,
-  Star, Award, Layers
+  Heart,
+  Zap,
+  Briefcase,
+  Shield,
+  ArrowRight,
+  CheckCircle2,
+  Star,
+  Award,
+  Layers,
 } from "lucide-react";
 import { getService } from "@/lib/seo/jsonld";
 
@@ -224,14 +229,6 @@ const Consultoria = () => {
       <Navbar />
       <BreadcrumbNavigation />
       
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-6">
-            Serviços de <span className="text-teal-600">Consultoria</span>
-          </h1>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Soluções estratégicas de desenvolvimento organizacional, gestão de talentos e governança, construídas com base em evidência e adaptadas ao contexto moçambicano.
-          </p>
       {/* Consultoria Menu Bar */}
       <ConsultoriaMenuBar />
       
