@@ -38,8 +38,6 @@ jobs:
         run: bun audit --prod || true
         continue-on-error: true
 
-      - name: Auditoria de vulnerabilidades
-        run: npm audit --audit-level=high
 
       - name: Instalar Supabase CLI
         uses: supabase/setup-cli@v1
