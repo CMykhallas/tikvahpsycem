@@ -229,14 +229,6 @@ const Consultoria = () => {
       <Navbar />
       <BreadcrumbNavigation />
       
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-6">
-            Serviços de <span className="text-teal-600">Consultoria</span>
-          </h1>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Soluções estratégicas de desenvolvimento organizacional, gestão de talentos e governança, construídas com base em evidência e adaptadas ao contexto moçambicano.
-          </p>
       {/* Consultoria Menu Bar */}
       <ConsultoriaMenuBar />
       
