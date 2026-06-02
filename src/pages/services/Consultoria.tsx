@@ -6,10 +6,10 @@ import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { 
-  Building, 
-  Users, 
-  TrendingUp, 
+import {
+  Building,
+  Users,
+  TrendingUp,
   Target,
   Lightbulb,
   FileText,
@@ -17,10 +17,15 @@ import {
   Compass,
   Handshake,
   Globe,
-} from "lucide-react";
-  Building, Users, TrendingUp, Target, Compass, Heart, Zap, 
-  BarChart3, Briefcase, Lightbulb, Shield, ArrowRight, CheckCircle2,
-  Star, Award, Layers
+  Heart,
+  Zap,
+  Briefcase,
+  Shield,
+  ArrowRight,
+  CheckCircle2,
+  Star,
+  Award,
+  Layers,
 } from "lucide-react";
 import { getService } from "@/lib/seo/jsonld";
 
