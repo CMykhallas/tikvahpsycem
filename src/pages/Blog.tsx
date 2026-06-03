@@ -28,6 +28,17 @@ const Blog = () => {
     // High-quality scientific articles with credible sources
     const mockPosts: BlogPost[] = [
       {
+        id: "0",
+        title: "Redes Sociais: ferramenta de oportunidades ou fonte de conflitos?",
+        slug: "redes-sociais-oportunidades-ou-conflitos",
+        excerpt: "Análise dual — psicanálise e cibersegurança — sobre o tempo nas redes sociais e o seu impacto na saúde psicológica, com leitura clínica e técnica aplicada ao contexto moçambicano.",
+        author: "Equipa Clínica & Segurança Tikvah",
+        category: "Saúde Digital",
+        read_time: "12 min",
+        image_url: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        created_at: "2026-06-03T09:00:00Z"
+      },
+      {
         id: "1",
         title: "Neuroplasticidade e Intervenções Terapêuticas: Uma Revisão Baseada em Evidências",
         slug: "neuroplasticidade-intervencoes-terapeuticas",
