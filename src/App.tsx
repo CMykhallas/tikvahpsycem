@@ -40,6 +40,7 @@ import MBSRMetaAnalise from "./pages/blog/MBSRMetaAnalise";
 import TraumaCulturalResiliencia from "./pages/blog/TraumaCulturalResiliencia";
 import ACTTerapiaContextos from "./pages/blog/ACTTerapiaContextos";
 import PsicologiaOrganizacional from "./pages/blog/PsicologiaOrganizacional";
+import RedesSociaisOportunidadesConflitos from "./pages/blog/RedesSociaisOportunidadesConflitos";
 
 import Loja from "./pages/Loja";
 import Carrinho from "./pages/Carrinho";
@@ -96,6 +97,7 @@ function App() {
                 <Route path="/blog/trauma-cultural-resiliencia-pos-colonial" element={<TraumaCulturalResiliencia />} />
                 <Route path="/blog/act-terapia-contextos-africanos" element={<ACTTerapiaContextos />} />
                 <Route path="/blog/psicologia-organizacional-transformacao-digital" element={<PsicologiaOrganizacional />} />
+                <Route path="/blog/redes-sociais-oportunidades-ou-conflitos" element={<RedesSociaisOportunidadesConflitos />} />
 
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/security" element={<SecurityDashboard />} />

@@ -16,6 +16,15 @@ const DEFAULT_IMAGE = "/og-image.jpg";
 
 export const BLOG_POSTS: BlogPostMeta[] = [
   {
+    slug: "redes-sociais-oportunidades-ou-conflitos",
+    title: "Redes Sociais: ferramenta de oportunidades ou fonte de conflitos?",
+    description:
+      "Análise dual — psicanálise e cibersegurança — sobre o tempo nas redes sociais e o seu impacto na saúde psicológica.",
+    image: DEFAULT_IMAGE,
+    datePublished: "2026-06-03",
+    dateModified: "2026-06-03",
+  },
+  {
     slug: "act-terapia-contextos-africanos",
     title: "ACT: Terapia de Aceitação e Compromisso em Contextos Africanos",
     description:
