@@ -175,22 +175,32 @@ export default function ServicesPage() {
 
         <div className="border-b border-slate-200 mb-10">
           <nav className="flex flex-wrap -mb-px gap-2" aria-label="Categorias de Serviços">
-            {tikvahServicesEcosystem.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => {
-                  setActiveCategory(category.id);
-                  setSelectedService(null);
-                }}
-                className={`py-3 px-6 font-medium text-sm border-b-2 transition-all rounded-t-lg ${
-                  activeCategory === category.id
-                    ? "border-teal-600 text-teal-700 bg-white"
-                    : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
-                }`}
-              >
-                {category.title}
-              </button>
-            ))}
+            <div role="tablist" aria-label="Categorias" className="flex flex-wrap gap-2">
+              {tikvahServicesEcosystem.map((category) => {
+                const isActive = activeCategory === category.id;
+                return (
+                  <button
+                    key={category.id}
+                    role="tab"
+                    type="button"
+                    aria-selected={isActive}
+                    aria-current={isActive ? "page" : undefined}
+                    tabIndex={isActive ? 0 : -1}
+                    onClick={() => {
+                      setActiveCategory(category.id);
+                      setSelectedService(null);
+                    }}
+                    className={`py-3 px-6 font-medium text-sm border-b-2 transition-all rounded-t-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 ${
+                      isActive
+                        ? "border-teal-600 text-teal-700 bg-white"
+                        : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+                    }`}
+                  >
+                    {category.title}
+                  </button>
+                );
+              })}
+            </div>
           </nav>
         </div>
 
