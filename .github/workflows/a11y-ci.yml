@@ -1,0 +1,62 @@
+name: Accessibility (axe) — /services
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CI: true
+
+jobs:
+  axe-services:
+    name: Axe a11y gate on /services
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Install Playwright browsers (Chromium)
+        run: bunx playwright install --with-deps chromium
+
+      - name: Build app
+        run: bun run build
+
+      - name: Preview server (background)
+        run: |
+          bunx vite preview --port 8080 --host 127.0.0.1 &
+          echo $! > /tmp/preview.pid
+          until curl -sSf http://127.0.0.1:8080 > /dev/null; do
+            echo "waiting for preview…"; sleep 2;
+          done
+
+      - name: Run axe a11y tests on /services (blocks on violations)
+        env:
+          E2E_BASE_URL: http://127.0.0.1:8080
+        run: bunx playwright test e2e/services.a11y.spec.ts --reporter=list
+
+      - name: Run protected-routes integration tests
+        env:
+          E2E_BASE_URL: http://127.0.0.1:8080
+        run: bunx playwright test e2e/protected-routes.spec.ts --reporter=list
+
+      - name: Stop preview
+        if: always()
+        run: kill $(cat /tmp/preview.pid) || true

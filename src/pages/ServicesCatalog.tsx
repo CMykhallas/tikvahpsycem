@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   tikvahServicesEcosystem,
   tikvahEcosystemDescription,
@@ -43,6 +43,36 @@ export default function ServicesPage() {
   const [checkoutModalidade, setCheckoutModalidade] = useState<ModalidadeTipo>("online");
   const [checkoutCliente, setCheckoutCliente] = useState<ClienteTipo>("individualidades");
   const [loadingCheckout, setLoadingCheckout] = useState(false);
+
+  const dialogTitleId = useId();
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
+
+  // Keyboard & focus management for the service-detail dialog
+  useEffect(() => {
+    if (!selectedService) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    openerRef.current = previouslyFocused;
+    // Focus the close button on open
+    closeButtonRef.current?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        setSelectedService(null);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    // Lock background scroll for AT users
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+      // Restore focus to opener
+      previouslyFocused?.focus?.();
+    };
+  }, [selectedService]);
 
   const currentCategory = useMemo(
     () => tikvahServicesEcosystem.find((cat) => cat.id === activeCategory) ?? tikvahServicesEcosystem[0],
@@ -145,22 +175,32 @@ export default function ServicesPage() {
 
         <div className="border-b border-slate-200 mb-10">
           <nav className="flex flex-wrap -mb-px gap-2" aria-label="Categorias de Serviços">
-            {tikvahServicesEcosystem.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => {
-                  setActiveCategory(category.id);
-                  setSelectedService(null);
-                }}
-                className={`py-3 px-6 font-medium text-sm border-b-2 transition-all rounded-t-lg ${
-                  activeCategory === category.id
-                    ? "border-teal-600 text-teal-700 bg-white"
-                    : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
-                }`}
-              >
-                {category.title}
-              </button>
-            ))}
+            <div role="tablist" aria-label="Categorias" className="flex flex-wrap gap-2">
+              {tikvahServicesEcosystem.map((category) => {
+                const isActive = activeCategory === category.id;
+                return (
+                  <button
+                    key={category.id}
+                    role="tab"
+                    type="button"
+                    aria-selected={isActive}
+                    aria-current={isActive ? "page" : undefined}
+                    tabIndex={isActive ? 0 : -1}
+                    onClick={() => {
+                      setActiveCategory(category.id);
+                      setSelectedService(null);
+                    }}
+                    className={`py-3 px-6 font-medium text-sm border-b-2 transition-all rounded-t-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 ${
+                      isActive
+                        ? "border-teal-600 text-teal-700 bg-white"
+                        : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+                    }`}
+                  >
+                    {category.title}
+                  </button>
+                );
+              })}
+            </div>
           </nav>
         </div>
 
@@ -180,7 +220,7 @@ export default function ServicesPage() {
                     .find((key) => typeof service.precosPorCliente?.[key] === "number") ?? "individualidades"
                 );
               }}
-              className="group bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-teal-500 transition-all cursor-pointer text-left flex flex-col justify-between"
+              className="group bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-teal-500 transition-all cursor-pointer text-left flex flex-col justify-between focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2"
             >
               <div>
                 <div className="flex justify-between items-start mb-4 gap-4">
@@ -210,18 +250,26 @@ export default function ServicesPage() {
             className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in"
             role="dialog"
             aria-modal="true"
+            aria-labelledby={dialogTitleId}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setSelectedService(null);
+            }}
           >
             <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-8 relative border border-slate-100">
               <button
+                ref={closeButtonRef}
+                type="button"
                 onClick={() => setSelectedService(null)}
-                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl font-semibold p-2"
+                className="absolute top-4 right-4 text-slate-500 hover:text-slate-700 text-2xl font-semibold p-2 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600"
                 aria-label="Fechar janela"
               >
                 &times;
               </button>
 
               <div className="flex flex-col gap-2 mb-6">
-                <h2 className="text-2xl font-bold text-slate-950">{selectedService.title}</h2>
+                <h2 id={dialogTitleId} className="text-2xl font-bold text-slate-950">
+                  {selectedService.title}
+                </h2>
                 <div className="flex flex-wrap gap-2">
                   <span className="inline-block bg-teal-50 text-teal-800 text-xs font-bold px-2.5 py-1 rounded-full">
                     Preço base: {formatMZN(selectedService.precoBaseMZN)}
