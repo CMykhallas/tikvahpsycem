@@ -100,8 +100,22 @@ function App() {
                 <Route path="/blog/psicologia-organizacional-transformacao-digital" element={<PsicologiaOrganizacional />} />
                 <Route path="/blog/redes-sociais-oportunidades-ou-conflitos" element={<RedesSociaisOportunidadesConflitos />} />
 
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/security" element={<SecurityDashboard />} />
+                <Route
+                  path="/administration"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <Administration />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/security"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <SecurityDashboard />
+                    </ProtectedRoute>
+                  }
+                />
 
                 <Route path="*" element={<NotFound />} />
               </Routes>
