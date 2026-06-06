@@ -220,7 +220,7 @@ export default function ServicesPage() {
                     .find((key) => typeof service.precosPorCliente?.[key] === "number") ?? "individualidades"
                 );
               }}
-              className="group bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-teal-500 transition-all cursor-pointer text-left flex flex-col justify-between"
+              className="group bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-teal-500 transition-all cursor-pointer text-left flex flex-col justify-between focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2"
             >
               <div>
                 <div className="flex justify-between items-start mb-4 gap-4">
