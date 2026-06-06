@@ -250,18 +250,26 @@ export default function ServicesPage() {
             className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in"
             role="dialog"
             aria-modal="true"
+            aria-labelledby={dialogTitleId}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setSelectedService(null);
+            }}
           >
             <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-8 relative border border-slate-100">
               <button
+                ref={closeButtonRef}
+                type="button"
                 onClick={() => setSelectedService(null)}
-                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl font-semibold p-2"
+                className="absolute top-4 right-4 text-slate-500 hover:text-slate-700 text-2xl font-semibold p-2 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600"
                 aria-label="Fechar janela"
               >
                 &times;
               </button>
 
               <div className="flex flex-col gap-2 mb-6">
-                <h2 className="text-2xl font-bold text-slate-950">{selectedService.title}</h2>
+                <h2 id={dialogTitleId} className="text-2xl font-bold text-slate-950">
+                  {selectedService.title}
+                </h2>
                 <div className="flex flex-wrap gap-2">
                   <span className="inline-block bg-teal-50 text-teal-800 text-xs font-bold px-2.5 py-1 rounded-full">
                     Preço base: {formatMZN(selectedService.precoBaseMZN)}
