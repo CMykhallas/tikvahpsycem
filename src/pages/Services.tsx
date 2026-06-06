@@ -5,6 +5,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, Loader2 } from "lucide-react";
+import LiveServicesGrid from "@/components/services/LiveServicesGrid";
 
 const ServicesCatalog = React.lazy(() => import("./ServicesCatalog"));
 
@@ -62,6 +63,9 @@ const ServicesPage = () => {
       />
       <Navbar />
       <main data-testid="services-page-main">
+        <ErrorBoundary>
+          <LiveServicesGrid />
+        </ErrorBoundary>
         <ErrorBoundary>
           <Suspense fallback={<CatalogSkeleton />}>
             <ErrorBoundary>

@@ -30,6 +30,7 @@ import NotFound from "./pages/NotFound";
 import ProximosPassos from "./pages/ProximosPassos";
 import SecurityDashboard from "./pages/SecurityDashboard";
 import Auth from "./pages/Auth";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 import Psicoterapia from "./pages/services/Psicoterapia";
 import Consultoria from "./pages/services/Consultoria";
