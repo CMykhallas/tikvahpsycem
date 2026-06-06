@@ -30,6 +30,7 @@ import NotFound from "./pages/NotFound";
 import ProximosPassos from "./pages/ProximosPassos";
 import SecurityDashboard from "./pages/SecurityDashboard";
 import Auth from "./pages/Auth";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 import Psicoterapia from "./pages/services/Psicoterapia";
 import Consultoria from "./pages/services/Consultoria";
@@ -76,7 +77,7 @@ function App() {
                 <Route path="/appointment" element={<Appointment />} />
                 <Route path="/feedback" element={<Feedback />} />
                 <Route path="/location" element={<Location />} />
-                <Route path="/administration" element={<Administration />} />
+                <Route path="/auth" element={<Auth />} />
                 <Route path="/obrigado" element={<Obrigado />} />
                 <Route path="/politica-de-privacidade" element={<PoliticaPrivacidade />} />
                 <Route path="/propostas/proximos-passos" element={<ProximosPassos />} />
@@ -99,8 +100,22 @@ function App() {
                 <Route path="/blog/psicologia-organizacional-transformacao-digital" element={<PsicologiaOrganizacional />} />
                 <Route path="/blog/redes-sociais-oportunidades-ou-conflitos" element={<RedesSociaisOportunidadesConflitos />} />
 
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/security" element={<SecurityDashboard />} />
+                <Route
+                  path="/administration"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <Administration />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/security"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <SecurityDashboard />
+                    </ProtectedRoute>
+                  }
+                />
 
                 <Route path="*" element={<NotFound />} />
               </Routes>
