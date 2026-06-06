@@ -44,6 +44,36 @@ export default function ServicesPage() {
   const [checkoutCliente, setCheckoutCliente] = useState<ClienteTipo>("individualidades");
   const [loadingCheckout, setLoadingCheckout] = useState(false);
 
+  const dialogTitleId = useId();
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
+
+  // Keyboard & focus management for the service-detail dialog
+  useEffect(() => {
+    if (!selectedService) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    openerRef.current = previouslyFocused;
+    // Focus the close button on open
+    closeButtonRef.current?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        setSelectedService(null);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    // Lock background scroll for AT users
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+      // Restore focus to opener
+      previouslyFocused?.focus?.();
+    };
+  }, [selectedService]);
+
   const currentCategory = useMemo(
     () => tikvahServicesEcosystem.find((cat) => cat.id === activeCategory) ?? tikvahServicesEcosystem[0],
     [activeCategory]
