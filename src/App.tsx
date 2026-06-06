@@ -77,7 +77,7 @@ function App() {
                 <Route path="/appointment" element={<Appointment />} />
                 <Route path="/feedback" element={<Feedback />} />
                 <Route path="/location" element={<Location />} />
-                <Route path="/administration" element={<Administration />} />
+                <Route path="/auth" element={<Auth />} />
                 <Route path="/obrigado" element={<Obrigado />} />
                 <Route path="/politica-de-privacidade" element={<PoliticaPrivacidade />} />
                 <Route path="/propostas/proximos-passos" element={<ProximosPassos />} />
