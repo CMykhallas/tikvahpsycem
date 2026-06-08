@@ -55,18 +55,64 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { proposal_id } = await req.json();
-    if (!proposal_id || typeof proposal_id !== "string") {
-      return new Response(JSON.stringify({ error: "proposal_id required" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const resendKey = Deno.env.get("RESEND_API_KEY");
-
     const supabase = createClient(supabaseUrl, serviceKey);
+
+    // Per-IP rate limit (max 5 / 10 min) to prevent notification spam.
+    const clientIP =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-real-ip") ||
+      "unknown";
+    {
+      const windowMs = 10 * 60 * 1000;
+      const max = 5;
+      const key = `notify-proposal:${clientIP}`;
+      const now = new Date();
+      try {
+        const { data: rl } = await supabase
+          .from("rate_limits")
+          .select("key, count, reset_time, blocked_until")
+          .eq("key", key)
+          .maybeSingle();
+        if (rl?.blocked_until && new Date(rl.blocked_until) > now) {
+          return new Response(JSON.stringify({ error: "Too many requests" }), {
+            status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        if (!rl || new Date(rl.reset_time) < now) {
+          await supabase.from("rate_limits").upsert({
+            key, count: 1,
+            reset_time: new Date(now.getTime() + windowMs).toISOString(),
+            blocked_until: null,
+          }, { onConflict: "key" });
+        } else if (rl.count >= max) {
+          await supabase.from("rate_limits").update({
+            blocked_until: new Date(now.getTime() + windowMs).toISOString(),
+          }).eq("key", key);
+          return new Response(JSON.stringify({ error: "Too many requests" }), {
+            status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        } else {
+          await supabase.from("rate_limits").update({ count: rl.count + 1 }).eq("key", key);
+        }
+      } catch (e) {
+        console.warn("notify-proposal rate limit check failed (denying):", (e as Error).message);
+        return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), {
+          status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
+    const { proposal_id } = await req.json();
+    if (!proposal_id || typeof proposal_id !== "string" ||
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(proposal_id)) {
+      return new Response(JSON.stringify({ error: "proposal_id (uuid) required" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const resendKey = Deno.env.get("RESEND_API_KEY");
 
     const { data: proposal, error } = await supabase
       .from("service_proposals")
