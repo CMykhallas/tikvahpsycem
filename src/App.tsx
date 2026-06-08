@@ -89,6 +89,9 @@ function App() {
                 <Route path="/services/workshops" element={<Workshops />} />
                 <Route path="/services/:slug" element={<ServiceDetail />} />
 
+                <Route path="/ecosistema/:categoryId" element={<EcosystemCategoryPage />} />
+                <Route path="/ecosistema/:categoryId/:itemSlug" element={<EcosystemItemPage />} />
+
                 <Route path="/loja" element={<Loja />} />
                 <Route path="/carrinho" element={<Carrinho />} />
                 <Route path="/checkout" element={<Checkout />} />
