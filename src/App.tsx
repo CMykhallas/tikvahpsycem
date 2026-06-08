@@ -36,6 +36,7 @@ import Psicoterapia from "./pages/services/Psicoterapia";
 import Consultoria from "./pages/services/Consultoria";
 import Cursos from "./pages/services/Cursos";
 import Workshops from "./pages/services/Workshops";
+import { EcosystemItemPage, EcosystemCategoryPage } from "./pages/EcosystemDetail";
 
 import MBSRMetaAnalise from "./pages/blog/MBSRMetaAnalise";
 import TraumaCulturalResiliencia from "./pages/blog/TraumaCulturalResiliencia";
@@ -87,6 +88,9 @@ function App() {
                 <Route path="/services/cursos" element={<Cursos />} />
                 <Route path="/services/workshops" element={<Workshops />} />
                 <Route path="/services/:slug" element={<ServiceDetail />} />
+
+                <Route path="/ecosistema/:categoryId" element={<EcosystemCategoryPage />} />
+                <Route path="/ecosistema/:categoryId/:itemSlug" element={<EcosystemItemPage />} />
 
                 <Route path="/loja" element={<Loja />} />
                 <Route path="/carrinho" element={<Carrinho />} />
