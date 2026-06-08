@@ -112,14 +112,7 @@ serve(async (req) => {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-
-
-
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const resendKey = Deno.env.get("RESEND_API_KEY");
-
-    const supabase = createClient(supabaseUrl, serviceKey);
 
     const { data: proposal, error } = await supabase
       .from("service_proposals")
