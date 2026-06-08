@@ -36,6 +36,7 @@ import Psicoterapia from "./pages/services/Psicoterapia";
 import Consultoria from "./pages/services/Consultoria";
 import Cursos from "./pages/services/Cursos";
 import Workshops from "./pages/services/Workshops";
+import { EcosystemItemPage, EcosystemCategoryPage } from "./pages/EcosystemDetail";
 
 import MBSRMetaAnalise from "./pages/blog/MBSRMetaAnalise";
 import TraumaCulturalResiliencia from "./pages/blog/TraumaCulturalResiliencia";
