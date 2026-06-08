@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import {
   Brain,
   GraduationCap,
@@ -7,6 +8,7 @@ import {
   Cpu,
   HandHeart,
   CheckCircle2,
+  ArrowRight,
 } from "lucide-react";
 import {
   TIKVAH_CATEGORIES,
@@ -14,6 +16,7 @@ import {
   TIKVAH_360_STATEMENT,
   type TikvahServiceCategory,
 } from "@/data/tikvah-services";
+import { itemHref, categoryHref } from "@/lib/ecosystem-slug";
 
 const ICONS = {
   brain: Brain,
