@@ -100,18 +100,21 @@ export const useAppointment = () => {
         token = csrfToken.generate();
       }
 
-      const { error } = await supabase
+      const { data: inserted, error } = await supabase
         .from("appointments")
         .insert([{
           ...sanitizedFormData,
           preferred_date: appointmentDate.toISOString()
-        }]);
+        }])
+        .select("id")
+        .single();
 
       if (error) throw error;
 
-      // Send email confirmation
+      // Send email confirmation — pass only the appointment ID; the edge
+      // function fetches the verified PII from the database itself.
       await supabase.functions.invoke('send-appointment-email', {
-        body: sanitizedFormData
+        body: { appointment_id: inserted.id }
       });
 
       // Log successful appointment
