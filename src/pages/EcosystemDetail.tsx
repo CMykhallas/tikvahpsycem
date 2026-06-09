@@ -188,7 +188,7 @@ const ItemDetailView = ({
   const found = findItem(categoryId, itemSlug);
   const headingRef = useFocusHeading();
 
-  if (!found) return <NotFound />;
+  if (!found) return <NotFoundFallback />;
   const { category, item } = found;
   const path = itemHref(category.id, item);
 
@@ -320,7 +320,7 @@ const ItemDetailView = ({
 const CategoryDetailView = ({ categoryId }: { categoryId: string }) => {
   const category = findCategory(categoryId);
   const headingRef = useFocusHeading();
-  if (!category) return <NotFound />;
+  if (!category) return <NotFoundFallback />;
 
   const path = categoryHref(category.id);
   const structuredData = [
@@ -424,7 +424,7 @@ const CategoryDetailView = ({ categoryId }: { categoryId: string }) => {
 
 export const EcosystemItemPage = () => {
   const { categoryId, itemSlug } = useParams();
-  if (!categoryId || !itemSlug) return <NotFound />;
+  if (!categoryId || !itemSlug) return <NotFoundFallback />;
   return (
     <ItemDetailView
       key={`${categoryId}/${itemSlug}`}
@@ -436,7 +436,7 @@ export const EcosystemItemPage = () => {
 
 export const EcosystemCategoryPage = () => {
   const { categoryId } = useParams();
-  if (!categoryId) return <NotFound />;
+  if (!categoryId) return <NotFoundFallback />;
   return <CategoryDetailView key={categoryId} categoryId={categoryId} />;
 };
 
