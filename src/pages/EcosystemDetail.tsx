@@ -1,10 +1,11 @@
 import { useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, Calendar, Mail } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Calendar, Mail, AlertTriangle } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SEOHead } from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import {
   findCategory,
   findItem,
@@ -17,13 +18,86 @@ import {
   getWebPage,
   SITE_ORIGIN,
 } from "@/lib/seo/jsonld";
-import NotFound from "./NotFound";
 
 const Container = ({ children }: { children: React.ReactNode }) => (
   <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
     {children}
   </div>
 );
+
+/** Accessible 404/500 fallback shell — keeps Navbar/Footer + role=alert message. */
+const EcosystemFallback = ({
+  title,
+  description,
+  status = 404,
+}: {
+  title: string;
+  description: string;
+  status?: 404 | 500;
+}) => (
+  <>
+    <SEOHead
+      title={`${title} — Tikvah`}
+      description={description}
+      ogType="website"
+    />
+    <Navbar />
+    <main id="main-content" tabIndex={-1}>
+      <Container>
+        <div
+          role="alert"
+          aria-live="polite"
+          className="rounded-2xl border border-amber-300 bg-amber-50 p-8 md:p-10 text-center"
+        >
+          <AlertTriangle
+            className="w-10 h-10 text-amber-600 mx-auto mb-4"
+            aria-hidden="true"
+          />
+          <p className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-2">
+            Erro {status}
+          </p>
+          <h1
+            tabIndex={-1}
+            className="text-2xl md:text-3xl font-bold text-slate-900 mb-3 focus:outline-none"
+          >
+            {title}
+          </h1>
+          <p className="text-slate-700 max-w-xl mx-auto mb-6">{description}</p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button asChild variant="default">
+              <Link to="/services" aria-label="Voltar ao catálogo de serviços">
+                Ver todos os serviços
+              </Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link to="/" aria-label="Voltar à página inicial">
+                Página inicial
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </Container>
+    </main>
+    <Footer />
+  </>
+);
+
+const NotFoundFallback = () => (
+  <EcosystemFallback
+    status={404}
+    title="Serviço não encontrado"
+    description="O serviço ou área que procura não está disponível ou foi movido. Use as opções abaixo para continuar a navegar."
+  />
+);
+
+const ErrorFallback = () => (
+  <EcosystemFallback
+    status={500}
+    title="Não foi possível carregar este serviço"
+    description="Ocorreu um erro inesperado ao renderizar esta página. A equipa técnica foi notificada — por favor tente novamente."
+  />
+);
+
 
 const Breadcrumbs = ({
   trail,
