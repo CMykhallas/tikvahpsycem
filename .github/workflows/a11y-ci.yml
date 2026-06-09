@@ -52,6 +52,16 @@ jobs:
           E2E_BASE_URL: http://127.0.0.1:8080
         run: bunx playwright test e2e/services.a11y.spec.ts --reporter=list
 
+      - name: Run axe a11y tests on /ecosistema (blocks on violations)
+        env:
+          E2E_BASE_URL: http://127.0.0.1:8080
+        run: bunx playwright test e2e/ecosystem.a11y.spec.ts --reporter=list
+
+      - name: Run ecosystem navigation E2E tests
+        env:
+          E2E_BASE_URL: http://127.0.0.1:8080
+        run: bunx playwright test e2e/ecosystem.spec.ts --reporter=list
+
       - name: Run protected-routes integration tests
         env:
           E2E_BASE_URL: http://127.0.0.1:8080
