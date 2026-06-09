@@ -32,16 +32,18 @@ test.describe("/ecosistema navigation", () => {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 
-  test("unknown category renders 404 (no crash)", async ({ page }) => {
+  test("unknown category renders accessible 404 alert (no crash)", async ({ page }) => {
     await page.goto(BASE_URL + "/ecosistema/__nope__");
-    await expect(page.getByText(/404/)).toBeVisible();
+    await expect(page.getByRole("alert")).toBeVisible();
+    await expect(page.getByText(/Erro 404/i)).toBeVisible();
   });
 
-  test("unknown item slug under valid category renders 404", async ({
+  test("unknown item slug under valid category renders accessible 404", async ({
     page,
   }) => {
     await page.goto(BASE_URL + "/ecosistema/saude-mental/__nope__");
-    await expect(page.getByText(/404/)).toBeVisible();
+    await expect(page.getByRole("alert")).toBeVisible();
+    await expect(page.getByText(/Erro 404/i)).toBeVisible();
   });
 
   test("category card on homepage ecosystem section links to /ecosistema/:id", async ({
