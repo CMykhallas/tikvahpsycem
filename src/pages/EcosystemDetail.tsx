@@ -426,18 +426,24 @@ export const EcosystemItemPage = () => {
   const { categoryId, itemSlug } = useParams();
   if (!categoryId || !itemSlug) return <NotFoundFallback />;
   return (
-    <ItemDetailView
-      key={`${categoryId}/${itemSlug}`}
-      categoryId={categoryId}
-      itemSlug={itemSlug}
-    />
+    <ErrorBoundary fallback={<ErrorFallback />}>
+      <ItemDetailView
+        key={`${categoryId}/${itemSlug}`}
+        categoryId={categoryId}
+        itemSlug={itemSlug}
+      />
+    </ErrorBoundary>
   );
 };
 
 export const EcosystemCategoryPage = () => {
   const { categoryId } = useParams();
   if (!categoryId) return <NotFoundFallback />;
-  return <CategoryDetailView key={categoryId} categoryId={categoryId} />;
+  return (
+    <ErrorBoundary fallback={<ErrorFallback />}>
+      <CategoryDetailView key={categoryId} categoryId={categoryId} />
+    </ErrorBoundary>
+  );
 };
 
 export default EcosystemItemPage;
