@@ -1,17 +1,33 @@
 name: Lighthouse CI — EcosystemDetail (perf + SEO)
 
+# Runs only on Pull Requests, and only when files that can affect
+# the /ecosistema/:categoryId/:itemSlug route change. Enforces the
+# performance budget defined in .lighthouserc.json.
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
+    paths:
+      - "src/pages/EcosystemDetail.tsx"
+      - "src/lib/ecosystem-slug.ts"
+      - "src/data/services-ecosystem.ts"
+      - "src/components/SEOHead.tsx"
+      - "src/lib/seo/jsonld.ts"
+      - "src/index.css"
+      - "tailwind.config.ts"
+      - "vite.config.ts"
+      - "package.json"
+      - "bun.lockb"
+      - ".lighthouserc.json"
+      - ".github/workflows/lighthouse-ci.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
+  pull-requests: write
 
 env:
   CI: true
+
 
 jobs:
   lighthouse:
