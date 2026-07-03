@@ -5,8 +5,12 @@ export default defineConfig({
   fullyParallel: true,
   reporter: [["list"]],
   timeout: 30_000,
+  retries: process.env.CI ? 2 : 0,
   use: {
     baseURL: process.env.E2E_BASE_URL || "http://localhost:8080",
+    // CI debugging artifacts — capture only on failure to keep runs fast.
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
     trace: "on-first-retry",
   },
   projects: [
