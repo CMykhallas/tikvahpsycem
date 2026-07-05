@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { 
-  Facebook, 
-  Instagram, 
-  Linkedin, 
+  Facebook as FacebookIcon, 
+  Instagram as InstagramIcon, 
+  Linkedin as LinkedinIcon, 
   MessageCircle, 
   Phone, 
   Mail, 
@@ -38,9 +38,9 @@ const CONTACT_INFO = {
 };
 
 const SOCIAL_LINKS = [
-  { icon: Linkedin, href: "https://www.linkedin.com/company/tikvah-psycem", label: "LinkedIn" },
-  { icon: Facebook, href: "https://www.facebook.com/consultoriotikvah", label: "Facebook" },
-  { icon: Instagram, href: "https://instagram.com/opm_moz", label: "Instagram" },
+  { icon: LinkedinIcon, href: "https://www.linkedin.com/company/tikvah-psycem", label: "LinkedIn" },
+  { icon: FacebookIcon, href: "https://www.facebook.com/consultoriotikvah", label: "Facebook" },
+  { icon: InstagramIcon, href: "https://instagram.com/opm_moz", label: "Instagram" },
   { icon: MessageCircle, href: "https://wa.me/258827592980", label: "WhatsApp", primary: true },
 ];
 
