@@ -10,10 +10,10 @@ import {
   Building2,
   MessageCircle,
   Globe,
-  Instagram,
-  Facebook,
-  Twitter,
-  Linkedin,
+  Instagram as InstagramIcon,
+  Facebook as FacebookIcon,
+  Twitter as TwitterIcon,
+  Linkedin as LinkedinIcon,
   ExternalLink
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -37,7 +37,7 @@ const Administration = () => {
       },
       {
         email: "ceo.consultoriotekvah@gmail.com",
-        description: "Comunicação institucional de alto nível e propostas de parcerias estratégicas",
+        description: "Comunicação institutional de alto nível e propostas de parcerias estratégicas",
         icon: <Users className="w-5 h-5 text-primary" />
       }
     ],
@@ -238,11 +238,11 @@ const Administration = () => {
               {contacts.social.map((social, index) => (
                 <Card key={index} className="hover-elegant text-center">
                   <CardContent className="p-6">
-                    {social.platform === 'Facebook' && <Facebook className="w-8 h-8 text-blue-600 mx-auto mb-3" />}
-                    {social.platform === 'Instagram' && <Instagram className="w-8 h-8 text-pink-600 mx-auto mb-3" />}
-                    {social.platform === 'Twitter' && <Twitter className="w-8 h-8 text-blue-400 mx-auto mb-3" />}
+                    {social.platform === 'Facebook' && <FacebookIcon className="w-8 h-8 text-blue-600 mx-auto mb-3" />}
+                    {social.platform === 'Instagram' && <InstagramIcon className="w-8 h-8 text-pink-600 mx-auto mb-3" />}
+                    {social.platform === 'Twitter' && <TwitterIcon className="w-8 h-8 text-blue-400 mx-auto mb-3" />}
                     {social.platform === 'TikTok' && <MessageCircle className="w-8 h-8 text-black mx-auto mb-3" />}
-                    {social.platform === 'LinkedIn' && <Linkedin className="w-8 h-8 text-blue-700 mx-auto mb-3" />}
+                    {social.platform === 'LinkedIn' && <LinkedinIcon className="w-8 h-8 text-blue-700 mx-auto mb-3" />}
                     
                     <h4 className="text-lg font-semibold text-foreground mb-2">
                       {social.platform}
