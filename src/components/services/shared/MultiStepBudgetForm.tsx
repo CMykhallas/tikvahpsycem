@@ -29,9 +29,11 @@ const stepSchemas = [
       .trim()
       .regex(/^\+?\d[\d\s-]{6,}$/i, "Telefone inválido")
       .max(30),
-    modalidade: z.enum(["presencial", "online", "hibrido"], {
-      errorMap: () => ({ message: "Escolha uma modalidade" }),
-    }),
+    modalidade: z.union([
+      z.literal("presencial"),
+      z.literal("online"),
+      z.literal("hibrido"),
+    ], { errorMap: () => ({ message: "Escolha uma modalidade" }) }),
   }),
   z.object({
     message: z
