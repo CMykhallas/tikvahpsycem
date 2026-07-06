@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import { 
-  Facebook as FacebookIcon, 
-  Instagram as InstagramIcon, 
-  Linkedin as LinkedinIcon, 
-  MessageCircle, 
-  Phone, 
-  Mail, 
-  MapPin, 
+import {
+  Share2 as FacebookIcon,
+  Camera as InstagramIcon,
+  Briefcase as LinkedinIcon,
+  MessageCircle,
+  Phone,
+  Mail,
+  MapPin,
   ChevronUp,
   ExternalLink
 } from "lucide-react";
