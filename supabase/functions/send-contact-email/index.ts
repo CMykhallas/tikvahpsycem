@@ -196,7 +196,7 @@ serve(async (req) => {
     // Send notification email to admin
     const adminEmailResponse = await resend.emails.send({
       from: 'Tikvah Psycem <onboarding@resend.dev>',
-      to: ['suporte.oficina.psicologo@proton.me'],
+      to: [ADMIN_RECIPIENT],
       subject: `Nova mensagem de contato: ${safeSubject}`,
       html: `
         <!DOCTYPE html>
