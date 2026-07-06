@@ -139,6 +139,15 @@ serve(async (req) => {
     );
   }
 
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL') ?? '',
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+  );
+
+  try {
+    logStep('Function started', { ip: clientIp });
+
+
     // Validate content type
     const contentType = req.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
