@@ -82,20 +82,71 @@ function validateContactData(data: unknown): { valid: boolean; error?: string; d
   };
 }
 
+// In-memory per-IP rate limit. Not distributed, but effective against the
+// single-instance abuse pattern the linter flagged (bot spamming the relay).
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 3;
+const ipHits = new Map<string, { count: number; resetAt: number }>();
+
+function checkRateLimit(ip: string): { allowed: boolean; retryAfter: number } {
+  const now = Date.now();
+  const entry = ipHits.get(ip);
+  if (!entry || now > entry.resetAt) {
+    ipHits.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return { allowed: true, retryAfter: 0 };
+  }
+  entry.count += 1;
+  if (entry.count > RATE_LIMIT_MAX) {
+    return { allowed: false, retryAfter: Math.ceil((entry.resetAt - now) / 1000) };
+  }
+  return { allowed: true, retryAfter: 0 };
+}
+
 serve(async (req) => {
   const corsHeaders = buildCorsHeaders(req);
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Initialize Supabase client with service_role
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
+  // Trusted, fixed recipient — the `to` address is NEVER taken from the
+  // request body, so this endpoint cannot be used as an open email relay.
+  const ADMIN_RECIPIENT = 'suporte.oficina.psicologo@proton.me';
+
+  const clientIp =
+    req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
+    req.headers.get('cf-connecting-ip') ||
+    'unknown';
+
+  const rl = checkRateLimit(clientIp);
+  if (!rl.allowed) {
+    return new Response(
+      JSON.stringify({ error: 'Too many requests', retryAfter: rl.retryAfter }),
+      {
+        status: 429,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+          'Retry-After': String(rl.retryAfter),
+        },
+      },
+    );
+  }
+
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL') ?? '',
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
   );
 
   try {
-    logStep('Function started');
+    logStep('Function started', { ip: clientIp });
+
 
     // Validate content type
     const contentType = req.headers.get('content-type');
@@ -145,7 +196,7 @@ serve(async (req) => {
     // Send notification email to admin
     const adminEmailResponse = await resend.emails.send({
       from: 'Tikvah Psycem <onboarding@resend.dev>',
-      to: ['suporte.oficina.psicologo@proton.me'],
+      to: [ADMIN_RECIPIENT],
       subject: `Nova mensagem de contato: ${safeSubject}`,
       html: `
         <!DOCTYPE html>

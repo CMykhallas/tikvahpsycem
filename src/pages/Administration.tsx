@@ -10,10 +10,10 @@ import {
   Building2,
   MessageCircle,
   Globe,
-  Instagram as InstagramIcon,
-  Facebook as FacebookIcon,
-  Twitter as TwitterIcon,
-  Linkedin as LinkedinIcon,
+  Camera as InstagramIcon,
+  Share2 as FacebookIcon,
+  AtSign as TwitterIcon,
+  Briefcase as LinkedinIcon,
   ExternalLink
 } from "lucide-react";
 import { Link } from "react-router-dom";
