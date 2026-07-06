@@ -12,7 +12,7 @@ import {
   Globe,
   Camera as InstagramIcon,
   Share2 as FacebookIcon,
-  Twitch as TwitterIcon,
+  AtSign as TwitterIcon,
   Briefcase as LinkedinIcon,
   ExternalLink
 } from "lucide-react";
