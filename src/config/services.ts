@@ -14,7 +14,8 @@
 
 import {
   Heart, Users, Home, Brain, Compass, Zap, Shield,
-  MessageCircle, Trophy, type LucideIcon,
+  MessageCircle, Trophy, Building, TrendingUp, Target,
+  Lightbulb, Globe, type LucideIcon,
 } from "lucide-react";
 
 /** Um item exibido no FeatureGrid (cartões principais do serviço). */
@@ -55,7 +56,7 @@ export interface ServiceFAQ {
 /** Entrada completa de um serviço institucional. */
 export interface ServiceConfig {
   /** Slug usado na rota `/services/:slug`. */
-  slug: "psicoterapia" | "cursos" | "workshops";
+  slug: "psicoterapia" | "cursos" | "workshops" | "consultoria";
   /** Tipo Schema.org (`serviceType`). */
   schemaType: string;
   seo: {
@@ -413,6 +414,156 @@ export const SERVICES_CONFIG: Record<ServiceConfig["slug"], ServiceConfig> = {
       heading: "Vamos desenhar o workshop ideal para si?",
       body: "Fale connosco para receber uma proposta customizada em até 48h úteis.",
       primaryLabel: "Solicitar orçamento",
+      primaryHref: "/contact",
+      whatsapp: WHATSAPP,
+      email: EMAIL,
+    },
+  },
+
+  consultoria: {
+    slug: "consultoria",
+    schemaType: "Business Consulting",
+    seo: {
+      title: "Consultoria Organizacional Premium em Maputo | Tikvah Psycem",
+      description:
+        "Consultoria organizacional de alto nível: estratégia, RH, operações, financeira e transformação digital. Soluções humanizadas para crescimento sustentável em Moçambique.",
+      keywords:
+        "consultoria estratégica Maputo, gestão organizacional, consultoria RH, transformação digital, coaching executivo",
+    },
+    hero: {
+      titlePrefix: "Serviços de ",
+      highlight: "Consultoria",
+      titleSuffix: " Organizacional",
+      subtitle:
+        "Expertise técnica e psicológica integrada para transformar desafios em vantagens competitivas sustentáveis.",
+    },
+    features: [
+      {
+        icon: Building,
+        title: "Consultoria Organizacional & Estratégica",
+        description:
+          "Diagnóstico, alinhamento de processos, gestão de mudança e otimização de estrutura.",
+        meta: "120 min",
+      },
+      {
+        icon: Users,
+        title: "Gestão de Recursos Humanos",
+        description:
+          "Recrutamento, avaliação de desempenho, plano de carreira e clima organizacional.",
+        meta: "90 min",
+      },
+      {
+        icon: TrendingUp,
+        title: "Coaching Executivo & Liderança",
+        description:
+          "Programas individuais para lideranças, com foco em decisão, gestão de conflitos e performance.",
+        meta: "90 min",
+      },
+      {
+        icon: Target,
+        title: "Assessment Psicológico Organizacional",
+        description:
+          "Avaliação estruturada para seleção, sucessão e desenvolvimento de talentos.",
+        meta: "180 min",
+      },
+      {
+        icon: Lightbulb,
+        title: "Consultoria Científica & Técnica",
+        description:
+          "Suporte metodológico a projetos de pesquisa, intervenção social e programas institucionais.",
+        meta: "90 min",
+      },
+      {
+        icon: Globe,
+        title: "Negócios & Desenvolvimento de Modelo",
+        description:
+          "Análise de negócio, planeamento estratégico, gestão de risco e apoio à expansão.",
+        meta: "120 min",
+      },
+      {
+        icon: Compass,
+        title: "Gestão de Projetos & Impacto",
+        description:
+          "Concepção, execução, monitoria e avaliação de impacto para projetos sociais e de saúde.",
+        meta: "90 min",
+      },
+      {
+        icon: Shield,
+        title: "Governação, Compliance & Políticas",
+        description:
+          "Desenho de políticas internas, protocolos de governança e conformidade regulatória.",
+        meta: "90 min",
+      },
+    ],
+    pricing: [
+      {
+        id: "diagnostico",
+        name: "Diagnóstico Inicial",
+        priceMZN: null,
+        unit: "sob consulta",
+        description: "Sessão executiva para mapeamento de necessidades e escopo.",
+        features: [
+          "Workshop de 3h com liderança",
+          "Diagnóstico documentado",
+          "Roadmap de intervenção",
+          "Proposta comercial estruturada",
+        ],
+        ctaLabel: "Solicitar diagnóstico",
+        ctaHref: "/contact",
+      },
+      {
+        id: "projeto",
+        name: "Projeto Completo",
+        priceMZN: null,
+        unit: "sob consulta",
+        description: "Consultoria continuada com equipa multidisciplinar dedicada.",
+        features: [
+          "Consultor sénior alocado",
+          "Sprints de 2 a 12 semanas",
+          "Relatórios executivos mensais",
+          "Transferência de conhecimento",
+        ],
+        highlighted: true,
+        ctaLabel: "Solicitar proposta",
+        ctaHref: "/contact",
+      },
+      {
+        id: "retainer",
+        name: "Retainer Estratégico",
+        priceMZN: null,
+        unit: "/mês",
+        description: "Acompanhamento estratégico contínuo à liderança.",
+        features: [
+          "Reunião executiva quinzenal",
+          "Suporte on-demand",
+          "Revisão trimestral de KPIs",
+          "Acesso à rede de parceiros",
+        ],
+        ctaLabel: "Falar com sénior",
+        ctaHref: "/contact",
+      },
+    ],
+    faq: [
+      {
+        question: "Qual o formato do primeiro contacto?",
+        answer:
+          "Uma sessão executiva de 60 a 90 min sem custo, para entender contexto, objectivos e restrições. Ao fim, enviamos diagnóstico preliminar e proposta.",
+      },
+      {
+        question: "Atendem fora de Maputo?",
+        answer:
+          "Sim. Trabalhamos presencialmente em Maputo e remotamente em toda a região da SADC.",
+      },
+      {
+        question: "Como garantem confidencialidade?",
+        answer:
+          "NDA assinado antes de qualquer partilha de informação. Toda documentação viaja em canais cifrados end-to-end.",
+      },
+    ],
+    cta: {
+      heading: "Pronto para transformar a sua organização?",
+      body: "Agende uma conversa executiva sem custo. Recebe diagnóstico preliminar e proposta em até 5 dias úteis.",
+      primaryLabel: "Agendar diagnóstico",
       primaryHref: "/contact",
       whatsapp: WHATSAPP,
       email: EMAIL,
