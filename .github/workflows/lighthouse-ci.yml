@@ -1,4 +1,4 @@
-name: Lighthouse CI — EcosystemDetail (perf + SEO)
+name: Lighthouse CI — Services + EcosystemDetail (perf + SEO + CWV)
 
 # Runs only on Pull Requests, and only when files that can affect
 # the /ecosistema/:categoryId/:itemSlug route change. Enforces the
@@ -8,6 +8,9 @@ on:
     branches: [main]
     paths:
       - "src/pages/EcosystemDetail.tsx"
+      - "src/pages/services/**"
+      - "src/components/services/**"
+      - "src/config/services.ts"
       - "src/lib/ecosystem-slug.ts"
       - "src/data/services-ecosystem.ts"
       - "src/components/SEOHead.tsx"

@@ -2,7 +2,11 @@
   "ci": {
     "collect": {
       "url": [
-        "http://127.0.0.1:8080/ecosistema/saude-mental/psicologia-clinica-social-e-organizacional"
+        "http://127.0.0.1:8080/ecosistema/saude-mental/psicologia-clinica-social-e-organizacional",
+        "http://127.0.0.1:8080/services/psicoterapia",
+        "http://127.0.0.1:8080/services/cursos",
+        "http://127.0.0.1:8080/services/workshops",
+        "http://127.0.0.1:8080/services/consultoria"
       ],
       "numberOfRuns": 3,
       "settings": {
@@ -20,6 +24,7 @@
         "largest-contentful-paint": ["error", { "maxNumericValue": 2500 }],
         "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1 }],
         "total-blocking-time": ["error", { "maxNumericValue": 300 }],
+        "interaction-to-next-paint": ["warn", { "maxNumericValue": 200 }],
         "speed-index": ["warn", { "maxNumericValue": 3000 }],
         "interactive": ["warn", { "maxNumericValue": 3500 }],
         "document-title": "error",
