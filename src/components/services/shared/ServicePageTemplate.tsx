@@ -31,9 +31,13 @@ const MultiStepBudgetForm = lazy(() =>
 
 interface Props {
   config: ServiceConfig | null;
+  /** Optional sticky sub-nav rendered directly under the breadcrumb. */
+  stickyNav?: React.ReactNode;
+  /** Optional extra content rendered between FeatureGrid and Pricing. */
+  extraContent?: React.ReactNode;
 }
 
-export const ServicePageTemplate: React.FC<Props> = ({ config }) => {
+export const ServicePageTemplate: React.FC<Props> = ({ config, stickyNav, extraContent }) => {
   if (!config) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
@@ -74,6 +78,7 @@ export const ServicePageTemplate: React.FC<Props> = ({ config }) => {
       />
       <Navbar />
       <BreadcrumbNavigation />
+      {stickyNav}
 
       <main
         id="main-content"
@@ -87,6 +92,8 @@ export const ServicePageTemplate: React.FC<Props> = ({ config }) => {
           ctaHref={config.cta.primaryHref}
           trackPrefix={config.slug}
         />
+
+        {extraContent}
 
         {config.pricing && config.pricing.length > 0 && (
           <Suspense fallback={<ServiceSkeleton />}>
