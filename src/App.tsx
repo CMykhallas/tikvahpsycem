@@ -29,6 +29,7 @@ import PoliticaPrivacidade from "./pages/PoliticaPrivacidade";
 import NotFound from "./pages/NotFound";
 import ProximosPassos from "./pages/ProximosPassos";
 import SecurityDashboard from "./pages/SecurityDashboard";
+import SecurityIncidentsAdmin from "./pages/admin/SecurityIncidents";
 import Auth from "./pages/Auth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
@@ -117,6 +118,14 @@ function App() {
                   element={
                     <ProtectedRoute requireAdmin>
                       <SecurityDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/security-incidents"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <SecurityIncidentsAdmin />
                     </ProtectedRoute>
                   }
                 />
