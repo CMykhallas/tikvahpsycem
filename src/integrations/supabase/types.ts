@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      alert_dedupe: {
+        Row: {
+          count: number
+          key: string
+          metadata: Json | null
+          notified_at: string
+        }
+        Insert: {
+          count?: number
+          key: string
+          metadata?: Json | null
+          notified_at?: string
+        }
+        Update: {
+          count?: number
+          key?: string
+          metadata?: Json | null
+          notified_at?: string
+        }
+        Relationships: []
+      }
       applications: {
         Row: {
           area: string
