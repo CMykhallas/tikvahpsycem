@@ -121,6 +121,14 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+                <Route
+                  path="/admin/security-incidents"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <SecurityIncidentsAdmin />
+                    </ProtectedRoute>
+                  }
+                />
 
                 <Route path="*" element={<NotFound />} />
               </Routes>
