@@ -93,6 +93,19 @@ const SecurityIncidentsAdmin = () => {
 
   useEffect(() => {
     load();
+    void logAdminAction({
+      action: "view_filters_applied",
+      resource: "security_incidents",
+      metadata: {
+        range,
+        severity,
+        has_ip_filter: Boolean(debouncedIp),
+        has_reason_filter: Boolean(debouncedReason),
+        has_request_id_filter: Boolean(debouncedRequest),
+        page,
+        page_size: pageSize,
+      },
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sinceIso, debouncedIp, debouncedReason, debouncedRequest, severity, pageSize, page]);
 
