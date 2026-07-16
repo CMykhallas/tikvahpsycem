@@ -24,12 +24,9 @@ export const logAdminAction = async ({ action, resource, metadata = {} }: AdminA
     const { data: userData } = await supabase.auth.getUser();
     const uid = userData?.user?.id;
     if (!uid) return;
-    const { error } = await supabase.from("admin_audit_logs").insert({
-      user_id: uid,
-      action,
-      resource,
-      metadata,
-    });
+    const { error } = await supabase.from("admin_audit_logs").insert([
+      { user_id: uid, action, resource, metadata: metadata as never },
+    ]);
     if (error) console.warn("[adminAudit] insert failed", error.message);
   } catch (err) {
     console.warn("[adminAudit] unexpected error", err);
