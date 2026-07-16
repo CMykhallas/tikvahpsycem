@@ -12,6 +12,8 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Copy, Download, Filter, RefreshCw } from "lucide-react";
 import { SEOHead } from "@/components/SEOHead";
+import { logAdminAction } from "@/lib/adminAudit";
+import { Link } from "react-router-dom";
 
 interface Incident {
   id: string;
