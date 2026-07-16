@@ -169,19 +169,23 @@ const SecurityIncidentsAdmin = () => {
     <div className="container mx-auto py-8 space-y-6">
       <SEOHead title="Incidentes de Segurança — Admin" description="Painel administrativo de incidentes de segurança" />
       <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Incidentes de Segurança</h1>
+        <h1 className="text-2xl font-bold" data-testid="admin-incidents-title">Incidentes de Segurança</h1>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => exportCsv(7)}>
+          <Button asChild variant="secondary" size="sm">
+            <Link to="/admin/security-analytics" data-testid="link-analytics">Dashboard</Link>
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => exportCsv(7)} data-testid="export-csv-7">
             <Download className="w-4 h-4 mr-2" />Últimos 7d
           </Button>
-          <Button variant="outline" size="sm" onClick={() => exportCsv(30)}>
+          <Button variant="outline" size="sm" onClick={() => exportCsv(30)} data-testid="export-csv-30">
             <Download className="w-4 h-4 mr-2" />Últimos 30d
           </Button>
-          <Button variant="ghost" size="sm" onClick={load} disabled={loading}>
+          <Button variant="ghost" size="sm" onClick={load} disabled={loading} data-testid="refresh-btn">
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
           </Button>
         </div>
       </header>
+
 
       <Card className="p-4 space-y-3">
         <div className="flex items-center gap-2 text-sm font-medium">
