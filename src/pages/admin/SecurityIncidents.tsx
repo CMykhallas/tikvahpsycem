@@ -145,6 +145,11 @@ const SecurityIncidentsAdmin = () => {
     a.click();
     URL.revokeObjectURL(url);
     toast.success(`CSV de ${days} dias exportado`);
+    void logAdminAction({
+      action: "export_csv",
+      resource: "security_incidents",
+      metadata: { days, row_count: data?.length ?? 0 },
+    });
   };
 
   const copyRequestId = async (id: string | undefined) => {
