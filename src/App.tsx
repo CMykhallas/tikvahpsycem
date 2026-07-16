@@ -30,6 +30,7 @@ import NotFound from "./pages/NotFound";
 import ProximosPassos from "./pages/ProximosPassos";
 import SecurityDashboard from "./pages/SecurityDashboard";
 import SecurityIncidentsAdmin from "./pages/admin/SecurityIncidents";
+import SecurityAnalytics from "./pages/admin/SecurityAnalytics";
 import Auth from "./pages/Auth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
@@ -129,6 +130,15 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+                <Route
+                  path="/admin/security-analytics"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <SecurityAnalytics />
+                    </ProtectedRoute>
+                  }
+                />
+
 
                 <Route path="*" element={<NotFound />} />
               </Routes>

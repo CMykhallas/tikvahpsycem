@@ -12,6 +12,8 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Copy, Download, Filter, RefreshCw } from "lucide-react";
 import { SEOHead } from "@/components/SEOHead";
+import { logAdminAction } from "@/lib/adminAudit";
+import { Link } from "react-router-dom";
 
 interface Incident {
   id: string;
@@ -91,6 +93,19 @@ const SecurityIncidentsAdmin = () => {
 
   useEffect(() => {
     load();
+    void logAdminAction({
+      action: "view_filters_applied",
+      resource: "security_incidents",
+      metadata: {
+        range,
+        severity,
+        has_ip_filter: Boolean(debouncedIp),
+        has_reason_filter: Boolean(debouncedReason),
+        has_request_id_filter: Boolean(debouncedRequest),
+        page,
+        page_size: pageSize,
+      },
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sinceIso, debouncedIp, debouncedReason, debouncedRequest, severity, pageSize, page]);
 
@@ -130,12 +145,22 @@ const SecurityIncidentsAdmin = () => {
     a.click();
     URL.revokeObjectURL(url);
     toast.success(`CSV de ${days} dias exportado`);
+    void logAdminAction({
+      action: "export_csv",
+      resource: "security_incidents",
+      metadata: { days, row_count: data?.length ?? 0 },
+    });
   };
 
   const copyRequestId = async (id: string | undefined) => {
     if (!id) return;
     await navigator.clipboard.writeText(id);
     toast.success("request_id copiado");
+    void logAdminAction({
+      action: "copy_request_id",
+      resource: "security_incidents",
+      metadata: { request_id_prefix: id.slice(0, 8) },
+    });
   };
 
   const pages = Math.ceil(total / pageSize);
@@ -144,19 +169,23 @@ const SecurityIncidentsAdmin = () => {
     <div className="container mx-auto py-8 space-y-6">
       <SEOHead title="Incidentes de Segurança — Admin" description="Painel administrativo de incidentes de segurança" />
       <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Incidentes de Segurança</h1>
+        <h1 className="text-2xl font-bold" data-testid="admin-incidents-title">Incidentes de Segurança</h1>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => exportCsv(7)}>
+          <Button asChild variant="secondary" size="sm">
+            <Link to="/admin/security-analytics" data-testid="link-analytics">Dashboard</Link>
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => exportCsv(7)} data-testid="export-csv-7">
             <Download className="w-4 h-4 mr-2" />Últimos 7d
           </Button>
-          <Button variant="outline" size="sm" onClick={() => exportCsv(30)}>
+          <Button variant="outline" size="sm" onClick={() => exportCsv(30)} data-testid="export-csv-30">
             <Download className="w-4 h-4 mr-2" />Últimos 30d
           </Button>
-          <Button variant="ghost" size="sm" onClick={load} disabled={loading}>
+          <Button variant="ghost" size="sm" onClick={load} disabled={loading} data-testid="refresh-btn">
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
           </Button>
         </div>
       </header>
+
 
       <Card className="p-4 space-y-3">
         <div className="flex items-center gap-2 text-sm font-medium">
