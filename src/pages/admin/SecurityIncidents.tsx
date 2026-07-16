@@ -156,6 +156,11 @@ const SecurityIncidentsAdmin = () => {
     if (!id) return;
     await navigator.clipboard.writeText(id);
     toast.success("request_id copiado");
+    void logAdminAction({
+      action: "copy_request_id",
+      resource: "security_incidents",
+      metadata: { request_id_prefix: id.slice(0, 8) },
+    });
   };
 
   const pages = Math.ceil(total / pageSize);
