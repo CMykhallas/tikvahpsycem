@@ -130,6 +130,15 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+                <Route
+                  path="/admin/security-analytics"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <SecurityAnalytics />
+                    </ProtectedRoute>
+                  }
+                />
+
 
                 <Route path="*" element={<NotFound />} />
               </Routes>
