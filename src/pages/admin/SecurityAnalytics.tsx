@@ -279,7 +279,12 @@ const SecurityAnalytics = () => {
                 ? "critical"
                 : ipRows.some((r) => r.severity === "high") ? "high" : "medium";
               return (
-                <tr key={row.key} className="border-t">
+                <tr
+                  key={row.key}
+                  className="border-t cursor-pointer hover:bg-muted/40"
+                  onClick={() => drillDown({ ip: row.key })}
+                  data-testid={`top-ip-row-${row.key}`}
+                >
                   {/* JSX auto-escapes — IP renders as literal text, never HTML */}
                   <td className="p-2 font-mono text-xs">{row.key}</td>
                   <td className="p-2">{row.count}</td>
