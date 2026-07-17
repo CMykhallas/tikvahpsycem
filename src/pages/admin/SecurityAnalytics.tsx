@@ -185,6 +185,7 @@ const SecurityAnalytics = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card className="p-4">
           <h2 className="font-semibold mb-3">Top 10 Reasons</h2>
+          <p className="text-xs text-muted-foreground mb-2">Clique numa barra para filtrar incidentes</p>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={byReason} layout="vertical" margin={{ left: 20 }}>
@@ -192,7 +193,15 @@ const SecurityAnalytics = () => {
                 <XAxis type="number" allowDecimals={false} />
                 <YAxis type="category" dataKey="key" width={140} tick={{ fontSize: 11 }} />
                 <Tooltip />
-                <Bar dataKey="count" fill="hsl(var(--primary))" />
+                <Bar
+                  dataKey="count"
+                  fill="hsl(var(--primary))"
+                  cursor="pointer"
+                  onClick={(d: unknown) => {
+                    const key = (d as { key?: string })?.key;
+                    if (key) drillDown({ reason: key });
+                  }}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
