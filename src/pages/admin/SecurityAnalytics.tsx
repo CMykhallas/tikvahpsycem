@@ -41,9 +41,23 @@ const SEVERITY_COLORS: Record<string, string> = {
 };
 
 const SecurityAnalytics = () => {
+  const navigate = useNavigate();
   const [range, setRange] = useState<Range>("7d");
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState<RawIncident[]>([]);
+
+  const drillDown = (filters: { reason?: string; severity?: string; ip?: string }) => {
+    const p = new URLSearchParams({ range });
+    if (filters.reason) p.set("reason", filters.reason);
+    if (filters.severity) p.set("severity", filters.severity);
+    if (filters.ip) p.set("ip", filters.ip);
+    void logAdminAction({
+      action: "drill_down",
+      resource: "security_analytics",
+      metadata: { range, ...filters },
+    });
+    navigate(`/admin/security-incidents?${p.toString()}`);
+  };
 
   const sinceIso = useMemo(
     () => new Date(Date.now() - RANGE_DAYS[range] * 86_400_000).toISOString(),
