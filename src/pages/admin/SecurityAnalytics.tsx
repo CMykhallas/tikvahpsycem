@@ -160,11 +160,19 @@ const SecurityAnalytics = () => {
           <div className="text-xs text-muted-foreground">Total incidentes</div>
           <div className="text-3xl font-bold" data-testid="metric-total">{rows.length}</div>
         </Card>
-        <Card className="p-4">
+        <Card
+          className="p-4 cursor-pointer hover:bg-muted/40 transition"
+          onClick={() => drillDown({ severity: "critical" })}
+          data-testid="kpi-critical"
+        >
           <div className="text-xs text-muted-foreground">Críticos</div>
           <div className="text-3xl font-bold text-destructive">{criticalCount}</div>
         </Card>
-        <Card className="p-4">
+        <Card
+          className="p-4 cursor-pointer hover:bg-muted/40 transition"
+          onClick={() => drillDown({ severity: "high" })}
+          data-testid="kpi-high"
+        >
           <div className="text-xs text-muted-foreground">High</div>
           <div className="text-3xl font-bold">{highCount}</div>
         </Card>
