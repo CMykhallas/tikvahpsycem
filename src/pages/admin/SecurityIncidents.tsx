@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { Copy, Download, Filter, RefreshCw } from "lucide-react";
 import { SEOHead } from "@/components/SEOHead";
 import { logAdminAction } from "@/lib/adminAudit";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 interface Incident {
   id: string;
@@ -44,17 +44,39 @@ const useDebounced = <T,>(value: T, delay = 300): T => {
   return v;
 };
 
+const isRange = (v: string | null): v is "24h" | "7d" | "30d" =>
+  v === "24h" || v === "7d" || v === "30d";
+const isSeverity = (v: string | null): boolean =>
+  v === "low" || v === "medium" || v === "high" || v === "critical";
+
 const SecurityIncidentsAdmin = () => {
-  const [range, setRange] = useState<"24h" | "7d" | "30d">("7d");
-  const [ipFilter, setIpFilter] = useState("");
-  const [reasonFilter, setReasonFilter] = useState("");
-  const [requestIdFilter, setRequestIdFilter] = useState("");
-  const [severity, setSeverity] = useState<string>("all");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [range, setRange] = useState<"24h" | "7d" | "30d">(
+    isRange(searchParams.get("range")) ? (searchParams.get("range") as "24h" | "7d" | "30d") : "7d",
+  );
+  const [ipFilter, setIpFilter] = useState(searchParams.get("ip") ?? "");
+  const [reasonFilter, setReasonFilter] = useState(searchParams.get("reason") ?? "");
+  const [requestIdFilter, setRequestIdFilter] = useState(searchParams.get("request_id") ?? "");
+  const [severity, setSeverity] = useState<string>(
+    isSeverity(searchParams.get("severity")) ? (searchParams.get("severity") as string) : "all",
+  );
   const [pageSize, setPageSize] = useState<number>(50);
   const [page, setPage] = useState(0);
   const [rows, setRows] = useState<Incident[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+
+  // Reflect current filters into the URL for shareable drill-down links
+  useEffect(() => {
+    const next = new URLSearchParams();
+    next.set("range", range);
+    if (severity !== "all") next.set("severity", severity);
+    if (ipFilter) next.set("ip", ipFilter);
+    if (reasonFilter) next.set("reason", reasonFilter);
+    if (requestIdFilter) next.set("request_id", requestIdFilter);
+    setSearchParams(next, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [range, severity, ipFilter, reasonFilter, requestIdFilter]);
 
   const debouncedIp = useDebounced(ipFilter);
   const debouncedReason = useDebounced(reasonFilter);

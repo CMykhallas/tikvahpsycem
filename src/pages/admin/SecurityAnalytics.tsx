@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/SEOHead";
 import { logAdminAction } from "@/lib/adminAudit";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, LineChart, Line, CartesianGrid, Legend,
@@ -41,9 +41,23 @@ const SEVERITY_COLORS: Record<string, string> = {
 };
 
 const SecurityAnalytics = () => {
+  const navigate = useNavigate();
   const [range, setRange] = useState<Range>("7d");
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState<RawIncident[]>([]);
+
+  const drillDown = (filters: { reason?: string; severity?: string; ip?: string }) => {
+    const p = new URLSearchParams({ range });
+    if (filters.reason) p.set("reason", filters.reason);
+    if (filters.severity) p.set("severity", filters.severity);
+    if (filters.ip) p.set("ip", filters.ip);
+    void logAdminAction({
+      action: "drill_down",
+      resource: "security_analytics",
+      metadata: { range, ...filters },
+    });
+    navigate(`/admin/security-incidents?${p.toString()}`);
+  };
 
   const sinceIso = useMemo(
     () => new Date(Date.now() - RANGE_DAYS[range] * 86_400_000).toISOString(),
@@ -146,11 +160,19 @@ const SecurityAnalytics = () => {
           <div className="text-xs text-muted-foreground">Total incidentes</div>
           <div className="text-3xl font-bold" data-testid="metric-total">{rows.length}</div>
         </Card>
-        <Card className="p-4">
+        <Card
+          className="p-4 cursor-pointer hover:bg-muted/40 transition"
+          onClick={() => drillDown({ severity: "critical" })}
+          data-testid="kpi-critical"
+        >
           <div className="text-xs text-muted-foreground">Críticos</div>
           <div className="text-3xl font-bold text-destructive">{criticalCount}</div>
         </Card>
-        <Card className="p-4">
+        <Card
+          className="p-4 cursor-pointer hover:bg-muted/40 transition"
+          onClick={() => drillDown({ severity: "high" })}
+          data-testid="kpi-high"
+        >
           <div className="text-xs text-muted-foreground">High</div>
           <div className="text-3xl font-bold">{highCount}</div>
         </Card>
@@ -163,6 +185,7 @@ const SecurityAnalytics = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card className="p-4">
           <h2 className="font-semibold mb-3">Top 10 Reasons</h2>
+          <p className="text-xs text-muted-foreground mb-2">Clique numa barra para filtrar incidentes</p>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={byReason} layout="vertical" margin={{ left: 20 }}>
@@ -170,7 +193,15 @@ const SecurityAnalytics = () => {
                 <XAxis type="number" allowDecimals={false} />
                 <YAxis type="category" dataKey="key" width={140} tick={{ fontSize: 11 }} />
                 <Tooltip />
-                <Bar dataKey="count" fill="hsl(var(--primary))" />
+                <Bar
+                  dataKey="count"
+                  fill="hsl(var(--primary))"
+                  cursor="pointer"
+                  onClick={(d: unknown) => {
+                    const key = (d as { key?: string })?.key;
+                    if (key) drillDown({ reason: key });
+                  }}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -178,10 +209,23 @@ const SecurityAnalytics = () => {
 
         <Card className="p-4">
           <h2 className="font-semibold mb-3">Distribuição por severidade</h2>
+          <p className="text-xs text-muted-foreground mb-2">Clique numa fatia para filtrar incidentes</p>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={bySeverity} dataKey="count" nameKey="severity" outerRadius={90} label>
+                <Pie
+                  data={bySeverity}
+                  dataKey="count"
+                  nameKey="severity"
+                  outerRadius={90}
+                  label
+                  cursor="pointer"
+                  onClick={(d: unknown) => {
+                    const sev = (d as { severity?: string })?.severity
+                      ?? (d as { payload?: { severity?: string } })?.payload?.severity;
+                    if (sev) drillDown({ severity: sev });
+                  }}
+                >
                   {bySeverity.map((s) => (
                     <Cell key={s.severity} fill={SEVERITY_COLORS[s.severity] ?? "hsl(var(--muted))"} />
                   ))}
@@ -235,7 +279,12 @@ const SecurityAnalytics = () => {
                 ? "critical"
                 : ipRows.some((r) => r.severity === "high") ? "high" : "medium";
               return (
-                <tr key={row.key} className="border-t">
+                <tr
+                  key={row.key}
+                  className="border-t cursor-pointer hover:bg-muted/40"
+                  onClick={() => drillDown({ ip: row.key })}
+                  data-testid={`top-ip-row-${row.key}`}
+                >
                   {/* JSX auto-escapes — IP renders as literal text, never HTML */}
                   <td className="p-2 font-mono text-xs">{row.key}</td>
                   <td className="p-2">{row.count}</td>
