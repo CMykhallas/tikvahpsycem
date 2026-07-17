@@ -11,7 +11,8 @@ export type AdminAuditAction =
   | "export_csv"
   | "copy_request_id"
   | "page_view"
-  | "pagination_change";
+  | "pagination_change"
+  | "drill_down";
 
 export interface AdminAuditPayload {
   action: AdminAuditAction;
