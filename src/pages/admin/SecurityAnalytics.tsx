@@ -209,10 +209,23 @@ const SecurityAnalytics = () => {
 
         <Card className="p-4">
           <h2 className="font-semibold mb-3">Distribuição por severidade</h2>
+          <p className="text-xs text-muted-foreground mb-2">Clique numa fatia para filtrar incidentes</p>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={bySeverity} dataKey="count" nameKey="severity" outerRadius={90} label>
+                <Pie
+                  data={bySeverity}
+                  dataKey="count"
+                  nameKey="severity"
+                  outerRadius={90}
+                  label
+                  cursor="pointer"
+                  onClick={(d: unknown) => {
+                    const sev = (d as { severity?: string })?.severity
+                      ?? (d as { payload?: { severity?: string } })?.payload?.severity;
+                    if (sev) drillDown({ severity: sev });
+                  }}
+                >
                   {bySeverity.map((s) => (
                     <Cell key={s.severity} fill={SEVERITY_COLORS[s.severity] ?? "hsl(var(--muted))"} />
                   ))}
