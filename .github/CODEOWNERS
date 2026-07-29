@@ -1,0 +1,21 @@
+# CODEOWNERS
+# Define quem deve rever pull requests em áreas sensíveis do projecto.
+# Documentação: https://docs.github.com/articles/about-code-owners
+#
+# ⚠️ Preencher com os handles reais da equipa antes deste ficheiro ter efeito —
+# GitHub ignora silenciosamente linhas com donos que não existem/não têm acesso.
+
+# Por omissão, sem dono explícito atribuído ainda:
+# *                             @preencher-handle-tech-lead
+
+# Áreas de alto risco — segurança, pagamentos, autenticação e base de dados
+# devem ter sempre revisão dedicada antes de merge para `main`.
+/supabase/functions/           @preencher-handle-tech-lead
+/supabase/migrations/          @preencher-handle-tech-lead
+/src/hooks/useAuth.ts          @preencher-handle-tech-lead
+/src/components/SecurityProvider.tsx @preencher-handle-tech-lead
+/src/utils/security.ts         @preencher-handle-tech-lead
+/vercel.json                   @preencher-handle-tech-lead
+/.github/                      @preencher-handle-tech-lead
+/docs/compliance/              @preencher-handle-tech-lead
+SECURITY.md                    @preencher-handle-tech-lead
