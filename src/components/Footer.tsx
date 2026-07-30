@@ -8,22 +8,24 @@ import {
   Mail,
   MapPin,
   ChevronUp,
-  ExternalLink
+  ExternalLink,
+  Twitter as TwitterIcon,
+  Video as TiktokIcon
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 
 // Configuração centralizada para fácil manutenção
 const COMPANY_INFO = {
-  name: "Tikvah",
-  tagline: "Psychological Center & Multiservice",
+  name: "Tikvah Psycem",
+  tagline: "Tikvah Psychological Center & Multiservice",
   description: "Centro de excelência em saúde mental e desenvolvimento organizacional, comprometido com o florescimento do capital humano através de práticas baseadas em evidências científicas.",
   foundedYear: 2024,
 };
 
 const CONTACT_INFO = {
   phones: [
-    { number: "+258 82 892 6020", label: "Chamadas/SMS", href: "tel:+258828926020" },
+    { number: "+258 82 778 5043", label: "Chamadas/SMS", href: "tel:+258827785043" },
     { number: "+258 82 759 2980", label: "WhatsApp", href: "https://wa.me/258827592980" },
   ],
   emails: [
@@ -40,7 +42,9 @@ const CONTACT_INFO = {
 const SOCIAL_LINKS = [
   { icon: LinkedinIcon, href: "https://www.linkedin.com/company/tikvah-psycem", label: "LinkedIn" },
   { icon: FacebookIcon, href: "https://www.facebook.com/consultoriotikvah", label: "Facebook" },
-  { icon: InstagramIcon, href: "https://instagram.com/opm_moz", label: "Instagram" },
+  { icon: InstagramIcon, href: "https://instagram.com/tikvah_psycem", label: "Instagram" },
+  { icon: TwitterIcon, href: "https://twitter.com/tikvah_psycem", label: "X" },
+  { icon: TiktokIcon, href: "https://tiktok.com/@tikvah_psycem", label: "TikTok" },
   { icon: MessageCircle, href: "https://wa.me/258827592980", label: "WhatsApp", primary: true },
 ];
 
@@ -88,7 +92,7 @@ export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-slate-900 text-slate-300">
+    <footer className="bg-slate-900 text-slate-200">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Upper Section - Brand & Navigation */}
@@ -102,18 +106,18 @@ export const Footer = () => {
                   <span className="text-white font-bold text-lg">T</span>
                 </div>
                 <div>
-                  <h2 className="text-white font-semibold text-lg tracking-tight">{COMPANY_INFO.name}</h2>
-                  <p className="text-slate-400 text-xs">{COMPANY_INFO.tagline}</p>
+                  <h2 className="text-white font-bold text-lg tracking-tight">{COMPANY_INFO.name}</h2>
+                  <p className="text-slate-300 text-xs font-medium">{COMPANY_INFO.tagline}</p>
                 </div>
               </div>
 
               {/* Description */}
-              <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
+              <p className="text-slate-300 text-sm font-normal leading-relaxed max-w-sm">
                 {COMPANY_INFO.description}
               </p>
 
               {/* Social Links */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 {SOCIAL_LINKS.map((social) => (
                   <a
                     key={social.label}
@@ -122,8 +126,8 @@ export const Footer = () => {
                     rel="noopener noreferrer"
                     className={`p-2.5 rounded-lg transition-all duration-200 ${
                       social.primary
-                        ? "bg-green-600 hover:bg-green-500 text-white"
-                        : "bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white"
+                        ? "bg-green-700 hover:bg-green-800 text-white"
+                        : "bg-slate-800 hover:bg-slate-700 text-slate-200"
                     }`}
                     title={social.label}
                     aria-label={social.label}
@@ -139,7 +143,7 @@ export const Footer = () => {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
                 {Object.values(NAV_SECTIONS).map((section) => (
                   <div key={section.title}>
-                    <h3 className="text-white font-medium text-sm mb-4 uppercase tracking-wider">
+                    <h3 className="text-white font-bold text-sm mb-4 uppercase tracking-wider">
                       {section.title}
                     </h3>
                     <ul className="space-y-2.5">
@@ -147,7 +151,7 @@ export const Footer = () => {
                         <li key={link.to}>
                           <Link
                             to={link.to}
-                            className="text-slate-400 hover:text-white text-sm transition-colors duration-200 inline-block"
+                            className="text-slate-300 hover:text-white text-sm font-medium transition-colors duration-200 inline-block"
                           >
                             {link.label}
                           </Link>
@@ -161,7 +165,7 @@ export const Footer = () => {
 
             {/* Contact Column */}
             <div className="lg:col-span-3 space-y-6">
-              <h3 className="text-white font-medium text-sm uppercase tracking-wider">
+              <h3 className="text-white font-bold text-sm uppercase tracking-wider">
                 Contacto
               </h3>
 
@@ -171,10 +175,10 @@ export const Footer = () => {
                   <a
                     key={phone.number}
                     href={phone.href}
-                    className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group"
+                    className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors group"
                   >
-                    <Phone className="w-4 h-4 text-slate-500 group-hover:text-primary" />
-                    <span className="text-sm">{phone.number}</span>
+                    <Phone className="w-4 h-4 text-slate-400 group-hover:text-primary" />
+                    <span className="text-sm font-medium">{phone.number}</span>
                   </a>
                 ))}
               </div>
@@ -185,18 +189,18 @@ export const Footer = () => {
                   <a
                     key={email.address}
                     href={`mailto:${email.address}`}
-                    className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group"
+                    className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors group"
                   >
-                    <Mail className="w-4 h-4 text-slate-500 group-hover:text-primary" />
-                    <span className="text-sm truncate">{email.address}</span>
+                    <Mail className="w-4 h-4 text-slate-400 group-hover:text-primary" />
+                    <span className="text-sm font-medium truncate">{email.address}</span>
                   </a>
                 ))}
               </div>
 
               {/* Address */}
-              <div className="flex items-start gap-3 text-slate-400">
-                <MapPin className="w-4 h-4 text-slate-500 mt-0.5 flex-shrink-0" />
-                <address className="text-sm not-italic leading-relaxed">
+              <div className="flex items-start gap-3 text-slate-300">
+                <MapPin className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                <address className="text-sm font-medium not-italic leading-relaxed">
                   {CONTACT_INFO.address.street}<br />
                   {CONTACT_INFO.address.district}<br />
                   {CONTACT_INFO.address.city}
@@ -206,7 +210,7 @@ export const Footer = () => {
               {/* CTA Button */}
               <Button
                 asChild
-                className="w-full bg-primary hover:bg-primary/90 text-white"
+                className="w-full bg-primary hover:bg-primary/90 text-white font-bold"
                 size="sm"
               >
                 <Link to="/appointment" className="flex items-center justify-center gap-2">
@@ -224,8 +228,8 @@ export const Footer = () => {
         <div className="py-6">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             {/* Copyright */}
-            <p className="text-slate-500 text-xs text-center sm:text-left">
-              © {currentYear} {COMPANY_INFO.name} {COMPANY_INFO.tagline}. Todos os direitos reservados.
+            <p className="text-slate-300 text-xs font-medium text-center sm:text-left">
+              © {currentYear} {COMPANY_INFO.name} — {COMPANY_INFO.tagline}. Todos os direitos reservados.
             </p>
 
             {/* Legal Links & Scroll to Top */}
@@ -235,7 +239,7 @@ export const Footer = () => {
                   <Link
                     key={link.to}
                     to={link.to}
-                    className="text-slate-500 hover:text-slate-300 text-xs transition-colors"
+                    className="text-slate-300 hover:text-white text-xs font-medium transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -244,7 +248,7 @@ export const Footer = () => {
 
               <button
                 onClick={scrollToTop}
-                className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all"
+                className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all"
                 aria-label="Voltar ao topo"
               >
                 <ChevronUp className="w-4 h-4" />
