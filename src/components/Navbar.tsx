@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
@@ -63,8 +62,8 @@ export const Navbar = () => {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold text-slate-800">Tikvah</span>
-              <span className="text-xs text-slate-600">Psychological Center</span>
+              <span className="text-xl font-bold text-slate-900">Tikvah Psycem</span>
+              <span className="text-xs font-semibold text-slate-700">Tikvah Psychological Center & Multiservice</span>
             </div>
           </Link>
 
@@ -74,22 +73,22 @@ export const Navbar = () => {
               <div key={item.name} className="relative group">
                 <Link
                   to={item.href}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-3 py-2 rounded-md text-sm font-semibold transition-colors ${
                     isActive(item.href)
-                      ? "text-teal-600 bg-teal-50"
-                      : "text-slate-700 hover:text-teal-600 hover:bg-slate-50"
+                      ? "text-teal-700 bg-teal-50 font-bold"
+                      : "text-slate-800 hover:text-teal-700 hover:bg-slate-50"
                   }`}
                 >
                   {item.name}
                 </Link>
                 {item.submenu && (
-                  <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <div className="absolute left-0 mt-2 w-52 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-slate-200">
                     <div className="py-1">
                       {item.submenu.map((subItem) => (
                         <Link
                           key={subItem.name}
                           to={subItem.href}
-                          className="block px-4 py-2 text-sm text-slate-700 hover:bg-teal-50 hover:text-teal-600"
+                          className="block px-4 py-2 text-sm font-medium text-slate-800 hover:bg-teal-50 hover:text-teal-700"
                         >
                           {subItem.name}
                         </Link>
@@ -104,7 +103,7 @@ export const Navbar = () => {
           {/* CTA Button */}
           <div className="hidden lg:flex items-center">
             <Link to="/appointment">
-              <Button className="btn-primary-gradient">
+              <Button className="btn-primary-gradient font-bold">
                 Agendar Consulta
               </Button>
             </Link>
@@ -115,7 +114,8 @@ export const Navbar = () => {
             <Button
               variant="ghost"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2"
+              className="p-2 text-slate-800 hover:bg-slate-100"
+              aria-label="Menu principal"
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </Button>
@@ -130,22 +130,22 @@ export const Navbar = () => {
                 <div key={item.name}>
                   <Link
                     to={item.href}
-                    className={`block px-3 py-2 rounded-md text-base font-medium ${
+                    className={`block px-3 py-2 rounded-md text-base font-semibold ${
                       isActive(item.href)
-                        ? "text-teal-600 bg-teal-50"
-                        : "text-slate-700 hover:text-teal-600 hover:bg-slate-50"
+                        ? "text-teal-700 bg-teal-50"
+                        : "text-slate-800 hover:text-teal-700 hover:bg-slate-50"
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {item.name}
                   </Link>
                   {item.submenu && (
-                    <div className="ml-4 space-y-1">
+                    <div className="ml-4 space-y-1 mt-1 border-l-2 border-slate-200 pl-2">
                       {item.submenu.map((subItem) => (
                         <Link
                           key={subItem.name}
                           to={subItem.href}
-                          className="block px-3 py-2 text-sm text-slate-600 hover:text-teal-600"
+                          className="block px-3 py-2 text-sm font-medium text-slate-700 hover:text-teal-700"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           {subItem.name}
@@ -157,7 +157,7 @@ export const Navbar = () => {
               ))}
               <div className="pt-4 border-t border-slate-200">
                 <Link to="/appointment" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="w-full btn-primary-gradient">
+                  <Button className="w-full btn-primary-gradient font-bold">
                     Agendar Consulta
                   </Button>
                 </Link>
