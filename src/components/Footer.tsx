@@ -9,7 +9,7 @@ import {
   MapPin,
   ChevronUp,
   ExternalLink,
-  Twitter as TwitterIcon,
+  X as TwitterIcon,
   Video as TiktokIcon
 } from "lucide-react";
 import { Button } from "./ui/button";
@@ -42,9 +42,9 @@ const CONTACT_INFO = {
 const SOCIAL_LINKS = [
   { icon: LinkedinIcon, href: "https://www.linkedin.com/company/tikvah-psycem", label: "LinkedIn" },
   { icon: FacebookIcon, href: "https://www.facebook.com/consultoriotikvah", label: "Facebook" },
-  { icon: InstagramIcon, href: "https://instagram.com/tikvah_psycem", label: "Instagram" },
-  { icon: TwitterIcon, href: "https://twitter.com/tikvah_psycem", label: "X" },
-  { icon: TiktokIcon, href: "https://tiktok.com/@tikvah_psycem", label: "TikTok" },
+  { icon: InstagramIcon, href: "https://instagram.com/@tikvahpsycem", label: "Instagram" },
+  { icon: TwitterIcon, href: "https://twitter.com/@tikvahpsycem", label: "X" },
+  { icon: TiktokIcon, href: "https://tiktok.com/@tikvahpsycem", label: "TikTok" },
   { icon: MessageCircle, href: "https://wa.me/258827592980", label: "WhatsApp", primary: true },
 ];
 
