@@ -1,15 +1,20 @@
 {
-  "short_name": "Tikvah",
-  "name": "Tikvah Psycem",
+  "short_name": "Tikvah Psycem",
+  "name": "Tikvah Psychological Center & Multiservice",
   "icons": [
     {
       "src": "/favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
+    },
+    {
+      "src": "/tikvah-logo.jpg",
+      "sizes": "192x192 512x512",
+      "type": "image/jpeg"
     }
   ],
   "start_url": "/",
   "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "theme_color": "#1f3c88",
   "display": "standalone"
 }
