@@ -23,6 +23,7 @@ firebase.json
 .eslintcache
 .parcel-cache/
 .turbo/
+*.tsbuildinfo
 
 # Logs de Erro e Depuração
 logs/
@@ -58,5 +59,3 @@ Thumbs.db
 .vscode/
 !.vscode/extensions.json
 .idea/
-*.tsbuildinfo
-*.tsbuildinfo
