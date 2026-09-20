@@ -283,4 +283,107 @@ export const TIKVAH_CATEGORIES: TikvahServiceCategory[] = [
       },
     ],
   },
+  {
+    id: "assessoria",
+    title: "Assessoria empresarial e financeira",
+    short: "Assessoria",
+    summary:
+      "Apoio estratégico e financeiro a startups, PMEs e profissionais em crescimento.",
+    gradient: "from-sky-600 to-blue-700",
+    accent: "text-sky-700",
+    icon: "briefcase",
+    items: [
+      {
+        title: "Assessoria Empresarial e Estratégia de Crescimento",
+        description:
+          "Acompanhamento próximo a empreendedores e pequenas empresas na definição de modelo de negócio, plano de crescimento, estruturação inicial e validação de mercado, com foco na realidade económica de Moçambique.",
+      },
+      {
+        title: "Assessoria Financeira e Desenvolvimento Profissional",
+        description:
+          "Apoio financeiro pessoal e profissional combinado com desenvolvimento de competências técnicas e interpessoais, direcionado a indivíduos em transição de carreira ou equipas em desenvolvimento.",
+      },
+    ],
+  },
+  {
+    id: "coaching-mentoria",
+    title: "Coaching e mentoria",
+    short: "Coaching",
+    summary:
+      "Coaching executivo, de carreira e de vida, e mentoria académica e profissional.",
+    gradient: "from-emerald-600 to-teal-700",
+    accent: "text-emerald-700",
+    icon: "handHeart",
+    items: [
+      {
+        title: "Coaching Executivo",
+        description:
+          "Programa estruturado de coaching individual para executivos e líderes organizacionais, com objetivos claros, sessões periódicas e avaliação de progresso ao longo do percurso.",
+      },
+      {
+        title: "Coaching de Carreira e de Vida",
+        description:
+          "Acompanhamento individual para pessoas em transição de carreira, procura de propósito ou definição de metas de vida, com plano de ação estruturado.",
+      },
+      {
+        title: "Mentoria Académica e Profissional",
+        description:
+          "Programa de mentoria para estudantes universitários e profissionais juniores, com orientação sobre percurso académico, primeiras experiências profissionais e desenvolvimento de identidade profissional.",
+      },
+    ],
+  },
+  {
+    id: "programas-estruturados",
+    title: "Programas estruturados de impacto",
+    short: "Programas",
+    summary:
+      "Programas sistematizados de prevenção e promoção de saúde mental para organizações, escolas e famílias.",
+    gradient: "from-indigo-600 to-violet-700",
+    accent: "text-indigo-700",
+    icon: "brain",
+    items: [
+      {
+        title: "Programa de Prevenção e Manejo do Burnout",
+        description:
+          "Programa institucional com psicoeducação sobre estresse ocupacional, autorregulação psiconeurofisiológica e reorganização de processos laborais para reduzir o esgotamento profissional.",
+      },
+      {
+        title: "Programa de Mindfulness Baseado em Evidências (MBSR/MBCT)",
+        description:
+          "Programa de grupo em protocolos internacionalmente validados (MBSR e MBCT) para redução de stress e prevenção de recaída em quadros ansiosos e depressivos.",
+      },
+      {
+        title: "Programa de Envelhecimento Ativo",
+        description:
+          "Estimulação cognitiva, atividade física adaptada, engajamento social e atividades domiciliares complementares, direcionado a idosos e às suas famílias.",
+      },
+      {
+        title: "Programa Escolar de Prevenção em Saúde Mental",
+        description:
+          "Programa institucional para escolas com oficinas temáticas, competências socioemocionais, prevenção de bullying, manejo de stress e capacitação docente.",
+      },
+    ],
+  },
+  {
+    id: "reciclagem-sustentabilidade",
+    title: "Reciclagem e sustentabilidade",
+    short: "Sustentabilidade",
+    summary:
+      "Sensibilização ambiental e capacitação prática em gestão de resíduos para instituições.",
+    gradient: "from-lime-600 to-green-700",
+    accent: "text-lime-700",
+    icon: "handHeart",
+    items: [
+      {
+        title: "Conscientização Ambiental",
+        description:
+          "Sessões formativas sobre impacto ambiental, práticas sustentáveis e responsabilidade ecológica institucional, adaptadas ao contexto de Moçambique.",
+      },
+      {
+        title: "Treinamento em Gestão de Resíduos",
+        description:
+          "Formação prática sobre gestão de resíduos, separação, redução e práticas sustentáveis aplicáveis ao contexto organizacional.",
+      },
+    ],
+  },
 ];

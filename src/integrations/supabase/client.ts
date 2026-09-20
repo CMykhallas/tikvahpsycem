@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
+import { brokeredPreviewStorage } from './previewAuthStorage';
 
 // Aceita VITE_SUPABASE_ANON_KEY ou VITE_SUPABASE_PUBLISHABLE_KEY para evitar incompatibilidades
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
@@ -19,7 +20,7 @@ export const supabase = createClient<Database>(
   SUPABASE_KEY || 'placeholder-key',
   {
     auth: {
-      storage: typeof window !== 'undefined' ? localStorage : undefined,
+      storage: brokeredPreviewStorage(),
       persistSession: true,
       autoRefreshToken: true,
     },
