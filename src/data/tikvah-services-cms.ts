@@ -29,5 +29,9 @@ export interface ServiceCategory {
 
 export const tikvahEcosystemDescription: string = (data as any).tikvahEcosystemDescription;
 export const tikvahModel360Text: string = (data as any).tikvahModel360Text;
+// TODO: os preços das 4 categorias novas (assessoria, coaching-mentoria,
+// programas-estruturados, reciclagem-sustentabilidade) em tikvah-services-cms.json
+// são INDICATIVOS (base × IVA 16%, variação por modalidade/cliente) —
+// confirmar com o negócio antes de publicar.
 export const tikvahServicesEcosystem: ServiceCategory[] =
   (data as any).categories as ServiceCategory[];
