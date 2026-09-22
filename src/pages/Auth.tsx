@@ -26,7 +26,9 @@ const Auth = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = (location.state as { from?: string })?.from || '/';
+  const nextParam = new URLSearchParams(location.search).get('next');
+  const safeNext = nextParam && /^\/(?!\/)/.test(nextParam) ? nextParam : null;
+  const from = safeNext || (location.state as { from?: string })?.from || '/';
 
   useEffect(() => {
     if (user && !authLoading) {
@@ -79,7 +81,7 @@ const Auth = () => {
     if (!validateInputs()) return;
 
     setLoading(true);
-    const { error } = await signUp(email, password);
+    const { error } = await signUp(email, password, safeNext ?? undefined);
     setLoading(false);
 
     if (error) {
