@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "sdk_version": "3.0.1",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://rrlwabtzwvurhhfwpmiq.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "tikvahpsycem",
+      "version": "0.1.0",
+      "title": "tikvahpsycem"
+    },
+    "tools": [
+      {
+        "name": "list_services",
+        "title": "Listar categorias de serviços",
+        "description": "Lista as categorias do catálogo de serviços da Tikvah com um resumo de cada uma.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_service_category",
+        "title": "Detalhe de uma categoria de serviços",
+        "description": "Devolve todos os serviços de uma categoria do catálogo Tikvah, a partir do seu id.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "category_id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Id da categoria, por exemplo 'saude-mental'."
+            }
+          },
+          "required": [
+            "category_id"
+          ],
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_blog_posts",
+        "title": "Listar artigos do blog",
+        "description": "Lista os artigos publicados no blog da Tikvah, com slug, título e data.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_appointments",
+        "title": "Listar marcações",
+        "description": "Lista as marcações mais recentes a que o utilizador autenticado tem acesso. O acesso é controlado pelas regras de segurança da base de dados.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "limit": {
+              "description": "Número máximo de marcações a devolver (por omissão 10).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            },
+            "status": {
+              "description": "Filtrar por estado da marcação, por exemplo 'pending'.",
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
