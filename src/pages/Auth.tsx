@@ -81,7 +81,7 @@ const Auth = () => {
     if (!validateInputs()) return;
 
     setLoading(true);
-    const { error } = await signUp(email, password);
+    const { error } = await signUp(email, password, safeNext ?? undefined);
     setLoading(false);
 
     if (error) {
