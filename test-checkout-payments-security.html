@@ -1,808 +1,1853 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="color-scheme" content="light dark" />
-  <title>🛡️ Testes de Checkout, Pagamentos e Segurança</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tikvah Psycem - Consola de Testes de Pagamentos</title>
+
   <style>
     :root {
-      --bg1: #667eea;
-      --bg2: #764ba2;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --card: #ffffff;
-      --line: #e5e7eb;
-      --success: #4caf50;
-      --danger: #f44336;
-      --warning: #ffa500;
-      --info: #2196f3;
-      --shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+      --bg: #f4f6f8;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --border: #d9e0e7;
+      --text: #17202a;
+      --muted: #657384;
+      --primary: #243b53;
+      --primary-2: #334e68;
+
+      --success: #18794e;
+      --success-bg: #e8f5ee;
+
+      --danger: #b42318;
+      --danger-bg: #fef0ef;
+
+      --warning: #9a6700;
+      --warning-bg: #fff7df;
+
+      --info: #175cd3;
+      --info-bg: #eff8ff;
+
+      --radius: 12px;
+      --shadow: 0 4px 16px rgba(16, 24, 40, .06);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
-      font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
-      min-height: 100vh;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      line-height: 1.5;
+    }
+
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 28px 24px;
+    }
+
+    header .container {
+      max-width: 1400px;
+      margin: auto;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: 1.65rem;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      margin: 0;
+      color: #d9e2ec;
+    }
+
+    main {
+      max-width: 1400px;
+      margin: 24px auto;
+      padding: 0 20px 48px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
       padding: 20px;
+    }
+
+    .card + .card {
+      margin-top: 16px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .section-title h2 {
+      font-size: 1.05rem;
+      margin: 0;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: .88rem;
+      margin-bottom: 6px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: white;
+      color: var(--text);
+      font: inherit;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 2px solid rgba(23, 92, 211, .16);
+      border-color: var(--info);
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .help {
+      color: var(--muted);
+      font-size: .8rem;
+      margin-top: 5px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 15px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--primary);
+      color: white;
+    }
+
+    button:hover {
+      background: var(--primary-2);
+    }
+
+    button.secondary {
+      background: #eef2f6;
       color: var(--text);
     }
 
-    .container {
-      max-width: 1280px;
-      margin: 0 auto;
-      background: var(--card);
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
+    button.danger {
+      background: var(--danger);
     }
 
-    .header {
-      background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
-      color: white;
-      padding: 40px 24px;
-      text-align: center;
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
     }
 
-    .header h1 { font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: 10px; }
-    .header p { font-size: 1.05rem; opacity: .92; }
-
-    .content { padding: 28px; }
-
-    .alert {
-      padding: 14px 16px;
-      border-radius: 8px;
-      margin-bottom: 18px;
-      display: none;
-      border-left: 4px solid transparent;
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
     }
-    .alert.info { display: block; background: #e3f2fd; border-left-color: var(--info); color: #0f4c81; }
-    .alert.error { display: block; background: #ffebee; border-left-color: var(--danger); color: #8a1f1f; }
-    .alert.success { display: block; background: #f1f8f4; border-left-color: var(--success); color: #1f6b2b; }
 
-    .toolbar { display: grid; gap: 12px; margin-bottom: 22px; }
-
-    .all-tests-button {
-      width: 100%; padding: 15px 16px; border: none; border-radius: 8px;
-      background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
-      color: white; font-weight: 800; font-size: 1.02rem; cursor: pointer;
-      transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
-    }
-    .all-tests-button:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(102,126,234,.35); }
-    .all-tests-button:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
-
-    .test-section {
-      margin-bottom: 22px;
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--bg1);
-      padding: 18px;
+    .notice {
       border-radius: 10px;
-      background: #fafafa;
+      padding: 13px 15px;
+      margin-bottom: 16px;
+      border: 1px solid transparent;
+      font-size: .9rem;
     }
 
-    .test-section h2 {
-      color: var(--bg2); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; font-size: 1.15rem;
+    .notice.warning {
+      background: var(--warning-bg);
+      border-color: #f0d98a;
     }
 
-    .test-group {
+    .notice.info {
+      background: var(--info-bg);
+      border-color: #b2ddff;
+    }
+
+    .notice.danger {
+      background: var(--danger-bg);
+      border-color: #f7b5ae;
+    }
+
+    .summary {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
     }
 
-    .test-button {
-      padding: 14px 16px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700;
-      color: white; background: var(--bg1); transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
-      text-align: left; min-height: 56px;
+    .metric {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 15px;
+      background: var(--surface-2);
     }
-    .test-button:hover { background: var(--bg2); transform: translateY(-1px); box-shadow: 0 8px 18px rgba(102,126,234,.25); }
-    .test-button:disabled { opacity: .65; cursor: not-allowed; transform: none; box-shadow: none; }
-    .test-button.running { background: var(--warning); animation: pulse 1.2s infinite; }
-    .test-button.success { background: var(--success); }
-    .test-button.error { background: var(--danger); }
 
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.75} }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .results-panel {
-      background: white; border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-top: 26px;
-      max-height: 420px; overflow-y: auto;
+    .metric-label {
+      color: var(--muted);
+      font-size: .78rem;
+      margin-bottom: 4px;
     }
-    .results-panel h3 { color: var(--text); margin-bottom: 14px; border-bottom: 2px solid var(--bg1); padding-bottom: 10px; }
 
-    .result-item {
-      padding: 12px; margin-bottom: 10px; border-left: 4px solid; border-radius: 6px; font-size: .96rem;
-      background: #fff;
+    .metric-value {
+      font-size: 1.55rem;
+      font-weight: 700;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: .76rem;
+      font-weight: 700;
+    }
+
+    .status.passed {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .status.failed {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .status.skipped {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .status.running {
+      background: var(--info-bg);
+      color: var(--info);
+    }
+
+    .tests {
+      display: grid;
+      gap: 10px;
+    }
+
+    .test-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 15px;
+      background: white;
+    }
+
+    .test-name {
+      font-weight: 650;
+    }
+
+    .test-description {
+      color: var(--muted);
+      font-size: .82rem;
+      margin-top: 2px;
+    }
+
+    .test-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 7px;
+    }
+
+    .tag {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 2px 7px;
+      font-size: .7rem;
+      color: var(--muted);
+      background: var(--surface-2);
+    }
+
+    .result-details {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: .78rem;
+      white-space: pre-wrap;
       word-break: break-word;
     }
-    .result-item.passed { border-left-color: var(--success); background: #f1f8f4; color: #1f6b2b; }
-    .result-item.failed { border-left-color: var(--danger); background: #fdf1f0; color: #8a1f1f; }
-    .result-item.running { border-left-color: var(--warning); background: #fff8f0; color: #8a5a00; }
 
-    .summary {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 22px;
-    }
-    .summary-card {
-      background: white; border: 1px solid var(--line); border-radius: 10px; padding: 18px; text-align: center;
-    }
-    .summary-card h4 {
-      color: var(--bg1); font-size: .82rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;
-    }
-    .summary-card .value { font-size: 2.2rem; font-weight: 800; color: var(--text); }
-    .summary-card.passed { border-left: 4px solid var(--success); }
-    .summary-card.failed { border-left: 4px solid var(--danger); }
-    .summary-card.total { border-left: 4px solid var(--bg1); }
-
-    .footer {
-      background: #f5f5f5; padding: 18px; text-align: center; color: var(--muted); border-top: 1px solid var(--line);
+    code {
+      background: #eef2f6;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: .83em;
     }
 
-    .inline-row { display: flex; gap: 10px; flex-wrap: wrap; }
-    .badge {
-      display: inline-flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 999px;
-      background: #eef2ff; color: #4338ca; font-size: .88rem; font-weight: 700;
-    }
-    .spinner {
-      display: inline-block; width: 18px; height: 18px; border: 3px solid #e5e7eb; border-top-color: var(--bg1);
-      border-radius: 50%; animation: spin 1s linear infinite; vertical-align: middle;
+    pre {
+      margin: 10px 0 0;
+      padding: 12px;
+      border-radius: 8px;
+      background: #101828;
+      color: #e4e7ec;
+      overflow: auto;
+      font-size: .76rem;
     }
 
-    @media (max-width: 640px) {
-      .content { padding: 18px; }
-      .header { padding: 30px 18px; }
-      .test-section { padding: 14px; }
+    .danger-text {
+      color: var(--danger);
+    }
+
+    .success-text {
+      color: var(--success);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    footer {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+      color: var(--muted);
+      font-size: .78rem;
+    }
+
+    @media (max-width: 900px) {
+      .grid-2,
+      .grid-3,
+      .summary {
+        grid-template-columns: 1fr;
+      }
+
+      .test-row {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
+
+<header>
   <div class="container">
-    <div class="header">
-      <h1>🛡️ Testes de Segurança Avançada</h1>
-      <p>Checkout, Pagamentos e Proteção de Banco de Dados</p>
-    </div>
+    <h1>Tikvah PSYCEM — Consola de Testes de Pagamentos</h1>
+    <p>
+      Validação técnica de autenticação, criação de pagamentos,
+      idempotência, RLS e callback do provedor.
+    </p>
+  </div>
+</header>
 
-    <div class="content">
-      <div class="alert info" id="alertBox"></div>
+<main>
 
-      <div class="toolbar">
-        <button class="all-tests-button" id="runAllBtn" type="button">
-          ▶️ EXECUTAR TODOS OS TESTES
-        </button>
-        <div class="inline-row">
-          <span class="badge">ENV: <span id="envLabel">local</span></span>
-          <span class="badge">Supabase: <span id="supabaseUrlLabel">http://127.0.0.1:54321</span></span>
-        </div>
-      </div>
-
-      <section class="test-section">
-        <h2>🛒 Testes de Checkout</h2>
-        <div class="test-group">
-          <button class="test-button" data-test="checkout-valid" type="button">Checkout Válido</button>
-          <button class="test-button" data-test="checkout-invalid-email" type="button">Email Inválido</button>
-          <button class="test-button" data-test="checkout-invalid-phone" type="button">Telefone Inválido</button>
-          <button class="test-button" data-test="checkout-empty-cart" type="button">Carrinho Vazio</button>
-        </div>
-      </section>
-
-      <section class="test-section">
-        <h2>💰 Testes de Validação de Preços</h2>
-        <div class="test-group">
-          <button class="test-button" data-test="price-manipulation" type="button">Detecção de Manipulação</button>
-          <button class="test-button" data-test="rounding-tolerance" type="button">Tolerância de Arredondamento</button>
-          <button class="test-button" data-test="inactive-product" type="button">Produto Inativo</button>
-          <button class="test-button" data-test="insufficient-stock" type="button">Stock Insuficiente</button>
-        </div>
-      </section>
-
-      <section class="test-section">
-        <h2>📱 Testes de Pagamento M-Pesa</h2>
-        <div class="test-group">
-          <button class="test-button" data-test="mpesa-valid" type="button">Pagamento Válido</button>
-          <button class="test-button" data-test="mpesa-invalid-phone" type="button">Telefone Inválido</button>
-          <button class="test-button" data-test="mpesa-negative-amount" type="button">Montante Negativo</button>
-          <button class="test-button" data-test="mpesa-invalid-order" type="button">Order Inexistente</button>
-        </div>
-      </section>
-
-      <section class="test-section">
-        <h2>🚦 Testes de Rate Limiting</h2>
-        <div class="test-group">
-          <button class="test-button" data-test="rate-limit-multiple" type="button">Múltiplas Requisições</button>
-          <button class="test-button" data-test="rate-limit-blocking" type="button">Bloqueio de IP</button>
-        </div>
-      </section>
-
-      <section class="test-section">
-        <h2>🔐 Testes de Segurança do Banco de Dados</h2>
-        <div class="test-group">
-          <button class="test-button" data-test="sql-injection" type="button">Injeção SQL</button>
-          <button class="test-button" data-test="xss" type="button">XSS (Cross-Site Scripting)</button>
-          <button class="test-button" data-test="privilege-escalation" type="button">Escalação de Privilégios</button>
-          <button class="test-button" data-test="unauthenticated-access" type="button">Acesso Não Autenticado</button>
-        </div>
-      </section>
-
-      <section class="test-section">
-        <h2>📋 Testes de Logging e Auditoria</h2>
-        <div class="test-group">
-          <button class="test-button" data-test="incident-logging" type="button">Registros de Incidentes</button>
-          <button class="test-button" data-test="audit-trail" type="button">Trilha de Auditoria</button>
-        </div>
-      </section>
-
-      <div class="results-panel">
-        <h3>📊 Resultados dos Testes</h3>
-        <div id="resultsContainer">
-          <div class="result-item running">Aguardando testes... Clique em um botão de teste acima.</div>
-        </div>
-      </div>
-
-      <div class="summary">
-        <div class="summary-card total">
-          <h4>Total de Testes</h4>
-          <div class="value" id="totalTests">0</div>
-        </div>
-        <div class="summary-card passed">
-          <h4>Aprovados ✅</h4>
-          <div class="value" id="passedTests">0</div>
-        </div>
-        <div class="summary-card failed">
-          <h4>Reprovados ❌</h4>
-          <div class="value" id="failedTests">0</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer">
-      <p>🔒 Sistema de Testes de Segurança - Tikvah PsyCem (2026)</p>
-      <p>Última atualização: <span id="updateTime"></span></p>
-    </div>
+  <div class="notice warning">
+    <strong>Ambiente controlado.</strong>
+    Esta consola não executa criação de pagamentos por defeito.
+    Para testes de criação é obrigatório configurar explicitamente
+    um booking de sandbox e activar o modo <strong>sandbox</strong>.
+    Nunca introduza aqui uma chave <code>service_role</code> ou um segredo PaySuite.
   </div>
 
-  <script>
-    'use strict';
+  <section class="card">
+    <div class="section-title">
+      <h2>1. Configuração</h2>
+      <span id="environmentBadge" class="status skipped">Não configurado</span>
+    </div>
 
-    const CONFIG = (() => {
-      const localUrl = 'http://127.0.0.1:54321';
-      const envUrl = window.__SUPABASE_URL__ || localUrl;
-      const envKey = window.__SUPABASE_ANON_KEY__ || null;
-      return {
-        SUPABASE_URL: envUrl,
-        SUPABASE_KEY: envKey,
-        IS_LOCAL: envUrl.includes('127.0.0.1') || envUrl.includes('localhost'),
-        REQUEST_TIMEOUT_MS: 12000,
-      };
-    })();
+    <div class="grid grid-3">
 
-    const state = {
-      testResults: [],
-      running: false,
-    };
+      <div class="field">
+        <label for="supabaseUrl">Supabase URL</label>
+        <input id="supabaseUrl" type="url" placeholder="https://project.supabase.co">
+      </div>
 
-    const el = {
-      alertBox: document.getElementById('alertBox'),
-      runAllBtn: document.getElementById('runAllBtn'),
-      resultsContainer: document.getElementById('resultsContainer'),
-      totalTests: document.getElementById('totalTests'),
-      passedTests: document.getElementById('passedTests'),
-      failedTests: document.getElementById('failedTests'),
-      updateTime: document.getElementById('updateTime'),
-      envLabel: document.getElementById('envLabel'),
-      supabaseUrlLabel: document.getElementById('supabaseUrlLabel'),
-      testButtons: Array.from(document.querySelectorAll('.test-button')),
-    };
+      <div class="field">
+        <label for="anonKey">Supabase Anon Key</label>
+        <input id="anonKey" type="password" autocomplete="off">
+        <div class="help">
+          Chave pública anon. Nunca utilizar service role.
+        </div>
+      </div>
 
-    el.envLabel.textContent = CONFIG.IS_LOCAL ? 'local' : 'remote';
-    el.supabaseUrlLabel.textContent = CONFIG.SUPABASE_URL;
-    el.updateTime.textContent = new Date().toLocaleString('pt-BR');
+      <div class="field">
+        <label for="accessToken">Access Token</label>
+        <input id="accessToken" type="password" autocomplete="off">
+        <div class="help">
+          Opcional. Não é persistido pelo painel.
+        </div>
+      </div>
 
-    function escapeHtml(str) {
-      return String(str)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
+      <div class="field">
+        <label for="bookingId">Booking Fixture ID</label>
+        <input id="bookingId" type="text" placeholder="UUID real de sandbox">
+        <div class="help">
+          Não inventar. Deve corresponder a um booking existente no ambiente de teste.
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="paymentMode">Modo de teste</label>
+        <select id="paymentMode">
+          <option value="disabled">Desactivado</option>
+          <option value="sandbox">Sandbox</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="signatureHeader">Header de assinatura PaySuite</label>
+        <input id="signatureHeader" type="text"
+               placeholder="Configurar segundo documentação oficial">
+        <div class="help">
+          Não assumir o nome do header sem confirmação contratual.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="field">
+      <label>
+        <input id="allowPaymentCreation"
+               type="checkbox"
+               style="width:auto;margin-right:6px;">
+        Permitir testes que criam uma transacção de pagamento no sandbox
+      </label>
+    </div>
+
+    <div class="actions">
+      <button id="saveConfig">Aplicar configuração</button>
+      <button id="clearConfig" class="secondary">Limpar</button>
+    </div>
+  </section>
+
+
+  <section class="card">
+    <div class="section-title">
+      <h2>2. Resumo da execução</h2>
+    </div>
+
+    <div class="summary">
+
+      <div class="metric">
+        <div class="metric-label">Total</div>
+        <div id="totalTests" class="metric-value">0</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">Passed</div>
+        <div id="passedTests" class="metric-value success-text">0</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">Failed</div>
+        <div id="failedTests" class="metric-value danger-text">0</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">Skipped</div>
+        <div id="skippedTests" class="metric-value">0</div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <section class="card">
+    <div class="section-title">
+      <h2>3. Testes de segurança e contrato da API</h2>
+
+      <button id="runSecurity">
+        Executar segurança
+      </button>
+    </div>
+
+    <div id="securityTests" class="tests"></div>
+  </section>
+
+
+  <section class="card">
+    <div class="section-title">
+      <h2>4. Testes de integridade de pagamento</h2>
+
+      <button id="runPayments">
+        Executar pagamentos sandbox
+      </button>
+    </div>
+
+    <div class="notice info">
+      Estes testes permanecem <strong>SKIPPED</strong> enquanto não houver
+      um booking real de sandbox, token de utilizador e autorização explícita
+      para criação de pagamentos.
+    </div>
+
+    <div id="paymentTests" class="tests"></div>
+  </section>
+
+
+  <section class="card">
+    <div class="section-title">
+      <h2>5. Testes do callback</h2>
+
+      <button id="runCallback">
+        Executar testes de callback
+      </button>
+    </div>
+
+    <div class="notice info">
+      A consola não envia callbacks de sucesso nem tenta alterar
+      <code>bookings</code> ou <code>payment_transactions</code>.
+      Os testes verificam apenas o comportamento de rejeição sem autenticação
+      do provedor.
+    </div>
+
+    <div id="callbackTests" class="tests"></div>
+  </section>
+
+
+  <section class="card">
+    <div class="section-title">
+      <h2>6. RLS e exposição de dados</h2>
+
+      <button id="runRls">
+        Executar RLS
+      </button>
+    </div>
+
+    <div id="rlsTests" class="tests"></div>
+  </section>
+
+
+  <section class="card">
+    <div class="section-title">
+      <h2>7. Execução completa</h2>
+
+      <div class="actions">
+        <button id="runAll">Executar todos</button>
+        <button id="clearResults" class="secondary">Limpar resultados</button>
+      </div>
+    </div>
+
+    <div id="allTests" class="tests"></div>
+  </section>
+
+</main>
+
+<footer>
+  Tikvah PSYCEM — Payment Security Test Console.
+  Esta ferramenta apoia testes técnicos e não substitui testes automatizados,
+  testes de contrato do provedor, revisão de segurança ou monitorização de produção.
+  <span id="year"></span>
+</footer>
+
+
+<script>
+"use strict";
+
+/*
+ * ============================================================
+ * CONFIGURAÇÃO
+ * ============================================================
+ *
+ * Também pode ser injectada antes deste script:
+ *
+ * window.__SUPABASE_URL__
+ * window.__SUPABASE_ANON_KEY__
+ * window.__SUPABASE_ACCESS_TOKEN__
+ * window.__TEST_BOOKING_ID__
+ * window.__PAYMENT_TEST_MODE__
+ * window.__ALLOW_PAYMENT_CREATION_TEST__
+ * window.__PAYSUITE_SIGNATURE_HEADER__
+ *
+ * NÃO colocar aqui:
+ * - SUPABASE_SERVICE_ROLE_KEY
+ * - PAYSUITE_API_TOKEN
+ * - PAYSUITE_WEBHOOK_SECRET
+ * - Stripe Secret Key
+ */
+
+const CONFIG = {
+  supabaseUrl:
+    window.__SUPABASE_URL__ || "",
+
+  anonKey:
+    window.__SUPABASE_ANON_KEY__ || "",
+
+  accessToken:
+    window.__SUPABASE_ACCESS_TOKEN__ || "",
+
+  bookingId:
+    window.__TEST_BOOKING_ID__ || "",
+
+  paymentMode:
+    window.__PAYMENT_TEST_MODE__ || "disabled",
+
+  allowPaymentCreation:
+    window.__ALLOW_PAYMENT_CREATION_TEST__ === true,
+
+  paysuiteSignatureHeader:
+    window.__PAYSUITE_SIGNATURE_HEADER__ || "",
+
+  createPaymentPath:
+    "/functions/v1/create-payment",
+
+  paymentCallbackPath:
+    "/functions/v1/payment-callback",
+
+  paymentTransactionsPath:
+    "/rest/v1/payment_transactions",
+
+  timeoutMs: 12000
+};
+
+
+const state = {
+  results: []
+};
+
+
+/*
+ * ============================================================
+ * UTILITÁRIOS
+ * ============================================================
+ */
+
+function $(id) {
+  return document.getElementById(id);
+}
+
+
+function isUuid(value) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+}
+
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+
+function redactKey(key, value) {
+  const sensitive = [
+    "token",
+    "secret",
+    "authorization",
+    "password",
+    "apikey",
+    "api_key",
+    "service_role",
+    "webhook_secret"
+  ];
+
+  if (sensitive.some(item => key.toLowerCase().includes(item))) {
+    return "[REDACTED]";
+  }
+
+  if (
+    typeof value === "string" &&
+    value.length > 160
+  ) {
+    return value.slice(0, 80) + "…[TRUNCATED]";
+  }
+
+  return value;
+}
+
+
+function sanitise(value) {
+  if (Array.isArray(value)) {
+    return value.map(sanitise);
+  }
+
+  if (value && typeof value === "object") {
+    const result = {};
+
+    for (const [key, item] of Object.entries(value)) {
+      result[key] = sanitise(redactKey(key, item));
     }
 
-    function showAlert(type, message) {
-      el.alertBox.style.display = 'block';
-      el.alertBox.className = `alert ${type}`;
-      el.alertBox.innerHTML = message;
-    }
+    return result;
+  }
 
-    function clearAlert() {
-      el.alertBox.style.display = 'none';
-      el.alertBox.className = 'alert';
-      el.alertBox.textContent = '';
-    }
+  return value;
+}
 
-    function sanitizeDetails(details) {
-      if (details === null || details === undefined) return {};
-      if (typeof details !== 'object') return { value: String(details) };
-      return details;
-    }
 
-    function addTestResult(test, passed, message, details = {}) {
-      state.testResults.push({
-        test,
-        passed,
-        message,
-        details: sanitizeDetails(details),
-        timestamp: new Date().toISOString(),
-      });
-      updateUI();
-    }
+function formatDetails(value) {
+  if (value === undefined || value === null) {
+    return "";
+  }
 
-    function updateUI() {
-      const sorted = [...state.testResults].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      el.resultsContainer.innerHTML = sorted.length
-        ? sorted.map(r => `
-            <div class="result-item ${r.passed ? 'passed' : 'failed'}">
-              <strong>${escapeHtml(r.test)}</strong><br>
-              ${escapeHtml(r.message)}
-              ${r.details && Object.keys(r.details).length > 0 ? `<br><small>${escapeHtml(JSON.stringify(r.details))}</small>` : ''}
-            </div>
-          `).join('')
-        : '<div class="result-item running">Nenhum teste executado ainda.</div>';
+  if (typeof value === "string") {
+    return value;
+  }
 
-      const passed = state.testResults.filter(r => r.passed).length;
-      const failed = state.testResults.filter(r => !r.passed).length;
-      const total = state.testResults.length;
-      el.totalTests.textContent = total;
-      el.passedTests.textContent = passed;
-      el.failedTests.textContent = failed;
-      el.updateTime.textContent = new Date().toLocaleString('pt-BR');
-    }
+  try {
+    return JSON.stringify(sanitise(value), null, 2);
+  } catch {
+    return String(value);
+  }
+}
 
-    function setButtonState(button, stateName) {
-      button.classList.remove('running', 'success', 'error');
-      if (stateName) button.classList.add(stateName);
-    }
 
-    function setAllButtonsDisabled(disabled) {
-      el.testButtons.forEach(btn => btn.disabled = disabled);
-      el.runAllBtn.disabled = disabled;
-    }
+function getConfig() {
+  return {
+    supabaseUrl: $("supabaseUrl").value.trim().replace(/\/+$/, ""),
+    anonKey: $("anonKey").value.trim(),
+    accessToken: $("accessToken").value.trim(),
+    bookingId: $("bookingId").value.trim(),
+    paymentMode: $("paymentMode").value,
+    allowPaymentCreation: $("allowPaymentCreation").checked,
+    paysuiteSignatureHeader: $("signatureHeader").value.trim()
+  };
+}
 
-    function getButtonByTest(testId) {
-      return document.querySelector(`button[data-test="${testId}"]`);
-    }
 
-    function validEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
+function applyConfigToState() {
+  Object.assign(CONFIG, getConfig());
+  updateEnvironmentBadge();
+}
 
-    function validPhone(phone) {
-      return /^\+?[0-9\s\-()]{8,20}$/.test(phone);
-    }
 
-    async function fetchAPI(endpoint, method = 'GET', body) {
-      if (!CONFIG.SUPABASE_KEY) {
-        throw new Error('SUPABASE_ANON_KEY não configurada no ambiente');
-      }
+function updateEnvironmentBadge() {
+  const badge = $("environmentBadge");
 
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT_MS);
-      try {
-        const response = await fetch(`${CONFIG.SUPABASE_URL}${endpoint}`, {
-          method,
-          signal: controller.signal,
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${CONFIG.SUPABASE_KEY}`,
-            apikey: CONFIG.SUPABASE_KEY,
-          },
-          body: body === undefined ? undefined : JSON.stringify(body),
-        });
+  if (!CONFIG.supabaseUrl || !CONFIG.anonKey) {
+    badge.className = "status skipped";
+    badge.textContent = "Não configurado";
+    return;
+  }
 
-        let data = null;
-        try { data = await response.json(); } catch { data = null; }
-        return { status: response.status, ok: response.ok, data };
-      } finally {
-        clearTimeout(timeout);
-      }
-    }
+  if (CONFIG.paymentMode === "sandbox") {
+    badge.className = "status passed";
+    badge.textContent = "Sandbox";
+    return;
+  }
 
-    function errorMessage(error) {
-      return error instanceof Error ? error.message : String(error);
-    }
+  badge.className = "status skipped";
+  badge.textContent = "Criação desactivada";
+}
 
-    async function executeTest(testName, testFn, button) {
-      try {
-        if (button) {
-          button.disabled = true;
-          setButtonState(button, 'running');
-        }
 
-        const result = await testFn();
-        addTestResult(testName, !!result.passed, result.message, result.details);
+function isPaymentCreationAllowed() {
+  return (
+    CONFIG.paymentMode === "sandbox" &&
+    CONFIG.allowPaymentCreation === true &&
+    Boolean(CONFIG.bookingId) &&
+    isUuid(CONFIG.bookingId) &&
+    Boolean(CONFIG.accessToken)
+  );
+}
 
-        if (button) {
-          setButtonState(button, result.passed ? 'success' : 'error');
-          button.disabled = false;
-          window.setTimeout(() => setButtonState(button, ''), 2500);
-        }
-      } catch (error) {
-        addTestResult(testName, false, `Erro: ${errorMessage(error)}`, { error: errorMessage(error) });
-        if (button) {
-          setButtonState(button, 'error');
-          button.disabled = false;
-        }
-      }
-    }
 
-    async function testCheckoutValid() {
-      const payload = {
-        customer_email: 'customer@example.com',
-        customer_phone: '+258841234567',
-        items: [{ product_id: 'prod-001', quantity: 1 }],
-        total_amount: 5000.0,
-      };
-      const res = await fetchAPI('/functions/v1/create-checkout', 'POST', payload);
-      return {
-        passed: res.ok,
-        message: res.ok ? '✅ Checkout criado com sucesso' : '❌ Falha ao criar checkout',
-        details: res.data || payload,
-      };
-    }
+function endpoint(path) {
+  return `${CONFIG.supabaseUrl}${path}`;
+}
 
-    async function testCheckoutInvalidEmail() {
-      const payload = {
-        customer_email: 'invalid-email',
-        customer_phone: '+258841234567',
-        items: [{ product_id: 'prod-001', quantity: 1 }],
-        total_amount: 5000.0,
-      };
-      const res = await fetchAPI('/functions/v1/create-checkout', 'POST', payload);
-      const rejected = !res.ok || res.status >= 400;
-      return {
-        passed: rejected && !validEmail(payload.customer_email),
-        message: rejected ? '✅ Email rejeitado corretamente' : '❌ Email inválido não foi rejeitado',
-        details: res.data || payload,
-      };
-    }
 
-    async function testCheckoutInvalidPhone() {
-      const payload = {
-        customer_email: 'customer@example.com',
-        customer_phone: '123',
-        items: [{ product_id: 'prod-001', quantity: 1 }],
-        total_amount: 5000.0,
-      };
-      const res = await fetchAPI('/functions/v1/create-checkout', 'POST', payload);
-      const rejected = !res.ok || res.status >= 400;
-      return {
-        passed: rejected && !validPhone(payload.customer_phone),
-        message: rejected ? '✅ Telefone rejeitado corretamente' : '❌ Telefone inválido não foi rejeitado',
-        details: res.data || payload,
-      };
-    }
+function headers(includeAuth = true) {
+  const result = {
+    "Accept": "application/json"
+  };
 
-    async function testCheckoutEmptyCart() {
-      const payload = {
-        customer_email: 'customer@example.com',
-        customer_phone: '+258841234567',
-        items: [],
-        total_amount: 5000.0,
-      };
-      const res = await fetchAPI('/functions/v1/create-checkout', 'POST', payload);
-      const rejected = !res.ok || res.status >= 400;
-      return {
-        passed: rejected,
-        message: rejected ? '✅ Carrinho vazio rejeitado' : '❌ Carrinho vazio não foi rejeitado',
-        details: res.data || payload,
-      };
-    }
+  if (CONFIG.anonKey) {
+    result["apikey"] = CONFIG.anonKey;
+  }
 
-    async function testPriceManipulation() {
-      const payload = {
-        customer_email: 'attacker@example.com',
-        customer_phone: '+258841234567',
-        items: [{ product_id: 'prod-001', quantity: 1 }],
-        total_amount: 0.01,
-      };
-      const res = await fetchAPI('/functions/v1/create-checkout', 'POST', payload);
-      const flagged = !res.ok || Boolean(res.data?.tamperedProducts || res.data?.tampered);
-      return {
-        passed: flagged,
-        message: flagged ? '✅ Manipulação detectada' : '❌ Manipulação não foi detectada',
-        details: res.data || payload,
-      };
-    }
+  if (includeAuth && CONFIG.accessToken) {
+    result["Authorization"] = `Bearer ${CONFIG.accessToken}`;
+  }
 
-    async function testRoundingTolerance() {
-      const payload = {
-        customer_email: 'customer@example.com',
-        customer_phone: '+258841234567',
-        items: [{ product_id: 'prod-001', quantity: 1 }],
-        total_amount: 1000.001,
-      };
-      const res = await fetchAPI('/functions/v1/create-checkout', 'POST', payload);
-      return {
-        passed: res.ok,
-        message: res.ok ? '✅ Variação pequena aceita' : '❌ Variação foi rejeitada',
-        details: res.data || payload,
-      };
-    }
+  return result;
+}
 
-    async function testInactiveProduct() {
-      const payload = {
-        customer_email: 'customer@example.com',
-        customer_phone: '+258841234567',
-        items: [{ product_id: 'prod-inactive', quantity: 1 }],
-        total_amount: 1000.0,
-      };
-      const res = await fetchAPI('/functions/v1/create-checkout', 'POST', payload);
-      const rejected = !res.ok || Boolean(res.data?.tampered);
-      return {
-        passed: rejected,
-        message: rejected ? '✅ Produto inativo rejeitado' : '❌ Produto inativo não foi rejeitado',
-        details: res.data || payload,
-      };
-    }
 
-    async function testInsufficientStock() {
-      const payload = {
-        customer_email: 'customer@example.com',
-        customer_phone: '+258841234567',
-        items: [{ product_id: 'prod-001', quantity: 999999 }],
-        total_amount: 50000000.0,
-      };
-      const res = await fetchAPI('/functions/v1/create-checkout', 'POST', payload);
-      const rejected = !res.ok || Boolean(res.data?.tampered);
-      return {
-        passed: rejected,
-        message: rejected ? '✅ Stock insuficiente detectado' : '❌ Stock insuficiente não foi bloqueado',
-        details: res.data || payload,
-      };
-    }
+async function request(url, options = {}) {
+  const controller = new AbortController();
 
-    async function testMPesaValid() {
-      const payload = {
-        order_id: 'order-001',
-        payment_method: 'mpesa',
-        amount: 5000.0,
-        phone_number: '+258841234567',
-      };
-      const res = await fetchAPI('/functions/v1/process-mpesa-payment', 'POST', payload);
-      return {
-        passed: res.ok,
-        message: res.ok ? '✅ Pagamento processado' : '❌ Falha no processamento',
-        details: res.data || payload,
-      };
-    }
+  const timeout = setTimeout(
+    () => controller.abort(),
+    CONFIG.timeoutMs
+  );
 
-    async function testMPesaInvalidPhone() {
-      const payload = {
-        order_id: 'order-001',
-        payment_method: 'mpesa',
-        amount: 5000.0,
-        phone_number: '123',
-      };
-      const res = await fetchAPI('/functions/v1/process-mpesa-payment', 'POST', payload);
-      return {
-        passed: (!res.ok || res.status >= 400) && !validPhone(payload.phone_number),
-        message: !res.ok ? '✅ Telefone rejeitado' : '❌ Telefone inválido não foi rejeitado',
-        details: res.data || payload,
-      };
-    }
-
-    async function testMPesaNegativeAmount() {
-      const payload = {
-        order_id: 'order-001',
-        payment_method: 'mpesa',
-        amount: -5000,
-        phone_number: '+258841234567',
-      };
-      const res = await fetchAPI('/functions/v1/process-mpesa-payment', 'POST', payload);
-      return {
-        passed: !res.ok || res.status >= 400,
-        message: !res.ok ? '✅ Montante negativo rejeitado' : '❌ Montante negativo foi aceito',
-        details: res.data || payload,
-      };
-    }
-
-    async function testMPesaInvalidOrder() {
-      const payload = {
-        order_id: 'nonexistent-order',
-        payment_method: 'mpesa',
-        amount: 5000.0,
-        phone_number: '+258841234567',
-      };
-      const res = await fetchAPI('/functions/v1/process-mpesa-payment', 'POST', payload);
-      return {
-        passed: !res.ok || res.status >= 400,
-        message: !res.ok ? '✅ Order inexistente rejeitada' : '❌ Order inexistente não foi rejeitada',
-        details: res.data || payload,
-      };
-    }
-
-    async function testRateLimitMultiple() {
-      const payload = {
-        customer_email: 'customer@example.com',
-        customer_phone: '+258841234567',
-        items: [{ product_id: 'prod-001', quantity: 1 }],
-        total_amount: 5000.0,
-      };
-      let successCount = 0;
-      let blocked = false;
-      for (let i = 0; i < 10; i++) {
-        const res = await fetchAPI('/functions/v1/create-checkout', 'POST', payload);
-        if (res.status === 429) { blocked = true; break; }
-        if (res.ok) successCount++;
-      }
-      return {
-        passed: blocked || successCount > 0,
-        message: blocked ? `✅ Bloqueado após ${successCount} requisições` : `ℹ️ Sem bloqueio, ${successCount} requisições aceitas`,
-        details: { successCount, limitHint: 5, windowMs: 15 * 60 * 1000 },
-      };
-    }
-
-    async function testRateLimitBlocking() {
-      return {
-        passed: true,
-        message: '✅ Rate limiting configurado para validação por comportamento do endpoint',
-        details: { note: 'Teste de integração depende do backend em execução' },
-      };
-    }
-
-    async function testSQLInjection() {
-      const payload = {
-        customer_email: "test@example.com'; DROP TABLE orders;--",
-        customer_phone: '+258841234567',
-        items: [{ product_id: 'prod-001', quantity: 1 }],
-        total_amount: 5000.0,
-      };
-      const res = await fetchAPI('/functions/v1/create-checkout', 'POST', payload);
-      const safe = !String(res.data?.customer_email ?? '').includes('DROP');
-      return {
-        passed: !safe || !res.ok,
-        message: !res.ok || safe ? '✅ Entrada SQL protegida' : '❌ SQL injection não foi bloqueado',
-        details: res.data || payload,
-      };
-    }
-
-    async function testXSS() {
-      const payload = {
-        customer_email: "<script>alert('xss')</script>@example.com",
-        customer_phone: '+258841234567',
-        items: [{ product_id: 'prod-001', quantity: 1 }],
-        total_amount: 5000.0,
-      };
-      const res = await fetchAPI('/functions/v1/create-checkout', 'POST', payload);
-      const safe = !String(res.data?.customer_email ?? '').includes('<script>');
-      return {
-        passed: !safe || !res.ok,
-        message: !res.ok || safe ? '✅ Conteúdo XSS sanitizado' : '❌ XSS não foi bloqueado',
-        details: res.data || payload,
-      };
-    }
-
-    async function testPrivilegeEscalation() {
-      const payload = {
-        customer_email: 'customer@example.com',
-        customer_phone: '+258841234567',
-        items: [{ product_id: 'prod-001', quantity: 1 }],
-        total_amount: 5000.0,
-        role: 'admin',
-        user_id: 'user-123',
-      };
-      const res = await fetchAPI('/functions/v1/create-checkout', 'POST', payload);
-      const safe = !res.data?.role;
-      return {
-        passed: !safe || !res.ok,
-        message: !res.ok || safe ? '✅ Campo de privilégio ignorado' : '❌ Escalação de privilégios aceita',
-        details: res.data || payload,
-      };
-    }
-
-    async function testUnauthenticatedAccess() {
-      const response = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/create-checkout`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          customer_email: 'test@example.com',
-          customer_phone: '+258841234567',
-          items: [{ product_id: 'prod-001', quantity: 1 }],
-          total_amount: 5000.0,
-        }),
-      });
-      return {
-        passed: response.status >= 400,
-        message: response.status >= 400 ? `✅ Requisição rejeitada (${response.status})` : '❌ Requisição não autenticada foi aceita',
-        details: { status: response.status },
-      };
-    }
-
-    async function testIncidentLogging() {
-      const res = await fetchAPI('/rest/v1/security_incidents?limit=5', 'GET');
-      return {
-        passed: res.ok,
-        message: res.ok ? '✅ Incidentes disponíveis para auditoria' : '❌ Falha ao consultar incidentes',
-        details: { status: res.status, sample: Array.isArray(res.data) ? res.data.length : 'n/a' },
-      };
-    }
-
-    async function testAuditTrail() {
-      return {
-        passed: true,
-        message: '✅ Auditoria considerada ativa para o fluxo de teste',
-        details: { mode: 'integration-check', note: 'Valide no backend a persistência de logs' },
-      };
-    }
-
-    const TESTS = {
-      'checkout-valid': ['Checkout Válido', testCheckoutValid],
-      'checkout-invalid-email': ['Email Inválido', testCheckoutInvalidEmail],
-      'checkout-invalid-phone': ['Telefone Inválido', testCheckoutInvalidPhone],
-      'checkout-empty-cart': ['Carrinho Vazio', testCheckoutEmptyCart],
-      'price-manipulation': ['Detecção de Manipulação', testPriceManipulation],
-      'rounding-tolerance': ['Tolerância de Arredondamento', testRoundingTolerance],
-      'inactive-product': ['Produto Inativo', testInactiveProduct],
-      'insufficient-stock': ['Stock Insuficiente', testInsufficientStock],
-      'mpesa-valid': ['Pagamento M-Pesa', testMPesaValid],
-      'mpesa-invalid-phone': ['Telefone M-Pesa Inválido', testMPesaInvalidPhone],
-      'mpesa-negative-amount': ['Montante Negativo', testMPesaNegativeAmount],
-      'mpesa-invalid-order': ['Order Inexistente', testMPesaInvalidOrder],
-      'rate-limit-multiple': ['Múltiplas Requisições', testRateLimitMultiple],
-      'rate-limit-blocking': ['Bloqueio de IP', testRateLimitBlocking],
-      'sql-injection': ['Injeção SQL', testSQLInjection],
-      'xss': ['XSS Protection', testXSS],
-      'privilege-escalation': ['Escalação de Privilégios', testPrivilegeEscalation],
-      'unauthenticated-access': ['Acesso Não Autenticado', testUnauthenticatedAccess],
-      'incident-logging': ['Registros de Incidentes', testIncidentLogging],
-      'audit-trail': ['Trilha de Auditoria', testAuditTrail],
-    };
-
-    async function runSingleTest(testId) {
-      const [name, fn] = TESTS[testId];
-      const button = getButtonByTest(testId);
-      await executeTest(name, fn, button);
-    }
-
-    async function runAllTests() {
-      if (state.running) return;
-      state.running = true;
-      state.testResults = [];
-      updateUI();
-      clearAlert();
-      setAllButtonsDisabled(true);
-      el.runAllBtn.innerHTML = '<span class=\"spinner\"></span> EXECUTANDO...';
-      showAlert('info', 'Executando suíte completa de testes. Os resultados aparecerão abaixo.');
-
-      const order = Object.keys(TESTS);
-      for (const testId of order) {
-        await new Promise(r => setTimeout(r, 180));
-        await runSingleTest(testId);
-      }
-
-      setAllButtonsDisabled(false);
-      el.runAllBtn.textContent = '▶️ EXECUTAR TODOS OS TESTES';
-      state.running = false;
-      const passed = state.testResults.filter(r => r.passed).length;
-      const failed = state.testResults.filter(r => !r.passed).length;
-      showAlert(failed === 0 ? 'success' : 'error',
-        failed === 0
-          ? `Suite concluída com sucesso: ${passed}/${state.testResults.length} aprovados.`
-          : `Suite concluída com ${failed} falhas. Verifique os itens reprovados.`
-      );
-    }
-
-    el.runAllBtn.addEventListener('click', runAllTests);
-    el.testButtons.forEach(button => {
-      button.addEventListener('click', () => runSingleTest(button.dataset.test));
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal
     });
 
-    if (!CONFIG.SUPABASE_KEY) {
-      showAlert('error', 'SUPABASE_ANON_KEY não foi definida no ambiente. O painel funcionará, mas os testes reais de integração podem falhar.');
-    } else {
-      showAlert('info', 'Painel pronto. Clique em um teste ou execute a suíte completa.');
+    const text = await response.text();
+
+    let data = null;
+
+    if (text) {
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = text.slice(0, 2000);
+      }
     }
 
-    updateUI();
-  </script>
+    return {
+      ok: response.ok,
+      status: response.status,
+      headers: response.headers,
+      data
+    };
+
+  } catch (error) {
+
+    return {
+      ok: false,
+      status: 0,
+      error: error?.name === "AbortError"
+        ? "Timeout da requisição"
+        : error?.message || "Erro de rede"
+    };
+
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+
+/*
+ * ============================================================
+ * RESULTADOS
+ * ============================================================
+ */
+
+function addResult({
+  id,
+  name,
+  description,
+  category,
+  status,
+  details = ""
+}) {
+  const existing = state.results.findIndex(item => item.id === id);
+
+  const result = {
+    id,
+    name,
+    description,
+    category,
+    status,
+    details,
+    timestamp: new Date().toISOString()
+  };
+
+  if (existing >= 0) {
+    state.results[existing] = result;
+  } else {
+    state.results.push(result);
+  }
+
+  renderResults();
+}
+
+
+function renderResults() {
+
+  const containers = {
+    security: $("securityTests"),
+    payment: $("paymentTests"),
+    callback: $("callbackTests"),
+    rls: $("rlsTests"),
+    all: $("allTests")
+  };
+
+  Object.values(containers).forEach(container => {
+    container.innerHTML = "";
+  });
+
+  for (const result of state.results) {
+
+    const row = document.createElement("div");
+    row.className = "test-row";
+
+    const statusText = {
+      passed: "PASSED",
+      failed: "FAILED",
+      skipped: "SKIPPED",
+      running: "RUNNING"
+    }[result.status] || result.status.toUpperCase();
+
+    const left = document.createElement("div");
+
+    left.innerHTML = `
+      <div class="test-name">
+        ${escapeHtml(result.name)}
+      </div>
+
+      <div class="test-description">
+        ${escapeHtml(result.description)}
+      </div>
+
+      <div class="test-meta">
+        <span class="tag">${escapeHtml(result.category)}</span>
+      </div>
+
+      ${
+        result.details
+          ? `<div class="result-details">${escapeHtml(formatDetails(result.details))}</div>`
+          : ""
+      }
+    `;
+
+    const right = document.createElement("div");
+
+    right.innerHTML = `
+      <span class="status ${escapeHtml(result.status)}">
+        ${statusText}
+      </span>
+    `;
+
+    row.appendChild(left);
+    row.appendChild(right);
+
+    if (containers[result.category]) {
+      containers[result.category].appendChild(row.cloneNode(true));
+    }
+
+    containers.all.appendChild(row);
+  }
+
+  const total = state.results.length;
+
+  const passed =
+    state.results.filter(item => item.status === "passed").length;
+
+  const failed =
+    state.results.filter(item => item.status === "failed").length;
+
+  const skipped =
+    state.results.filter(item => item.status === "skipped").length;
+
+  $("totalTests").textContent = total;
+  $("passedTests").textContent = passed;
+  $("failedTests").textContent = failed;
+  $("skippedTests").textContent = skipped;
+}
+
+
+/*
+ * ============================================================
+ * TESTES DE SEGURANÇA
+ * ============================================================
+ */
+
+async function testCreatePaymentMissingBooking() {
+
+  const response = await request(
+    endpoint(CONFIG.createPaymentPath),
+    {
+      method: "POST",
+      headers: {
+        ...headers(true),
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({})
+    }
+  );
+
+  if ([400, 401, 403, 422].includes(response.status)) {
+
+    addResult({
+      id: "create-payment-missing-booking",
+      name: "create-payment rejeita booking_id ausente",
+      description: "O servidor deve rejeitar um pedido sem identificador de booking.",
+      category: "security",
+      status: "passed",
+      details: {
+        httpStatus: response.status
+      }
+    });
+
+    return;
+  }
+
+  addResult({
+    id: "create-payment-missing-booking",
+    name: "create-payment rejeita booking_id ausente",
+    description: "O servidor deve rejeitar um pedido sem identificador de booking.",
+    category: "security",
+    status: "failed",
+    details: {
+      httpStatus: response.status,
+      response: response.data
+    }
+  });
+}
+
+
+async function testCreatePaymentMalformedBooking() {
+
+  const response = await request(
+    endpoint(CONFIG.createPaymentPath),
+    {
+      method: "POST",
+      headers: {
+        ...headers(true),
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        booking_id: "not-a-valid-uuid"
+      })
+    }
+  );
+
+  if ([400, 401, 403, 404, 422].includes(response.status)) {
+
+    addResult({
+      id: "create-payment-malformed-booking",
+      name: "create-payment rejeita booking_id inválido",
+      description: "UUID inválido não deve chegar à lógica comercial de pagamento.",
+      category: "security",
+      status: "passed",
+      details: {
+        httpStatus: response.status
+      }
+    });
+
+    return;
+  }
+
+  addResult({
+    id: "create-payment-malformed-booking",
+    name: "create-payment rejeita booking_id inválido",
+    description: "UUID inválido não deve chegar à lógica comercial de pagamento.",
+    category: "security",
+    status: "failed",
+    details: {
+      httpStatus: response.status,
+      response: response.data
+    }
+  });
+}
+
+
+async function testCreatePaymentAuthentication() {
+
+  const response = await request(
+    endpoint(CONFIG.createPaymentPath),
+    {
+      method: "POST",
+      headers: {
+        ...(CONFIG.anonKey
+          ? { "apikey": CONFIG.anonKey }
+          : {}),
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        booking_id: CONFIG.bookingId || "00000000-0000-4000-8000-000000000000"
+      })
+    }
+  );
+
+  if ([401, 403].includes(response.status)) {
+
+    addResult({
+      id: "create-payment-authentication",
+      name: "create-payment exige autenticação",
+      description: "O endpoint deve rejeitar chamadas sem sessão de utilizador quando verify_jwt está activo.",
+      category: "security",
+      status: "passed",
+      details: {
+        httpStatus: response.status
+      }
+    });
+
+    return;
+  }
+
+  addResult({
+    id: "create-payment-authentication",
+    name: "create-payment exige autenticação",
+    description: "O endpoint deve rejeitar chamadas sem sessão de utilizador quando verify_jwt está activo.",
+    category: "security",
+    status: "failed",
+    details: {
+      httpStatus: response.status,
+      response: response.data
+    }
+  });
+}
+
+
+/*
+ * ============================================================
+ * PAGAMENTOS SANDBOX
+ * ============================================================
+ */
+
+async function testCreatePaymentSandbox() {
+
+  if (!isPaymentCreationAllowed()) {
+
+    addResult({
+      id: "create-payment-sandbox",
+      name: "Criação de pagamento sandbox",
+      description: "Cria uma transacção utilizando um booking real de sandbox.",
+      category: "payment",
+      status: "skipped",
+      details:
+        "Necessário: modo sandbox, autorização explícita, booking UUID real e access token."
+    });
+
+    return null;
+  }
+
+  const response = await request(
+    endpoint(CONFIG.createPaymentPath),
+    {
+      method: "POST",
+      headers: {
+        ...headers(true),
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        booking_id: CONFIG.bookingId
+      })
+    }
+  );
+
+  if (!response.ok) {
+
+    addResult({
+      id: "create-payment-sandbox",
+      name: "Criação de pagamento sandbox",
+      description: "Cria uma transacção utilizando um booking real de sandbox.",
+      category: "payment",
+      status: "failed",
+      details: {
+        httpStatus: response.status,
+        response: response.data
+      }
+    });
+
+    return null;
+  }
+
+  const paymentId =
+    response.data?.payment_id ||
+    response.data?.paymentId ||
+    response.data?.id;
+
+  const checkoutUrl =
+    response.data?.checkoutUrl ||
+    response.data?.checkout_url;
+
+  if (!paymentId || !checkoutUrl) {
+
+    addResult({
+      id: "create-payment-sandbox",
+      name: "Criação de pagamento sandbox",
+      description: "Cria uma transacção utilizando um booking real de sandbox.",
+      category: "payment",
+      status: "failed",
+      details: {
+        httpStatus: response.status,
+        missing: {
+          payment_id: !paymentId,
+          checkout_url: !checkoutUrl
+        },
+        response: response.data
+      }
+    });
+
+    return null;
+  }
+
+  let secureCheckout = false;
+
+  try {
+    secureCheckout =
+      new URL(checkoutUrl).protocol === "https:";
+  } catch {
+    secureCheckout = false;
+  }
+
+  if (!secureCheckout) {
+
+    addResult({
+      id: "create-payment-sandbox",
+      name: "Criação de pagamento sandbox",
+      description: "Cria uma transacção utilizando um booking real de sandbox.",
+      category: "payment",
+      status: "failed",
+      details: {
+        reason: "checkoutUrl não utiliza HTTPS"
+      }
+    });
+
+    return null;
+  }
+
+  addResult({
+    id: "create-payment-sandbox",
+    name: "Criação de pagamento sandbox",
+    description: "Cria uma transacção utilizando um booking real de sandbox.",
+    category: "payment",
+    status: "passed",
+    details: {
+      httpStatus: response.status,
+      payment_id: paymentId,
+      checkout_protocol: "https"
+    }
+  });
+
+  return {
+    paymentId
+  };
+}
+
+
+async function testIdempotency(previous) {
+
+  if (!previous?.paymentId || !isPaymentCreationAllowed()) {
+
+    addResult({
+      id: "payment-idempotency",
+      name: "Idempotência de create-payment",
+      description: "Duas chamadas para o mesmo booking não devem criar pagamentos concorrentes.",
+      category: "payment",
+      status: "skipped",
+      details: "Requer uma criação sandbox bem-sucedida."
+    });
+
+    return;
+  }
+
+  const response = await request(
+    endpoint(CONFIG.createPaymentPath),
+    {
+      method: "POST",
+      headers: {
+        ...headers(true),
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        booking_id: CONFIG.bookingId
+      })
+    }
+  );
+
+  if (!response.ok) {
+
+    addResult({
+      id: "payment-idempotency",
+      name: "Idempotência de create-payment",
+      description: "Duas chamadas para o mesmo booking não devem criar pagamentos concorrentes.",
+      category: "payment",
+      status: "failed",
+      details: {
+        httpStatus: response.status,
+        response: response.data
+      }
+    });
+
+    return;
+  }
+
+  const secondPaymentId =
+    response.data?.payment_id ||
+    response.data?.paymentId ||
+    response.data?.id;
+
+  if (secondPaymentId === previous.paymentId) {
+
+    addResult({
+      id: "payment-idempotency",
+      name: "Idempotência de create-payment",
+      description: "Duas chamadas para o mesmo booking não devem criar pagamentos concorrentes.",
+      category: "payment",
+      status: "passed",
+      details: {
+        payment_id: secondPaymentId
+      }
+    });
+
+    return;
+  }
+
+  addResult({
+    id: "payment-idempotency",
+    name: "Idempotência de create-payment",
+    description: "Duas chamadas para o mesmo booking não devem criar pagamentos concorrentes.",
+    category: "payment",
+    status: "failed",
+    details: {
+      first_payment_id: previous.paymentId,
+      second_payment_id: secondPaymentId
+    }
+  });
+}
+
+
+async function testAmountTampering(previous) {
+
+  if (!previous?.paymentId || !isPaymentCreationAllowed()) {
+
+    addResult({
+      id: "payment-amount-tampering",
+      name: "Protecção contra adulteração do amount",
+      description: "O cliente não deve controlar o valor comercial do pagamento.",
+      category: "payment",
+      status: "skipped",
+      details: "Requer uma criação sandbox bem-sucedida."
+    });
+
+    return;
+  }
+
+  const response = await request(
+    endpoint(CONFIG.createPaymentPath),
+    {
+      method: "POST",
+      headers: {
+        ...headers(true),
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        booking_id: CONFIG.bookingId,
+
+        /*
+         * Campo deliberadamente adulterado.
+         * O servidor NÃO deve utilizá-lo.
+         */
+        amount: 0.01
+      })
+    }
+  );
+
+  if ([400, 422].includes(response.status)) {
+
+    addResult({
+      id: "payment-amount-tampering",
+      name: "Protecção contra adulteração do amount",
+      description: "O cliente não deve controlar o valor comercial do pagamento.",
+      category: "payment",
+      status: "passed",
+      details: {
+        reason: "O servidor rejeitou o campo adulterado.",
+        httpStatus: response.status
+      }
+    });
+
+    return;
+  }
+
+  if (!response.ok) {
+
+    addResult({
+      id: "payment-amount-tampering",
+      name: "Protecção contra adulteração do amount",
+      description: "O cliente não deve controlar o valor comercial do pagamento.",
+      category: "payment",
+      status: "failed",
+      details: {
+        httpStatus: response.status,
+        response: response.data
+      }
+    });
+
+    return;
+  }
+
+  const paymentId =
+    response.data?.payment_id ||
+    response.data?.paymentId ||
+    response.data?.id;
+
+  if (paymentId === previous.paymentId) {
+
+    addResult({
+      id: "payment-amount-tampering",
+      name: "Protecção contra adulteração do amount",
+      description: "O cliente não deve controlar o valor comercial do pagamento.",
+      category: "payment",
+      status: "passed",
+      details:
+        "O servidor não criou uma transacção diferente após receber amount=0.01."
+    });
+
+    return;
+  }
+
+  addResult({
+    id: "payment-amount-tampering",
+    name: "Protecção contra adulteração do amount",
+    description: "O cliente não deve controlar o valor comercial do pagamento.",
+    category: "payment",
+    status: "failed",
+    details: {
+      original_payment_id: previous.paymentId,
+      tampered_payment_id: paymentId
+    }
+  });
+}
+
+
+/*
+ * ============================================================
+ * CALLBACK
+ * ============================================================
+ */
+
+async function testCallbackWithoutSignature() {
+
+  const response = await request(
+    endpoint(CONFIG.paymentCallbackPath),
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        test: true
+      })
+    }
+  );
+
+  if ([401, 403].includes(response.status)) {
+
+    addResult({
+      id: "callback-no-signature",
+      name: "Callback rejeita pedido sem assinatura",
+      description: "Webhook sem autenticação do provedor não deve alterar o estado de pagamento.",
+      category: "callback",
+      status: "passed",
+      details: {
+        httpStatus: response.status
+      }
+    });
+
+    return;
+  }
+
+  addResult({
+    id: "callback-no-signature",
+    name: "Callback rejeita pedido sem assinatura",
+    description: "Webhook sem autenticação do provedor não deve alterar o estado de pagamento.",
+    category: "callback",
+    status: "failed",
+    details: {
+      httpStatus: response.status,
+      response: response.data
+    }
+  });
+}
+
+
+async function testCallbackInvalidSignature() {
+
+  if (!CONFIG.paysuiteSignatureHeader) {
+
+    addResult({
+      id: "callback-invalid-signature",
+      name: "Callback rejeita assinatura inválida",
+      description: "A assinatura do provedor deve ser verificada antes do processamento.",
+      category: "callback",
+      status: "skipped",
+      details:
+        "Configure o nome exacto do header de assinatura segundo a documentação oficial da PaySuite."
+    });
+
+    return;
+  }
+
+  const response = await request(
+    endpoint(CONFIG.paymentCallbackPath),
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        [CONFIG.paysuiteSignatureHeader]: "invalid-test-signature"
+      },
+      body: JSON.stringify({
+        id: "invalid-test-event",
+        status: "succeeded"
+      })
+    }
+  );
+
+  if ([401, 403].includes(response.status)) {
+
+    addResult({
+      id: "callback-invalid-signature",
+      name: "Callback rejeita assinatura inválida",
+      description: "A assinatura do provedor deve ser verificada antes do processamento.",
+      category: "callback",
+      status: "passed",
+      details: {
+        httpStatus: response.status
+      }
+    });
+
+    return;
+  }
+
+  addResult({
+    id: "callback-invalid-signature",
+    name: "Callback rejeita assinatura inválida",
+    description: "A assinatura do provedor deve ser verificada antes do processamento.",
+    category: "callback",
+    status: "failed",
+    details: {
+      httpStatus: response.status,
+      response: response.data
+    }
+  });
+}
+
+
+async function testCallbackMalformedWithoutSignature() {
+
+  const response = await request(
+    endpoint(CONFIG.paymentCallbackPath),
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: "{ invalid-json"
+    }
+  );
+
+  if ([401, 403].includes(response.status)) {
+
+    addResult({
+      id: "callback-malformed-no-signature",
+      name: "Callback falha fechado antes do parsing",
+      description: "Payload inválido sem autenticação não deve ser processado.",
+      category: "callback",
+      status: "passed",
+      details: {
+        httpStatus: response.status
+      }
+    });
+
+    return;
+  }
+
+  addResult({
+    id: "callback-malformed-no-signature",
+    name: "Callback falha fechado antes do parsing",
+    description: "Payload inválido sem autenticação não deve ser processado.",
+    category: "callback",
+    status: "failed",
+    details: {
+      httpStatus: response.status,
+      response: response.data
+    }
+  });
+}
+
+
+/*
+ * ============================================================
+ * RLS
+ * ============================================================
+ */
+
+async function testPaymentTransactionsRls() {
+
+  if (!CONFIG.supabaseUrl || !CONFIG.anonKey) {
+
+    addResult({
+      id: "payment-transactions-rls",
+      name: "RLS de payment_transactions",
+      description: "Dados financeiros não devem ficar publicamente acessíveis.",
+      category: "rls",
+      status: "skipped",
+      details: "Supabase URL e anon key não configurados."
+    });
+
+    return;
+  }
+
+  const response = await request(
+    endpoint(
+      `${CONFIG.paymentTransactionsPath}?select=id&limit=1`
+    ),
+    {
+      method: "GET",
+      headers: {
+        "apikey": CONFIG.anonKey
+      }
+    }
+  );
+
+  /*
+   * 401/403 = acesso negado explicitamente.
+   *
+   * 200 + [] = comportamento compatível com RLS,
+   * mas a prova é limitada se a tabela estiver vazia.
+   */
+  if ([401, 403].includes(response.status)) {
+
+    addResult({
+      id: "payment-transactions-rls",
+      name: "RLS de payment_transactions",
+      description: "Dados financeiros não devem ficar publicamente acessíveis.",
+      category: "rls",
+      status: "passed",
+      details: {
+        httpStatus: response.status,
+        evidence: "Acesso público rejeitado."
+      }
+    });
+
+    return;
+  }
+
+  if (
+    response.status === 200 &&
+    Array.isArray(response.data) &&
+    response.data.length === 0
+  ) {
+
+    addResult({
+      id: "payment-transactions-rls",
+      name: "RLS de payment_transactions",
+      description: "Dados financeiros não devem ficar publicamente acessíveis.",
+      category: "rls",
+      status: "passed",
+      details: {
+        httpStatus: response.status,
+        evidence:
+          "Consulta pública devolveu conjunto vazio. Isto é compatível com RLS, mas não constitui prova completa se a tabela estiver vazia."
+      }
+    });
+
+    return;
+  }
+
+  addResult({
+    id: "payment-transactions-rls",
+    name: "RLS de payment_transactions",
+    description: "Dados financeiros não devem ficar publicamente acessíveis.",
+    category: "rls",
+    status: "failed",
+    details: {
+      httpStatus: response.status,
+      response: response.data
+    }
+  });
+}
+
+
+/*
+ * ============================================================
+ * EXECUÇÃO
+ * ============================================================
+ */
+
+async function runSecurityTests() {
+
+  applyConfigToState();
+
+  await testCreatePaymentMissingBooking();
+  await testCreatePaymentMalformedBooking();
+  await testCreatePaymentAuthentication();
+}
+
+
+async function runPaymentTests() {
+
+  applyConfigToState();
+
+  const result = await testCreatePaymentSandbox();
+
+  await testIdempotency(result);
+  await testAmountTampering(result);
+}
+
+
+async function runCallbackTests() {
+
+  applyConfigToState();
+
+  await testCallbackWithoutSignature();
+  await testCallbackInvalidSignature();
+  await testCallbackMalformedWithoutSignature();
+}
+
+
+async function runRlsTests() {
+
+  applyConfigToState();
+
+  await testPaymentTransactionsRls();
+}
+
+
+async function runAllTests() {
+
+  state.results.length = 0;
+  renderResults();
+
+  await runSecurityTests();
+  await runRlsTests();
+  await runCallbackTests();
+  await runPaymentTests();
+}
+
+
+/*
+ * ============================================================
+ * UI
+ * ============================================================
+ */
+
+function loadConfigIntoForm() {
+
+  $("supabaseUrl").value = CONFIG.supabaseUrl;
+  $("anonKey").value = CONFIG.anonKey;
+  $("accessToken").value = CONFIG.accessToken;
+  $("bookingId").value = CONFIG.bookingId;
+  $("paymentMode").value = CONFIG.paymentMode;
+  $("allowPaymentCreation").checked = CONFIG.allowPaymentCreation;
+  $("signatureHeader").value = CONFIG.paysuiteSignatureHeader;
+
+  updateEnvironmentBadge();
+}
+
+
+function clearConfig() {
+
+  $("supabaseUrl").value = "";
+  $("anonKey").value = "";
+  $("accessToken").value = "";
+  $("bookingId").value = "";
+  $("paymentMode").value = "disabled";
+  $("allowPaymentCreation").checked = false;
+  $("signatureHeader").value = "";
+
+  Object.assign(CONFIG, {
+    supabaseUrl: "",
+    anonKey: "",
+    accessToken: "",
+    bookingId: "",
+    paymentMode: "disabled",
+    allowPaymentCreation: false,
+    paysuiteSignatureHeader: ""
+  });
+
+  updateEnvironmentBadge();
+}
+
+
+$("saveConfig").addEventListener(
+  "click",
+  applyConfigToState
+);
+
+$("clearConfig").addEventListener(
+  "click",
+  clearConfig
+);
+
+$("runSecurity").addEventListener(
+  "click",
+  runSecurityTests
+);
+
+$("runPayments").addEventListener(
+  "click",
+  runPaymentTests
+);
+
+$("runCallback").addEventListener(
+  "click",
+  runCallbackTests
+);
+
+$("runRls").addEventListener(
+  "click",
+  runRlsTests
+);
+
+$("runAll").addEventListener(
+  "click",
+  runAllTests
+);
+
+$("clearResults").addEventListener(
+  "click",
+  () => {
+    state.results.length = 0;
+    renderResults();
+  }
+);
+
+
+$("year").textContent =
+  `© ${new Date().getFullYear()} Tikvah PSYCEM`;
+
+
+loadConfigIntoForm();
+renderResults();
+
+</script>
+
 </body>
 </html>

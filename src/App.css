@@ -1,42 +1,42 @@
+/* ==========================================================================
+   Tikvah Psychological Center & Multiservice — App.css Corrigido
+   Padronização: Layout Responsivo, Flexbox Global e Compatibilidade Tailwind
+   ========================================================================== */
+
+/* Reseta o elemento raiz (#root) para ocupar 100% da viewport, 
+   permitindo que o Tailwind e os componentes estruturais ocupem a tela inteira fluidamente. */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  text-align: left;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Utilitários de suporte corporativo e transições suaves */
+.app-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Correções de acessibilidade e foco global */
+:focus-visible {
+  outline: 2px solid hsl(var(--ring, 221.2 83.2% 53.3%));
+  outline-offset: 2px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Otimizações de rolagem suave para navegação interna entre âncoras/páginas */
+html {
+  scroll-behavior: smooth;
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+/* Garantia de renderização de fontes otimizadas */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }

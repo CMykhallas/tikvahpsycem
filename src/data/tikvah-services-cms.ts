@@ -1,4 +1,4 @@
-import data from "./tikvah-services-cms.json";
+import data from "./tikvah-psycem-services-cms.json";
 
 export type ModalidadeTipo = "online" | "presencial" | "hibrido";
 
@@ -27,7 +27,7 @@ export interface ServiceCategory {
   items: ServiceDetail[];
 }
 
-export const tikvahEcosystemDescription: string = (data as any).tikvahEcosystemDescription;
-export const tikvahModel360Text: string = (data as any).tikvahModel360Text;
-export const tikvahServicesEcosystem: ServiceCategory[] =
+export const tikvahpsycemEcosystemDescription: string = (data as any).tikvahpsycemEcosystemDescription;
+export const tikvahpsycemModel360Text: string = (data as any).tikvahModel360Text;
+export const tikvahpsycemServicesEcosystem: ServiceCategory[] =
   (data as any).categories as ServiceCategory[];

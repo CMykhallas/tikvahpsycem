@@ -27,8 +27,13 @@ export const getOrganization = () => ({
   telephone: SITE_PHONE,
   sameAs: [
     "https://facebook.com/consultoriotikvah",
-    "https://instagram.com/tikvah_center",
-    "https://twitter.com/TikvahMZ",
+    "https://instagram.com/tikvahpsycem",
+    "https://twitter.com/tikvahpsycem",
+    "https://tiktok.com/tikvahpsycem",
+    "https://twitter.com/tikvahpsycem",
+    "https://telegram.com/tikvahpsycem",
+    "https://linkidin.com/tikvahpsyschologicalcenter&multiservice",
+    "https://me.whatsapp.com/258827592980",
   ],
 });
 

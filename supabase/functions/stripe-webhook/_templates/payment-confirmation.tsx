@@ -91,11 +91,11 @@ export const PaymentConfirmationEmail = ({
           <Hr style={divider} />
 
           <Text style={footer}>
-            <strong>Tikvah - Centro de Psicologia</strong>
+            <strong>Tikvah Psycem - Centro de Psicologia, Consultoria e Multiserviços</strong>
             <br />
-            Av. 24 de Julho, Maputo
+            Av. 24 de Julho, 1o Andar Direito, Bairro Poalana Cimento A | Cidade de Maputo -  Maputo
             <br />
-            <Link href="https://tikvah-psicologia.com" style={link}>
+            <Link href="https://tikvahpsycem.vercell.app" style={link}>
               www.tikvah-psicologia.com
             </Link>
           </Text>

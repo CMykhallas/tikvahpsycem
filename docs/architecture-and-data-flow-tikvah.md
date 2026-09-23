@@ -1,6 +1,6 @@
-# Arquitetura de Sistemas e Fluxo de Dados — Ecossistema Tikvah
+# Arquitetura de Sistemas e Fluxo de Dados — Ecossistema Tikvah Psycem
 
-**Código do Documento:** TIKVAH-ARCH-DATAFLOW  
+**Código do Documento:** TIKVAH-PSYCEM-ARCH-DATAFLOW  
 **Versão:** 1.0.0  
 **Data de Emissão:** 30 de Maio de 2026  
 **Classificação:** Técnico / Executivo  

@@ -1,13 +1,13 @@
-// Catálogo institucional Tikvah — fonte única para a página /services e
+// Catálogo institucional Tikvah Psycem— fonte única para a página /services e
 // para a secção "Nossos Serviços" da homepage. Reflecte o documento oficial
-// "Serviços Tikvah" (modelo de intervenção 360°).
+// "Serviços Tikvah Psycem" (modelo de intervenção 360°).
 
-export interface TikvahServiceItem {
+export interface TikvahPsycemServiceItem {
   title: string;
   description: string;
 }
 
-export interface TikvahServiceCategory {
+export interface TikvahPsycemServiceCategory {
   id: string;
   title: string;
   short: string;
@@ -21,19 +21,19 @@ export interface TikvahServiceCategory {
     | "scale"
     | "cpu"
     | "handHeart";
-  items: TikvahServiceItem[];
+  items: TikvahPsycemServiceItem[];
 }
 
-export const TIKVAH_INTRO =
-  "A Tikvah estrutura os seus serviços como um ecossistema integrado, pensado para gerar impacto mensurável em pessoas, organizações e comunidades. Aliamos psicologia fundamentada em evidência, gestão estratégica, tecnologia, direito, finanças e responsabilidade social num modelo de intervenção centrado em eficiência, rigor técnico e sustentabilidade.";
+export const TIKVAH_PSYCEM_INTRO =
+  "A Tikvah Psycem estrutura os seus serviços como um ecossistema integrado, pensado para gerar impacto mensurável em pessoas, organizações e comunidades. Aliamos psicologia fundamentada em evidência, gestão estratégica, tecnologia, direito, finanças e responsabilidade social num modelo de intervenção centrado em eficiência, rigor técnico e sustentabilidade.";
 
-export const TIKVAH_360_STATEMENT =
-  "A Tikvah integra saúde mental, terapia da fala (incluindo Língua Gestual), terapia ocupacional, formação, estágios, voluntariado, gestão empresarial, gestão de negócios, recursos humanos, fiscalidade, contabilidade, tecnologia, direito, responsabilidade social e comunidade num único modelo de intervenção 360°. Cada intervenção é desenhada de forma estratégica, com base em diagnóstico rigoroso, acompanhamento contínuo e avaliação sistemática de impacto, adaptada ao contexto institucional, económico e cultural em que a organização atua.";
+export const TIKVAH_PSYCEM_360_STATEMENT =
+  "A Tikvah Psycem integra saúde mental, terapia da fala (incluindo Língua Gestual), terapia ocupacional, formação, estágios, voluntariado, gestão empresarial, gestão de negócios, recursos humanos, fiscalidade, contabilidade, tecnologia, direito, responsabilidade social e comunidade num único modelo de intervenção 360°. Cada intervenção é desenhada de forma estratégica, com base em diagnóstico rigoroso, acompanhamento contínuo e avaliação sistemática de impacto, adaptada ao contexto institucional, económico e cultural em que a organização atua.";
 
-export const TIKVAH_CATEGORIES: TikvahServiceCategory[] = [
+export const TIKVAH_PSYCEM_CATEGORIES: TikvahPsycemServiceCategory[] = [
   {
-    id: "saude-mental",
-    title: "Saúde mental, reabilitação e intervenção",
+    id: "saude-mental-e-psicologia",
+    title: "Saúde mental, psicologia, reabilitação e intervenção",
     short: "Saúde Mental",
     summary:
       "Avaliação, psicoterapia e reabilitação multidisciplinar com foco em autonomia e bem-estar.",
@@ -60,6 +60,11 @@ export const TIKVAH_CATEGORIES: TikvahServiceCategory[] = [
         title: "Terapia Ocupacional",
         description:
           "Avaliação funcional e (re)habilitação de atividades de vida diária, com foco em autonomia, participação social e adaptação de ambientes domésticos, educativos e clínicos.",
+      },
+      {
+        title: "Psicanálise",
+        description:
+          "Abordagem psicanalítica clássica, contemporânea e infantil, com foco na compreensão dos processos inconscientes, história de vida e dinâmica psíquica subjacente ao sofrimento emocional.",
       },
       {
         title: "Apoio psicológico em crises",
@@ -280,6 +285,109 @@ export const TIKVAH_CATEGORIES: TikvahServiceCategory[] = [
         title: "Engajamento comunitário e voluntariado",
         description:
           "Programas estruturados e ações pontuais em saúde mental, educação, assistência básica e apoio pós-desastre, alinhados a planos de programa e sistemas de M&E.",
+      },
+    ],
+  },
+  {
+    id: "assessoria",
+    title: "Assessoria empresarial e financeira",
+    short: "Assessoria",
+    summary:
+      "Apoio estratégico e financeiro a startups, PMEs e profissionais em crescimento.",
+    gradient: "from-sky-600 to-blue-700",
+    accent: "text-sky-700",
+    icon: "briefcase",
+    items: [
+      {
+        title: "Assessoria Empresarial e Estratégia de Crescimento",
+        description:
+          "Acompanhamento próximo a empreendedores e pequenas empresas na definição de modelo de negócio, plano de crescimento, estruturação inicial e validação de mercado, com foco na realidade económica de Moçambique.",
+      },
+      {
+        title: "Assessoria Financeira e Desenvolvimento Profissional",
+        description:
+          "Apoio financeiro pessoal e profissional combinado com desenvolvimento de competências técnicas e interpessoais, direcionado a indivíduos em transição de carreira ou equipas em desenvolvimento.",
+      },
+    ],
+  },
+  {
+    id: "coaching-mentoria",
+    title: "Coaching e mentoria",
+    short: "Coaching",
+    summary:
+      "Coaching executivo, de carreira e de vida, e mentoria académica e profissional.",
+    gradient: "from-emerald-600 to-teal-700",
+    accent: "text-emerald-700",
+    icon: "handHeart",
+    items: [
+      {
+        title: "Coaching Executivo",
+        description:
+          "Programa estruturado de coaching individual para executivos e líderes organizacionais, com objetivos claros, sessões periódicas e avaliação de progresso ao longo do percurso.",
+      },
+      {
+        title: "Coaching de Carreira e de Vida",
+        description:
+          "Acompanhamento individual para pessoas em transição de carreira, procura de propósito ou definição de metas de vida, com plano de ação estruturado.",
+      },
+      {
+        title: "Mentoria Académica e Profissional",
+        description:
+          "Programa de mentoria para estudantes universitários e profissionais juniores, com orientação sobre percurso académico, primeiras experiências profissionais e desenvolvimento de identidade profissional.",
+      },
+    ],
+  },
+  {
+    id: "programas-estruturados",
+    title: "Programas estruturados de impacto",
+    short: "Programas",
+    summary:
+      "Programas sistematizados de prevenção e promoção de saúde mental para organizações, escolas e famílias.",
+    gradient: "from-indigo-600 to-violet-700",
+    accent: "text-indigo-700",
+    icon: "brain",
+    items: [
+      {
+        title: "Programa de Prevenção e Manejo do Burnout",
+        description:
+          "Programa institucional com psicoeducação sobre estresse ocupacional, autorregulação psiconeurofisiológica e reorganização de processos laborais para reduzir o esgotamento profissional.",
+      },
+      {
+        title: "Programa de Mindfulness Baseado em Evidências (MBSR/MBCT)",
+        description:
+          "Programa de grupo em protocolos internacionalmente validados (MBSR e MBCT) para redução de stress e prevenção de recaída em quadros ansiosos e depressivos.",
+      },
+      {
+        title: "Programa de Envelhecimento Ativo",
+        description:
+          "Estimulação cognitiva, atividade física adaptada, engajamento social e atividades domiciliares complementares, direcionado a idosos e às suas famílias.",
+      },
+      {
+        title: "Programa Escolar de Prevenção em Saúde Mental",
+        description:
+          "Programa institucional para escolas com oficinas temáticas, competências socioemocionais, prevenção de bullying, manejo de stress e capacitação docente.",
+      },
+    ],
+  },
+  {
+    id: "reciclagem-sustentabilidade",
+    title: "Reciclagem e sustentabilidade",
+    short: "Sustentabilidade",
+    summary:
+      "Sensibilização ambiental e capacitação prática em gestão de resíduos para instituições.",
+    gradient: "from-lime-600 to-green-700",
+    accent: "text-lime-700",
+    icon: "handHeart",
+    items: [
+      {
+        title: "Conscientização Ambiental",
+        description:
+          "Sessões formativas sobre impacto ambiental, práticas sustentáveis e responsabilidade ecológica institucional, adaptadas ao contexto de Moçambique.",
+      },
+      {
+        title: "Treinamento em Gestão de Resíduos",
+        description:
+          "Formação prática sobre gestão de resíduos, separação, redução e práticas sustentáveis aplicáveis ao contexto organizacional.",
       },
     ],
   },

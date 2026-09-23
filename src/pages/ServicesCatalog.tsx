@@ -2,9 +2,9 @@
 
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import {
-  tikvahServicesEcosystem,
-  tikvahEcosystemDescription,
-  tikvahModel360Text,
+  tikvahpsycemServicesEcosystem as tikvahServicesEcosystem,
+  tikvahpsycemEcosystemDescription as tikvahEcosystemDescription,
+  tikvahpsycemModel360Text as tikvahModel360Text,
   ServiceDetail,
   ModalidadeTipo,
 } from "@/data/tikvah-services-cms";
@@ -36,7 +36,7 @@ const clienteLabel: Record<ClienteTipo, string> = {
   associacoes: "Associações",
 };
 
-export default function ServicesPage() {
+export default function ServicesCatalog() {
   const initialCategoryId = tikvahServicesEcosystem[0]?.id ?? "";
   const [activeCategory, setActiveCategory] = useState<string>(initialCategoryId);
   const [selectedService, setSelectedService] = useState<ServiceDetail | null>(null);
@@ -53,7 +53,6 @@ export default function ServicesPage() {
     if (!selectedService) return;
     const previouslyFocused = document.activeElement as HTMLElement | null;
     openerRef.current = previouslyFocused;
-    // Focus the close button on open
     closeButtonRef.current?.focus();
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -63,13 +62,11 @@ export default function ServicesPage() {
       }
     };
     document.addEventListener("keydown", onKeyDown);
-    // Lock background scroll for AT users
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = prevOverflow;
-      // Restore focus to opener
       previouslyFocused?.focus?.();
     };
   }, [selectedService]);
@@ -128,21 +125,6 @@ export default function ServicesPage() {
         cliente: checkoutCliente,
         priceMZN: finalPrice,
       });
-
-      // Integração futura com Supabase ou gateway:
-      // const response = await fetch("/api/create-checkout", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     serviceId: service.id,
-      //     serviceTitle: service.title,
-      //     modalidade: checkoutModalidade,
-      //     cliente: checkoutCliente,
-      //     priceMZN: finalPrice,
-      //   }),
-      // });
-      // const data = await response.json();
-      // if (data?.url) window.location.href = data.url;
     } catch (err) {
       console.error("Erro no processamento do checkout:", err);
     } finally {

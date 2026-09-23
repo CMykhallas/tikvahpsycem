@@ -52,9 +52,16 @@ import Checkout from "./pages/Checkout";
 import ProductDetail from "./pages/ProductDetail";
 import Success from "./pages/Success";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
-function App() {
+export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
@@ -64,6 +71,7 @@ function App() {
             <Sonner />
             <BrowserRouter>
               <Routes>
+                {/* Rotas Públicas Principais */}
                 <Route path="/" element={<Index />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/services" element={<Services />} />
@@ -85,27 +93,32 @@ function App() {
                 <Route path="/politica-de-privacidade" element={<PoliticaPrivacidade />} />
                 <Route path="/propostas/proximos-passos" element={<ProximosPassos />} />
 
+                {/* Rotas de Serviços Especializados */}
                 <Route path="/services/psicoterapia" element={<Psicoterapia />} />
                 <Route path="/services/consultoria" element={<Consultoria />} />
                 <Route path="/services/cursos" element={<Cursos />} />
                 <Route path="/services/workshops" element={<Workshops />} />
                 <Route path="/services/:slug" element={<ServiceDetail />} />
 
+                {/* Rotas de Ecossistema */}
                 <Route path="/ecosistema/:categoryId" element={<EcosystemCategoryPage />} />
                 <Route path="/ecosistema/:categoryId/:itemSlug" element={<EcosystemItemPage />} />
 
+                {/* Rotas de E-commerce / Loja */}
                 <Route path="/loja" element={<Loja />} />
                 <Route path="/carrinho" element={<Carrinho />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/produto/:slug" element={<ProductDetail />} />
                 <Route path="/success" element={<Success />} />
 
+                {/* Rotas de Artigos Científicos / Blog */}
                 <Route path="/blog/mbsr-meta-analise-eficacia" element={<MBSRMetaAnalise />} />
                 <Route path="/blog/trauma-cultural-resiliencia-pos-colonial" element={<TraumaCulturalResiliencia />} />
                 <Route path="/blog/act-terapia-contextos-africanos" element={<ACTTerapiaContextos />} />
                 <Route path="/blog/psicologia-organizacional-transformacao-digital" element={<PsicologiaOrganizacional />} />
                 <Route path="/blog/redes-sociais-oportunidades-ou-conflitos" element={<RedesSociaisOportunidadesConflitos />} />
 
+                {/* Rotas Administrativas e de Segurança Protegidas */}
                 <Route
                   path="/administration"
                   element={
@@ -139,7 +152,7 @@ function App() {
                   }
                 />
 
-
+                {/* Tratamento de Rota Não Encontrada (404) */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

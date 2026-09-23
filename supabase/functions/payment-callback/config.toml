@@ -1,0 +1,2 @@
+[functions.payment-callback]
+verify_jwt = false # Permite que o PaySuite envie requisições sem possuir o JWT do projeto

@@ -1,8 +1,8 @@
-# Tikvah - Psychological Services & Integrated Solutions
+# Tikvah Psycem  - Psychological Services & Integrated Solutions
 
-## About Tikvah
+## About Tikvah Psycem 
 
-Tikvah is an integrated ecosystem of psychological and professional services designed to generate measurable impact on individuals, organizations, and communities. We combine evidence-based psychology, strategic management, technology, law, finance, and social responsibility in an intervention model focused on efficiency, technical rigor, and sustainability.
+Tikvah Psycem  is an integrated ecosystem of psychological and professional services designed to generate measurable impact on individuals, organizations, and communities. We combine evidence-based psychology, strategic management, technology, law, finance, and social responsibility in an intervention model focused on efficiency, technical rigor, and sustainability.
 
 ## Our Services
 
@@ -59,7 +59,7 @@ Tikvah is an integrated ecosystem of psychological and professional services des
 
 ### Integrated Services: 360° Intervention Model
 
-Tikvah integrates mental health, speech therapy (including Sign Language), occupational therapy, training, internships, volunteering, business management, business management, human resources, taxation, accounting, technology, law, social responsibility and community into a single 360° intervention model. Each intervention is designed strategically, based on rigorous diagnosis, continuous follow-up and systematic evaluation of impact, adapted to the institutional, economic and cultural context in which the organization operates.
+Tikvah Psycem  integrates mental health, speech therapy (including Sign Language), occupational therapy, training, internships, volunteering, business management, business management, human resources, taxation, accounting, technology, law, social responsibility and community into a single 360° intervention model. Each intervention is designed strategically, based on rigorous diagnosis, continuous follow-up and systematic evaluation of impact, adapted to the institutional, economic and cultural context in which the organization operates.
 
 ---
 
@@ -67,7 +67,7 @@ Tikvah integrates mental health, speech therapy (including Sign Language), occup
 
 **URL**: https://tikvahpsycem.vercel.app
 
-This is the web application for Tikvah's integrated services platform.
+This is the web application for Tikvah Psycem 's integrated services platform.
 
 ## Technologies Used
 
@@ -92,7 +92,7 @@ Clone this repo and work locally with Node.js & npm installed:
 git clone <YOUR_GIT_URL>
 
 # Navigate to the project directory
-cd tikvahpsycem
+cd Tikvah Psycem psycem
 
 # Install dependencies
 npm i
