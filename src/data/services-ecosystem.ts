@@ -139,6 +139,9 @@ export const serviceCatalogMetadata = Object.freeze({
  * Os valores abaixo foram preservados do ficheiro fornecido.
  * `satisfies` valida a forma do objeto sem destruir a inferência literal.
  */
+/** Aplica IVA de 16% ao valor base, arredondado ao metical. */
+const comIva = (valor: number): PrecoMZN => Math.round(valor * 1.16);
+
 export const tikvahServicesEcosystem: readonly ServiceCategory[] = [
   {
     "id": "saude-mental-reabilitacao",
@@ -566,7 +569,8 @@ export const tikvahServicesEcosystem: readonly ServiceCategory[] = [
         competitividade:
           "Preço acessível para startups e PMEs em fase inicial, com opção de acompanhamento continuado.",
         modalidadesPermitidas: ["online", "presencial", "hibrido"],
-        precoBaseMZN: 9000, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoBaseMZN: 9000,// TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoComIvaMZN: comIva(9000),
         precosPorModalidade: {
           online: comIva(8500),
           presencial: comIva(9000),
@@ -593,7 +597,8 @@ export const tikvahServicesEcosystem: readonly ServiceCategory[] = [
         competitividade:
           "Posicionamento acessível para indivíduos, com pacote corporativo para equipas.",
         modalidadesPermitidas: ["online", "presencial", "hibrido"],
-        precoBaseMZN: 5000, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoBaseMZN: 5000,// TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoComIvaMZN: comIva(5000),
         precosPorModalidade: {
           online: comIva(4700),
           presencial: comIva(5000),
@@ -626,7 +631,8 @@ export const tikvahServicesEcosystem: readonly ServiceCategory[] = [
         competitividade:
           "Alinhado ao mercado de coaching executivo em Maputo para lideranças de médias e grandes empresas.",
         modalidadesPermitidas: ["online", "presencial", "hibrido"],
-        precoBaseMZN: 6000, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoBaseMZN: 6000,// TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoComIvaMZN: comIva(6000),
         precosPorModalidade: {
           online: comIva(5700),
           presencial: comIva(6000),
@@ -653,7 +659,8 @@ export const tikvahServicesEcosystem: readonly ServiceCategory[] = [
         competitividade:
           "Preço acessível para indivíduos, mantendo qualidade técnica do acompanhamento.",
         modalidadesPermitidas: ["online", "presencial", "hibrido"],
-        precoBaseMZN: 3500, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoBaseMZN: 3500,// TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoComIvaMZN: comIva(3500),
         precosPorModalidade: {
           online: comIva(3300),
           presencial: comIva(3500),
@@ -680,7 +687,8 @@ export const tikvahServicesEcosystem: readonly ServiceCategory[] = [
         competitividade:
           "Posicionamento acessível, pensado para estudantes e profissionais em início de carreira.",
         modalidadesPermitidas: ["online", "presencial", "hibrido"],
-        precoBaseMZN: 2500, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoBaseMZN: 2500,// TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoComIvaMZN: comIva(2500),
         precosPorModalidade: {
           online: comIva(2300),
           presencial: comIva(2500),
@@ -713,7 +721,8 @@ export const tikvahServicesEcosystem: readonly ServiceCategory[] = [
         competitividade:
           "Valor direto para empresas que enfrentam alta rotatividade e absentismo ligado ao stress.",
         modalidadesPermitidas: ["online", "presencial", "hibrido"],
-        precoBaseMZN: 12000, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoBaseMZN: 12000,// TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoComIvaMZN: comIva(12000),
         precosPorModalidade: {
           online: comIva(11000),
           presencial: comIva(12000),
@@ -740,7 +749,8 @@ export const tikvahServicesEcosystem: readonly ServiceCategory[] = [
         competitividade:
           "Preço acessível em formato de grupo, com opção corporativa.",
         modalidadesPermitidas: ["online", "presencial", "hibrido"],
-        precoBaseMZN: 4000, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoBaseMZN: 4000,// TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoComIvaMZN: comIva(4000),
         precosPorModalidade: {
           online: comIva(3700),
           presencial: comIva(4000),
@@ -767,7 +777,8 @@ export const tikvahServicesEcosystem: readonly ServiceCategory[] = [
         competitividade:
           "Serviço com pouca oferta especializada em Maputo, posicionamento diferenciado.",
         modalidadesPermitidas: ["presencial", "hibrido"],
-        precoBaseMZN: 3500, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoBaseMZN: 3500,// TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoComIvaMZN: comIva(3500),
         precosPorModalidade: {
           online: comIva(0),
           presencial: comIva(3500),
@@ -794,7 +805,8 @@ export const tikvahServicesEcosystem: readonly ServiceCategory[] = [
         competitividade:
           "Preço institucional acessível para escolas e associações de pais.",
         modalidadesPermitidas: ["presencial", "hibrido"],
-        precoBaseMZN: 6000, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoBaseMZN: 6000,// TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoComIvaMZN: comIva(6000),
         precosPorModalidade: {
           online: comIva(0),
           presencial: comIva(6000),
@@ -827,7 +839,8 @@ export const tikvahServicesEcosystem: readonly ServiceCategory[] = [
         competitividade:
           "Preço acessível para escolas, ONGs e pequenas empresas.",
         modalidadesPermitidas: ["online", "presencial", "hibrido"],
-        precoBaseMZN: 4000, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoBaseMZN: 4000,// TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoComIvaMZN: comIva(4000),
         precosPorModalidade: {
           online: comIva(3700),
           presencial: comIva(4000),
@@ -854,7 +867,8 @@ export const tikvahServicesEcosystem: readonly ServiceCategory[] = [
         competitividade:
           "Preço competitivo para instituições que precisam de conformidade ambiental básica.",
         modalidadesPermitidas: ["presencial", "hibrido"],
-        precoBaseMZN: 4500, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoBaseMZN: 4500,// TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precoComIvaMZN: comIva(4500),
         precosPorModalidade: {
           online: comIva(0),
           presencial: comIva(4500),
