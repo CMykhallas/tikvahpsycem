@@ -265,7 +265,7 @@ serve(async (req) => {
       ua_hash: uaHash,
       duration_ms: Date.now() - started,
       admin_id: adminResp.data?.id,
-      user_id: userResp.data?.id,
+      user_confirmation_email: false,
     });
 
     return new Response(
