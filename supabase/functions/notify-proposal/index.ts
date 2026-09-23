@@ -126,6 +126,34 @@ serve(async (req) => {
       });
     }
 
+    // ---------------------------------------------------------------------
+    // AUTORIZAÇÃO: este endpoint público só pode notificar propostas
+    // acabadas de submeter (janela de 10 minutos) e apenas uma vez.
+    // Impede que terceiros usem IDs arbitrários para gerar emails e registos.
+    // ---------------------------------------------------------------------
+    const SUBMISSION_WINDOW_MS = 10 * 60 * 1000;
+    const createdAt = new Date(proposal.created_at).getTime();
+    if (!isFinite(createdAt) || Date.now() - createdAt > SUBMISSION_WINDOW_MS) {
+      console.warn("notify-proposal rejected: outside submission window", { proposal_id });
+      return new Response(JSON.stringify({ error: "Proposta não elegível para notificação" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const { data: alreadyNotified } = await supabase
+      .from("proposal_audit_trail")
+      .select("id")
+      .eq("proposal_id", proposal.id)
+      .eq("event", "notificada")
+      .limit(1);
+
+    if (alreadyNotified && alreadyNotified.length > 0) {
+      return new Response(JSON.stringify({ success: true, alreadyNotified: true }), {
+        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+
     const protocol = (proposal.metadata as any)?.protocol || `TKV-${proposal.id.slice(0, 8).toUpperCase()}`;
     const { cc, priority } = resolveCC(proposal.area_code);
     const whatsappText = buildWhatsAppText(proposal, protocol);
