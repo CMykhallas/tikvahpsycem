@@ -7,6 +7,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { SecurityLogger, securityMiddleware, validateOptionalJWT } from '../_shared/security.ts';
 import { buildCorsHeaders } from '../_shared/cors.ts';
+import { decryptField, isEncrypted } from '../_shared/encryption.ts';
 
 const logStep = (step: string, details?: any) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
