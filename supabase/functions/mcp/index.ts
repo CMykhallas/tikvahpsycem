@@ -9,11 +9,11 @@ import { auth, defineMcp } from "npm:@lovable.dev/mcp-js@3.0.1";
 import { defineTool } from "npm:@lovable.dev/mcp-js@3.0.1";
 
 // src/data/tikvah-services.ts
-var TIKVAH_INTRO = "A Tikvah estrutura os seus servi\xE7os como um ecossistema integrado, pensado para gerar impacto mensur\xE1vel em pessoas, organiza\xE7\xF5es e comunidades. Aliamos psicologia fundamentada em evid\xEAncia, gest\xE3o estrat\xE9gica, tecnologia, direito, finan\xE7as e responsabilidade social num modelo de interven\xE7\xE3o centrado em efici\xEAncia, rigor t\xE9cnico e sustentabilidade.";
-var TIKVAH_CATEGORIES = [
+var TIKVAH_PSYCEM_INTRO = "A Tikvah Psycem estrutura os seus servi\xE7os como um ecossistema integrado, pensado para gerar impacto mensur\xE1vel em pessoas, organiza\xE7\xF5es e comunidades. Aliamos psicologia fundamentada em evid\xEAncia, gest\xE3o estrat\xE9gica, tecnologia, direito, finan\xE7as e responsabilidade social num modelo de interven\xE7\xE3o centrado em efici\xEAncia, rigor t\xE9cnico e sustentabilidade.";
+var TIKVAH_PSYCEM_CATEGORIES = [
   {
-    id: "saude-mental",
-    title: "Sa\xFAde mental, reabilita\xE7\xE3o e interven\xE7\xE3o",
+    id: "saude-mental-e-psicologia",
+    title: "Sa\xFAde mental, psicologia, reabilita\xE7\xE3o e interven\xE7\xE3o",
     short: "Sa\xFAde Mental",
     summary: "Avalia\xE7\xE3o, psicoterapia e reabilita\xE7\xE3o multidisciplinar com foco em autonomia e bem-estar.",
     gradient: "from-teal-600 to-emerald-600",
@@ -35,6 +35,10 @@ var TIKVAH_CATEGORIES = [
       {
         title: "Terapia Ocupacional",
         description: "Avalia\xE7\xE3o funcional e (re)habilita\xE7\xE3o de atividades de vida di\xE1ria, com foco em autonomia, participa\xE7\xE3o social e adapta\xE7\xE3o de ambientes dom\xE9sticos, educativos e cl\xEDnicos."
+      },
+      {
+        title: "Psican\xE1lise",
+        description: "Abordagem psicanal\xEDtica cl\xE1ssica, contempor\xE2nea e infantil, com foco na compreens\xE3o dos processos inconscientes, hist\xF3ria de vida e din\xE2mica ps\xEDquica subjacente ao sofrimento emocional."
       },
       {
         title: "Apoio psicol\xF3gico em crises",
@@ -310,6 +314,8 @@ var TIKVAH_CATEGORIES = [
     ]
   }
 ];
+var TIKVAH_INTRO = TIKVAH_PSYCEM_INTRO;
+var TIKVAH_CATEGORIES = TIKVAH_PSYCEM_CATEGORIES;
 
 // src/lib/mcp/tools/list-services.ts
 var list_services_default = defineTool({
