@@ -33,7 +33,7 @@ import { useMemo } from "react";
 import {
   serviceCatalogService,
   type ServiceCatalogQuery,
-} from "@/services/service-catalog.service";
+} from "@/services/service-catalog-validator";
 
 import type {
   ServiceCategoryCMS,

@@ -2,9 +2,9 @@
 
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import {
-  tikvahpsycemServicesEcosystem as tikvahServicesEcosystem,
-  tikvahpsycemEcosystemDescription as tikvahEcosystemDescription,
-  tikvahpsycemModel360Text as tikvahModel360Text,
+  tikvahServicesEcosystem,
+  tikvahEcosystemDescription,
+  tikvahModel360Text,
   ServiceDetail,
   ModalidadeTipo,
 } from "@/data/tikvah-services-cms";

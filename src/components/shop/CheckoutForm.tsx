@@ -68,8 +68,9 @@ export const CheckoutForm = () => {
           {
             body: {
               phoneNumber: formData.phone,
-              amount: getTotal(),
+              // O valor é sempre derivado do pedido no servidor.
               orderId: data.orderId,
+              orderToken: accessToken,
             },
           }
         );

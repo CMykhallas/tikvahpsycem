@@ -392,3 +392,9 @@ export const TIKVAH_PSYCEM_CATEGORIES: TikvahPsycemServiceCategory[] = [
     ],
   },
 ];
+// Aliases de compatibilidade usados por componentes e ferramentas MCP.
+export type TikvahServiceItem = TikvahPsycemServiceItem;
+export type TikvahServiceCategory = TikvahPsycemServiceCategory;
+export const TIKVAH_INTRO = TIKVAH_PSYCEM_INTRO;
+export const TIKVAH_360_STATEMENT = TIKVAH_PSYCEM_360_STATEMENT;
+export const TIKVAH_CATEGORIES = TIKVAH_PSYCEM_CATEGORIES;

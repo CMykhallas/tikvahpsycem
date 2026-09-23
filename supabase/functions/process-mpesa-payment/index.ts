@@ -7,6 +7,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { SecurityLogger, securityMiddleware, validateOptionalJWT } from '../_shared/security.ts';
 import { buildCorsHeaders } from '../_shared/cors.ts';
+import { decryptField, isEncrypted } from '../_shared/encryption.ts';
 
 const logStep = (step: string, details?: any) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
@@ -63,7 +64,8 @@ serve(async (req) => {
     // =========================================
     // FASE 2: INPUT VALIDATION
     // =========================================
-    const { phoneNumber, amount, orderId } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const { phoneNumber, orderId, orderToken } = body ?? {};
 
     // Validar configuração M-Pesa
     const consumerKey = Deno.env.get("MPESA_CONSUMER_KEY");
@@ -80,8 +82,9 @@ serve(async (req) => {
       throw new Error("Configuração M-Pesa incompleta");
     }
 
-    // Validar inputs
-    if (!orderId || !phoneNumber || !amount) {
+    // Validar inputs (o valor NUNCA vem do cliente — é derivado do pedido)
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!orderId || typeof orderId !== 'string' || !UUID_RE.test(orderId) || !phoneNumber) {
       await logger.logIncident({
         incident_type: 'VALIDATION_FAILURE',
         severity: 'medium',
@@ -100,7 +103,7 @@ serve(async (req) => {
     }
 
     // Validar telefone M-Pesa
-    const validPhone = phoneNumber.replace(/\D/g, '');
+    const validPhone = String(phoneNumber).replace(/\D/g, '');
     if (!/^258(8[2345]|8[67])\d{7}$/.test(validPhone)) {
       await logger.logIncident({
         incident_type: 'VALIDATION_FAILURE',
@@ -122,20 +125,85 @@ serve(async (req) => {
       });
     }
 
-    // Validar valor
-    const validAmount = Number(amount);
-    if (isNaN(validAmount) || validAmount <= 0 || validAmount > 100000) {
+    // =========================================
+    // FASE 2B: OWNERSHIP / AUTHORIZATION
+    // O pedido tem de pertencer ao utilizador autenticado ou
+    // o chamador tem de apresentar o token de acesso do pedido (convidado).
+    // =========================================
+    const { data: order, error: orderLoadError } = await supabase
+      .from('orders')
+      .select('id, amount, status, user_id, order_access_token, token_expires_at')
+      .eq('id', orderId)
+      .maybeSingle();
+
+    const denyAccess = async (reason: string) => {
       await logger.logIncident({
         incident_type: 'VALIDATION_FAILURE',
-        severity: 'medium',
+        severity: 'high',
         ip_address: ip,
+        user_agent: userAgent,
         endpoint: 'process-mpesa-payment',
-        details: { reason: 'INVALID_AMOUNT', amount }
+        details: { reason, orderId }
       });
-      
       return new Response(JSON.stringify({
         success: false,
-        error: "Valor inválido (mínimo 1 MZN, máximo 100.000 MZN)"
+        error: "Pedido não encontrado ou acesso não autorizado"
+      }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    };
+
+    if (orderLoadError || !order) {
+      return await denyAccess('ORDER_NOT_FOUND');
+    }
+
+    if (order.user_id) {
+      // Pedido de utilizador autenticado: exige JWT do próprio dono
+      if (!jwtCheck.userId || jwtCheck.userId !== order.user_id) {
+        return await denyAccess('ORDER_OWNERSHIP_MISMATCH');
+      }
+    } else {
+      // Pedido de convidado: exige token de acesso válido e não expirado
+      if (!orderToken || typeof orderToken !== 'string') {
+        return await denyAccess('MISSING_ORDER_TOKEN');
+      }
+      if (!order.token_expires_at || new Date(order.token_expires_at) < new Date()) {
+        return await denyAccess('ORDER_TOKEN_EXPIRED');
+      }
+      let storedToken: string | null = null;
+      try {
+        const parsed = JSON.parse(order.order_access_token ?? 'null');
+        storedToken = isEncrypted(parsed) ? await decryptField(parsed) : null;
+      } catch (_e) {
+        storedToken = null;
+      }
+      if (!storedToken || storedToken !== orderToken) {
+        return await denyAccess('INVALID_ORDER_TOKEN');
+      }
+    }
+
+    // Só pedidos pendentes podem ser pagos
+    if (order.status !== 'pending') {
+      return await denyAccess('ORDER_NOT_PAYABLE');
+    }
+
+    // =========================================
+    // VALOR DERIVADO DO SERVIDOR (nunca do cliente)
+    // orders.amount está em centavos
+    // =========================================
+    const validAmount = Math.round(Number(order.amount)) / 100;
+    if (!isFinite(validAmount) || validAmount <= 0 || validAmount > 100000) {
+      await logger.logIncident({
+        incident_type: 'VALIDATION_FAILURE',
+        severity: 'high',
+        ip_address: ip,
+        endpoint: 'process-mpesa-payment',
+        details: { reason: 'INVALID_SERVER_AMOUNT', orderId }
+      });
+      return new Response(JSON.stringify({
+        success: false,
+        error: "Valor do pedido inválido"
       }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
@@ -147,6 +215,7 @@ serve(async (req) => {
       amount: validAmount,
       orderId 
     });
+
 
     // =========================================
     // FASE 3: M-PESA OAUTH TOKEN
@@ -224,7 +293,8 @@ serve(async (req) => {
           mpesa_reference: c2bData.output_TransactionID,
           phone_number: validPhone,
         })
-        .eq("id", orderId);
+        .eq("id", orderId)
+        .eq("status", "pending");
 
       if (updateError) {
         logStep("⚠️ Order update failed", updateError);
