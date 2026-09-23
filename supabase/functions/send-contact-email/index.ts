@@ -247,23 +247,11 @@ serve(async (req) => {
         </body></html>`,
     });
 
-    // Send user confirmation
-    const userResp = await resend.emails.send({
-      from: "Tikvah Psycem <onboarding@resend.dev>",
-      to: [data.email],
-      subject: "Mensagem recebida - Obrigado pelo contato!",
-      html: `<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"></head>
-        <body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:600px;margin:0 auto;padding:20px">
-          <h2 style="color:#1a365d">Olá, ${safeName}!</h2>
-          <p>Recebemos a sua mensagem e responderemos em até 24h úteis.</p>
-          <div style="background:#f7fafc;padding:20px;border-radius:8px">
-            <p><strong>Assunto:</strong> ${safeSubjectHtml}</p>
-            <div style="background:#fff;padding:15px;border:1px solid #e2e8f0;border-radius:4px">${safeMessageHtml}</div>
-          </div>
-          <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0">
-          <p style="color:#718096;font-size:12px">Tikvah Psychological Center · Maputo</p>
-        </body></html>`,
-    });
+    // NOTA DE SEGURANÇA: não enviamos qualquer email para o endereço submetido.
+    // Enviar confirmação para um destinatário arbitrário permitiria usar o domínio
+    // como relé de mensagens não solicitadas a terceiros. A confirmação é dada
+    // apenas na resposta HTTP ao formulário.
+
 
     await supabase.from("audit_logs").insert({
       action: "CONTACT_EMAIL_SENT",
