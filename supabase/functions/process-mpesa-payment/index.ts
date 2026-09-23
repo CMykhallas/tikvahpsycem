@@ -293,7 +293,8 @@ serve(async (req) => {
           mpesa_reference: c2bData.output_TransactionID,
           phone_number: validPhone,
         })
-        .eq("id", orderId);
+        .eq("id", orderId)
+        .eq("status", "pending");
 
       if (updateError) {
         logStep("⚠️ Order update failed", updateError);
