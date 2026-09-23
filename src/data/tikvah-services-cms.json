@@ -411,6 +411,173 @@
           "precosPorCliente": { "individualidades": null, "casal": null, "familia": null, "empresas": 10440, "ong": 6300, "associacoes": 6300 }
         }
       ]
+    },
+    {
+      "id": "assessoria",
+      "title": "Assessoria empresarial e financeira",
+      "items": [
+        {
+          "id": "assessoria-empresarial",
+          "title": "Assessoria Empresarial e Estratégia de Crescimento",
+          "summary": "Apoio a startups e negócios em fase de crescimento na estruturação estratégica e operacional.",
+          "descriptionFull": "Acompanhamento próximo a empreendedores e pequenas empresas na definição de modelo de negócio, plano de crescimento, estruturação inicial e validação de mercado, com foco na realidade económica de Moçambique.",
+          "diferencial": "Abordagem prática e adaptada ao estágio real do negócio, sem recomendações genéricas de manual.",
+          "competitividade": "Preço acessível para startups e PMEs em fase inicial, com opção de acompanhamento continuado.",
+          "modalidadesPermitidas": ["online", "presencial", "hibrido"],
+          "precoBaseMZN": 9000,
+          "precoComIvaMZN": 10440,
+          "precosPorModalidade": { "online": 9860, "presencial": 10440, "hibrido": 10208 },
+          "precosPorCliente": { "individualidades": 7540, "casal": null, "familia": null, "empresas": 10440, "ong": 9800, "associacoes": 9600 }
+        },
+        {
+          "id": "assessoria-financeira",
+          "title": "Assessoria Financeira e Desenvolvimento Profissional",
+          "summary": "Treinamento e desenvolvimento de habilidades técnicas e interpessoais para profissionais e equipas.",
+          "descriptionFull": "Programa de apoio financeiro pessoal/profissional combinado com desenvolvimento de competências técnicas e interpessoais, direcionado a indivíduos em transição de carreira ou equipas em desenvolvimento.",
+          "diferencial": "Combina literacia financeira prática com desenvolvimento comportamental, algo raro no mercado local.",
+          "competitividade": "Posicionamento acessível para indivíduos, com pacote corporativo para equipas.",
+          "modalidadesPermitidas": ["online", "presencial", "hibrido"],
+          "precoBaseMZN": 5000,
+          "precoComIvaMZN": 5800,
+          "precosPorModalidade": { "online": 5452, "presencial": 5800, "hibrido": 5684 },
+          "precosPorCliente": { "individualidades": 5800, "casal": null, "familia": null, "empresas": 11600, "ong": 8000, "associacoes": 7800 }
+        }
+      ]
+    },
+    {
+      "id": "coaching-mentoria",
+      "title": "Coaching e mentoria",
+      "items": [
+        {
+          "id": "coaching-executivo",
+          "title": "Coaching Executivo",
+          "summary": "Acompanhamento individual para lideranças com foco em decisão, performance e gestão de conflitos.",
+          "descriptionFull": "Programa estruturado de coaching individual para executivos e líderes organizacionais, com objetivos claros, sessões periódicas e avaliação de progresso ao longo do percurso.",
+          "diferencial": "Metodologia baseada em psicologia organizacional, não apenas técnicas motivacionais genéricas.",
+          "competitividade": "Alinhado ao mercado de coaching executivo em Maputo para lideranças de médias e grandes empresas.",
+          "modalidadesPermitidas": ["online", "presencial", "hibrido"],
+          "precoBaseMZN": 6000,
+          "precoComIvaMZN": 6960,
+          "precosPorModalidade": { "online": 6612, "presencial": 6960, "hibrido": 6844 },
+          "precosPorCliente": { "individualidades": 6960, "casal": null, "familia": null, "empresas": 13920, "ong": 9600, "associacoes": 9200 }
+        },
+        {
+          "id": "coaching-carreira-vida",
+          "title": "Coaching de Carreira e de Vida",
+          "summary": "Apoio individual na definição de objetivos pessoais e profissionais.",
+          "descriptionFull": "Acompanhamento individual para pessoas em transição de carreira, procura de propósito ou definição de metas de vida, com plano de ação estruturado.",
+          "diferencial": "Processo estruturado por objetivos, com acompanhamento e ajustes ao longo do percurso.",
+          "competitividade": "Preço acessível para indivíduos, mantendo qualidade técnica do acompanhamento.",
+          "modalidadesPermitidas": ["online", "presencial", "hibrido"],
+          "precoBaseMZN": 3500,
+          "precoComIvaMZN": 4060,
+          "precosPorModalidade": { "online": 3828, "presencial": 4060, "hibrido": 3944 },
+          "precosPorCliente": { "individualidades": 4060, "casal": 5220, "familia": null, "empresas": 9396, "ong": 6496, "associacoes": 6264 }
+        },
+        {
+          "id": "mentoria-academica-profissional",
+          "title": "Mentoria Académica e Profissional",
+          "summary": "Orientação continuada para estudantes e profissionais em início de carreira.",
+          "descriptionFull": "Programa de mentoria para estudantes universitários e profissionais juniores, com orientação sobre percurso académico, primeiras experiências profissionais e desenvolvimento de identidade profissional.",
+          "diferencial": "Foco em construção de identidade profissional com segurança, não apenas aconselhamento pontual.",
+          "competitividade": "Posicionamento acessível, pensado para estudantes e profissionais em início de carreira.",
+          "modalidadesPermitidas": ["online", "presencial", "hibrido"],
+          "precoBaseMZN": 2500,
+          "precoComIvaMZN": 2900,
+          "precosPorModalidade": { "online": 2668, "presencial": 2900, "hibrido": 2784 },
+          "precosPorCliente": { "individualidades": 2900, "casal": null, "familia": null, "empresas": 5800, "ong": 4000, "associacoes": 3900 }
+        }
+      ]
+    },
+    {
+      "id": "programas-estruturados",
+      "title": "Programas estruturados de impacto",
+      "items": [
+        {
+          "id": "programa-burnout",
+          "title": "Programa de Prevenção e Manejo do Burnout",
+          "summary": "Intervenção estruturada para prevenção e tratamento da síndrome de esgotamento profissional.",
+          "descriptionFull": "Programa institucional com psicoeducação sobre estresse ocupacional, técnicas de autorregulação psiconeurofisiológica e reorganização de processos laborais, desenhado para reduzir o esgotamento profissional nas organizações.",
+          "diferencial": "Abordagem estruturada e mensurável, não apenas palestras pontuais de sensibilização.",
+          "competitividade": "Valor direto para empresas que enfrentam alta rotatividade e absentismo ligado ao stress.",
+          "modalidadesPermitidas": ["online", "presencial", "hibrido"],
+          "precoBaseMZN": 12000,
+          "precoComIvaMZN": 13920,
+          "precosPorModalidade": { "online": 12760, "presencial": 13920, "hibrido": 13340 },
+          "precosPorCliente": { "individualidades": null, "casal": null, "familia": null, "empresas": 13920, "ong": 13440, "associacoes": 13200 }
+        },
+        {
+          "id": "programa-mindfulness",
+          "title": "Programa de Mindfulness Baseado em Evidências (MBSR/MBCT)",
+          "summary": "Treinamento sistematizado em práticas de atenção plena, protocolos MBSR e MBCT.",
+          "descriptionFull": "Programa de grupo estruturado em protocolos internacionalmente validados (Mindfulness-Based Stress Reduction e Mindfulness-Based Cognitive Therapy) para redução de stress e prevenção de recaída em quadros ansiosos/depressivos.",
+          "diferencial": "Uso de protocolos validados internacionalmente, não apenas sessões avulsas de meditação.",
+          "competitividade": "Preço acessível em formato de grupo, com opção corporativa.",
+          "modalidadesPermitidas": ["online", "presencial", "hibrido"],
+          "precoBaseMZN": 4000,
+          "precoComIvaMZN": 4640,
+          "precosPorModalidade": { "online": 4292, "presencial": 4640, "hibrido": 4524 },
+          "precosPorCliente": { "individualidades": 3248, "casal": null, "familia": null, "empresas": 9280, "ong": 6400, "associacoes": 6200 }
+        },
+        {
+          "id": "programa-envelhecimento-ativo",
+          "title": "Programa de Envelhecimento Ativo",
+          "summary": "Intervenção multidimensional para promoção de saúde mental na terceira idade.",
+          "descriptionFull": "Programa com estimulação cognitiva, atividade física adaptada, engajamento social e atividades domiciliares complementares, direcionado a idosos e às suas famílias.",
+          "diferencial": "Abordagem multidimensional (cognitiva, física e social), não apenas atividades recreativas isoladas.",
+          "competitividade": "Serviço com pouca oferta especializada em Maputo, posicionamento diferenciado.",
+          "modalidadesPermitidas": ["presencial", "hibrido"],
+          "precoBaseMZN": 3500,
+          "precoComIvaMZN": 4060,
+          "precosPorModalidade": { "presencial": 4060, "hibrido": 3828 },
+          "precosPorCliente": { "individualidades": 4060, "casal": null, "familia": 5568, "empresas": null, "ong": 6380, "associacoes": 6148 }
+        },
+        {
+          "id": "programa-prevencao-escolar",
+          "title": "Programa Escolar de Prevenção em Saúde Mental",
+          "summary": "Intervenção psicoeducativa sistematizada para ambiente escolar, incluindo prevenção de bullying e manejo de stress.",
+          "descriptionFull": "Programa institucional para escolas, com oficinas temáticas, desenvolvimento de competências socioemocionais, prevenção de bullying, manejo de stress e capacitação docente.",
+          "diferencial": "Programa sistematizado e adaptado ao calendário escolar, com capacitação de docentes incluída.",
+          "competitividade": "Preço institucional acessível para escolas e associações de pais.",
+          "modalidadesPermitidas": ["presencial", "hibrido"],
+          "precoBaseMZN": 6000,
+          "precoComIvaMZN": 6960,
+          "precosPorModalidade": { "presencial": 6960, "hibrido": 6612 },
+          "precosPorCliente": { "individualidades": null, "casal": null, "familia": null, "empresas": null, "ong": 6960, "associacoes": 6960 }
+        }
+      ]
+    },
+    {
+      "id": "reciclagem-sustentabilidade",
+      "title": "Reciclagem e sustentabilidade",
+      "items": [
+        {
+          "id": "conscientizacao-ambiental",
+          "title": "Conscientização Ambiental",
+          "summary": "Workshops e campanhas de sensibilização ambiental para organizações e comunidades.",
+          "descriptionFull": "Sessões formativas sobre impacto ambiental, práticas sustentáveis e responsabilidade ecológica institucional, adaptadas ao contexto de Moçambique.",
+          "diferencial": "Conteúdo adaptado à realidade local, não material genérico traduzido.",
+          "competitividade": "Preço acessível para escolas, ONGs e pequenas empresas.",
+          "modalidadesPermitidas": ["online", "presencial", "hibrido"],
+          "precoBaseMZN": 4000,
+          "precoComIvaMZN": 4640,
+          "precosPorModalidade": { "online": 4292, "presencial": 4640, "hibrido": 4524 },
+          "precosPorCliente": { "individualidades": null, "casal": null, "familia": null, "empresas": 9280, "ong": 6496, "associacoes": 6728 }
+        },
+        {
+          "id": "gestao-residuos",
+          "title": "Treinamento em Gestão de Resíduos",
+          "summary": "Capacitação prática em gestão e redução de resíduos institucionais.",
+          "descriptionFull": "Formação prática sobre gestão de resíduos, separação, redução e práticas sustentáveis aplicáveis ao contexto organizacional.",
+          "diferencial": "Foco prático e aplicável, com recomendações concretas por tipo de organização.",
+          "competitividade": "Preço competitivo para instituições que precisam de conformidade ambiental básica.",
+          "modalidadesPermitidas": ["presencial", "hibrido"],
+          "precoBaseMZN": 4500,
+          "precoComIvaMZN": 5220,
+          "precosPorModalidade": { "presencial": 5220, "hibrido": 4988 },
+          "precosPorCliente": { "individualidades": null, "casal": null, "familia": null, "empresas": 10440, "ong": 6300, "associacoes": 6300 }
+        }
+      ]
     }
   ]
 }

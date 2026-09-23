@@ -62,8 +62,9 @@ export const useAuth = () => {
     return { error };
   };
 
-  const signUp = async (email: string, password: string) => {
-    const redirectUrl = `${window.location.origin}/`;
+  const signUp = async (email: string, password: string, next?: string) => {
+    const safeNext = next && /^\/(?!\/)/.test(next) ? next : '/';
+    const redirectUrl = `${window.location.origin}${safeNext}`;
     const { error } = await supabase.auth.signUp({
       email,
       password,

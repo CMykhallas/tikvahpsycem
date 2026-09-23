@@ -549,6 +549,327 @@ export const tikvahServicesEcosystem: readonly ServiceCategory[] = [
         }
       }
     ]
+  },
+  {
+    id: "assessoria",
+    title: "Assessoria empresarial e financeira",
+    items: [
+      {
+        id: "assessoria-empresarial",
+        title: "Assessoria Empresarial e Estratégia de Crescimento",
+        summary:
+          "Apoio a startups e negócios em fase de crescimento na estruturação estratégica e operacional.",
+        descriptionFull:
+          "Acompanhamento próximo a empreendedores e pequenas empresas na definição de modelo de negócio, plano de crescimento, estruturação inicial e validação de mercado, com foco na realidade económica de Moçambique.",
+        diferencial:
+          "Abordagem prática e adaptada ao estágio real do negócio, sem recomendações genéricas de manual.",
+        competitividade:
+          "Preço acessível para startups e PMEs em fase inicial, com opção de acompanhamento continuado.",
+        modalidadesPermitidas: ["online", "presencial", "hibrido"],
+        precoBaseMZN: 9000, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precosPorModalidade: {
+          online: comIva(8500),
+          presencial: comIva(9000),
+          hibrido: comIva(8800)
+        },
+        precosPorCliente: {
+          individualidades: comIva(6500),
+          casal: comIva(0),
+          familia: comIva(0),
+          empresas: comIva(10440),
+          ong: comIva(9800),
+          associacoes: comIva(9600)
+        }
+      },
+      {
+        id: "assessoria-financeira",
+        title: "Assessoria Financeira e Desenvolvimento Profissional",
+        summary:
+          "Treinamento e desenvolvimento de habilidades técnicas e interpessoais para profissionais e equipas.",
+        descriptionFull:
+          "Programa de apoio financeiro pessoal/profissional combinado com desenvolvimento de competências técnicas e interpessoais, direcionado a indivíduos em transição de carreira ou equipas em desenvolvimento.",
+        diferencial:
+          "Combina literacia financeira prática com desenvolvimento comportamental, algo raro no mercado local.",
+        competitividade:
+          "Posicionamento acessível para indivíduos, com pacote corporativo para equipas.",
+        modalidadesPermitidas: ["online", "presencial", "hibrido"],
+        precoBaseMZN: 5000, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precosPorModalidade: {
+          online: comIva(4700),
+          presencial: comIva(5000),
+          hibrido: comIva(4900)
+        },
+        precosPorCliente: {
+          individualidades: comIva(5000),
+          casal: comIva(0),
+          familia: comIva(0),
+          empresas: comIva(11600),
+          ong: comIva(8000),
+          associacoes: comIva(7800)
+        }
+      }
+    ]
+  },
+  {
+    id: "coaching-mentoria",
+    title: "Coaching e mentoria",
+    items: [
+      {
+        id: "coaching-executivo",
+        title: "Coaching Executivo",
+        summary:
+          "Acompanhamento individual para lideranças com foco em decisão, performance e gestão de conflitos.",
+        descriptionFull:
+          "Programa estruturado de coaching individual para executivos e líderes organizacionais, com objetivos claros, sessões periódicas e avaliação de progresso ao longo do percurso.",
+        diferencial:
+          "Metodologia baseada em psicologia organizacional, não apenas técnicas motivacionais genéricas.",
+        competitividade:
+          "Alinhado ao mercado de coaching executivo em Maputo para lideranças de médias e grandes empresas.",
+        modalidadesPermitidas: ["online", "presencial", "hibrido"],
+        precoBaseMZN: 6000, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precosPorModalidade: {
+          online: comIva(5700),
+          presencial: comIva(6000),
+          hibrido: comIva(5900)
+        },
+        precosPorCliente: {
+          individualidades: comIva(6000),
+          casal: comIva(0),
+          familia: comIva(0),
+          empresas: comIva(13920),
+          ong: comIva(9600),
+          associacoes: comIva(9200)
+        }
+      },
+      {
+        id: "coaching-carreira-vida",
+        title: "Coaching de Carreira e de Vida",
+        summary:
+          "Apoio individual na definição de objetivos pessoais e profissionais.",
+        descriptionFull:
+          "Acompanhamento individual para pessoas em transição de carreira, procura de propósito ou definição de metas de vida, com plano de ação estruturado.",
+        diferencial:
+          "Processo estruturado por objetivos, com acompanhamento e ajustes ao longo do percurso.",
+        competitividade:
+          "Preço acessível para indivíduos, mantendo qualidade técnica do acompanhamento.",
+        modalidadesPermitidas: ["online", "presencial", "hibrido"],
+        precoBaseMZN: 3500, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precosPorModalidade: {
+          online: comIva(3300),
+          presencial: comIva(3500),
+          hibrido: comIva(3400)
+        },
+        precosPorCliente: {
+          individualidades: comIva(3500),
+          casal: comIva(4500),
+          familia: comIva(0),
+          empresas: comIva(8100),
+          ong: comIva(5600),
+          associacoes: comIva(5400)
+        }
+      },
+      {
+        id: "mentoria-academica-profissional",
+        title: "Mentoria Académica e Profissional",
+        summary:
+          "Orientação continuada para estudantes e profissionais em início de carreira.",
+        descriptionFull:
+          "Programa de mentoria para estudantes universitários e profissionais juniores, com orientação sobre percurso académico, primeiras experiências profissionais e desenvolvimento de identidade profissional.",
+        diferencial:
+          "Foco em construção de identidade profissional com segurança, não apenas aconselhamento pontual.",
+        competitividade:
+          "Posicionamento acessível, pensado para estudantes e profissionais em início de carreira.",
+        modalidadesPermitidas: ["online", "presencial", "hibrido"],
+        precoBaseMZN: 2500, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precosPorModalidade: {
+          online: comIva(2300),
+          presencial: comIva(2500),
+          hibrido: comIva(2400)
+        },
+        precosPorCliente: {
+          individualidades: comIva(2500),
+          casal: comIva(0),
+          familia: comIva(0),
+          empresas: comIva(5800),
+          ong: comIva(4000),
+          associacoes: comIva(3900)
+        }
+      }
+    ]
+  },
+  {
+    id: "programas-estruturados",
+    title: "Programas estruturados de impacto",
+    items: [
+      {
+        id: "programa-burnout",
+        title: "Programa de Prevenção e Manejo do Burnout",
+        summary:
+          "Intervenção estruturada para prevenção e tratamento da síndrome de esgotamento profissional.",
+        descriptionFull:
+          "Programa institucional com psicoeducação sobre estresse ocupacional, técnicas de autorregulação psiconeurofisiológica e reorganização de processos laborais, desenhado para reduzir o esgotamento profissional nas organizações.",
+        diferencial:
+          "Abordagem estruturada e mensurável, não apenas palestras pontuais de sensibilização.",
+        competitividade:
+          "Valor direto para empresas que enfrentam alta rotatividade e absentismo ligado ao stress.",
+        modalidadesPermitidas: ["online", "presencial", "hibrido"],
+        precoBaseMZN: 12000, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precosPorModalidade: {
+          online: comIva(11000),
+          presencial: comIva(12000),
+          hibrido: comIva(11500)
+        },
+        precosPorCliente: {
+          individualidades: comIva(0),
+          casal: comIva(0),
+          familia: comIva(0),
+          empresas: comIva(13920),
+          ong: comIva(13440),
+          associacoes: comIva(13200)
+        }
+      },
+      {
+        id: "programa-mindfulness",
+        title: "Programa de Mindfulness Baseado em Evidências (MBSR/MBCT)",
+        summary:
+          "Treinamento sistematizado em práticas de atenção plena, protocolos MBSR e MBCT.",
+        descriptionFull:
+          "Programa de grupo estruturado em protocolos internacionalmente validados (Mindfulness-Based Stress Reduction e Mindfulness-Based Cognitive Therapy) para redução de stress e prevenção de recaída em quadros ansiosos/depressivos.",
+        diferencial:
+          "Uso de protocolos validados internacionalmente, não apenas sessões avulsas de meditação.",
+        competitividade:
+          "Preço acessível em formato de grupo, com opção corporativa.",
+        modalidadesPermitidas: ["online", "presencial", "hibrido"],
+        precoBaseMZN: 4000, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precosPorModalidade: {
+          online: comIva(3700),
+          presencial: comIva(4000),
+          hibrido: comIva(3900)
+        },
+        precosPorCliente: {
+          individualidades: comIva(2800),
+          casal: comIva(0),
+          familia: comIva(0),
+          empresas: comIva(9280),
+          ong: comIva(6400),
+          associacoes: comIva(6200)
+        }
+      },
+      {
+        id: "programa-envelhecimento-ativo",
+        title: "Programa de Envelhecimento Ativo",
+        summary:
+          "Intervenção multidimensional para promoção de saúde mental na terceira idade.",
+        descriptionFull:
+          "Programa com estimulação cognitiva, atividade física adaptada, engajamento social e atividades domiciliares complementares, direcionado a idosos e às suas famílias.",
+        diferencial:
+          "Abordagem multidimensional (cognitiva, física e social), não apenas atividades recreativas isoladas.",
+        competitividade:
+          "Serviço com pouca oferta especializada em Maputo, posicionamento diferenciado.",
+        modalidadesPermitidas: ["presencial", "hibrido"],
+        precoBaseMZN: 3500, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precosPorModalidade: {
+          online: comIva(0),
+          presencial: comIva(3500),
+          hibrido: comIva(3300)
+        },
+        precosPorCliente: {
+          individualidades: comIva(3500),
+          casal: comIva(0),
+          familia: comIva(4800),
+          empresas: comIva(0),
+          ong: comIva(5500),
+          associacoes: comIva(5300)
+        }
+      },
+      {
+        id: "programa-prevencao-escolar",
+        title: "Programa Escolar de Prevenção em Saúde Mental",
+        summary:
+          "Intervenção psicoeducativa sistematizada para ambiente escolar, incluindo prevenção de bullying e manejo de stress.",
+        descriptionFull:
+          "Programa institucional para escolas, com oficinas temáticas, desenvolvimento de competências socioemocionais, prevenção de bullying, manejo de stress e capacitação docente.",
+        diferencial:
+          "Programa sistematizado e adaptado ao calendário escolar, com capacitação de docentes incluída.",
+        competitividade:
+          "Preço institucional acessível para escolas e associações de pais.",
+        modalidadesPermitidas: ["presencial", "hibrido"],
+        precoBaseMZN: 6000, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precosPorModalidade: {
+          online: comIva(0),
+          presencial: comIva(6000),
+          hibrido: comIva(5700)
+        },
+        precosPorCliente: {
+          individualidades: comIva(0),
+          casal: comIva(0),
+          familia: comIva(0),
+          empresas: comIva(0),
+          ong: comIva(6960),
+          associacoes: comIva(6960)
+        }
+      }
+    ]
+  },
+  {
+    id: "reciclagem-sustentabilidade",
+    title: "Reciclagem e sustentabilidade",
+    items: [
+      {
+        id: "conscientizacao-ambiental",
+        title: "Conscientização Ambiental",
+        summary:
+          "Workshops e campanhas de sensibilização ambiental para organizações e comunidades.",
+        descriptionFull:
+          "Sessões formativas sobre impacto ambiental, práticas sustentáveis e responsabilidade ecológica institucional, adaptadas ao contexto de Moçambique.",
+        diferencial:
+          "Conteúdo adaptado à realidade local, não material genérico traduzido.",
+        competitividade:
+          "Preço acessível para escolas, ONGs e pequenas empresas.",
+        modalidadesPermitidas: ["online", "presencial", "hibrido"],
+        precoBaseMZN: 4000, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precosPorModalidade: {
+          online: comIva(3700),
+          presencial: comIva(4000),
+          hibrido: comIva(3900)
+        },
+        precosPorCliente: {
+          individualidades: comIva(0),
+          casal: comIva(0),
+          familia: comIva(0),
+          empresas: comIva(9280),
+          ong: comIva(5600),
+          associacoes: comIva(5800)
+        }
+      },
+      {
+        id: "gestao-residuos",
+        title: "Treinamento em Gestão de Resíduos",
+        summary:
+          "Capacitação prática em gestão e redução de resíduos institucionais.",
+        descriptionFull:
+          "Formação prática sobre gestão de resíduos, separação, redução e práticas sustentáveis aplicáveis ao contexto organizacional.",
+        diferencial:
+          "Foco prático e aplicável, com recomendações concretas por tipo de organização.",
+        competitividade:
+          "Preço competitivo para instituições que precisam de conformidade ambiental básica.",
+        modalidadesPermitidas: ["presencial", "hibrido"],
+        precoBaseMZN: 4500, // TODO: preço indicativo, confirmar com o negócio antes de publicar
+        precosPorModalidade: {
+          online: comIva(0),
+          presencial: comIva(4500),
+          hibrido: comIva(4300)
+        },
+        precosPorCliente: {
+          individualidades: comIva(0),
+          casal: comIva(0),
+          familia: comIva(0),
+          empresas: comIva(10440),
+          ong: comIva(6300),
+          associacoes: comIva(6300)
+        }
+      }
+    ]
   }
 ] as const;
 

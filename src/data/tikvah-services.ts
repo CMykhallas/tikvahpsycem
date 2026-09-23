@@ -1,4 +1,4 @@
-// Catálogo institucional Tikvah Psycem— fonte única para a página /services e
+// Catálogo institucional Tikvah Psycem — fonte única para a página /services e
 // para a secção "Nossos Serviços" da homepage. Reflecte o documento oficial
 // "Serviços Tikvah Psycem" (modelo de intervenção 360°).
 

@@ -32,6 +32,7 @@ import SecurityDashboard from "./pages/SecurityDashboard";
 import SecurityIncidentsAdmin from "./pages/admin/SecurityIncidents";
 import SecurityAnalytics from "./pages/admin/SecurityAnalytics";
 import Auth from "./pages/Auth";
+import OAuthConsent from "./pages/OAuthConsent";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 import Psicoterapia from "./pages/services/Psicoterapia";
@@ -89,6 +90,7 @@ export function App() {
                 <Route path="/feedback" element={<Feedback />} />
                 <Route path="/location" element={<Location />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
                 <Route path="/obrigado" element={<Obrigado />} />
                 <Route path="/politica-de-privacidade" element={<PoliticaPrivacidade />} />
                 <Route path="/propostas/proximos-passos" element={<ProximosPassos />} />
