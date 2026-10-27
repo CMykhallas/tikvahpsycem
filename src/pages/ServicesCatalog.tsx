@@ -144,7 +144,7 @@ export default function ServicesCatalog() {
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-teal-600 text-sm font-semibold uppercase tracking-wider">
+          <span className="text-teal-700 text-sm font-semibold uppercase tracking-wider">
             Portfólio Corporativo e Clínico
           </span>
           <h1 className="mt-2 text-4xl font-extrabold text-slate-900 tracking-tight sm:text-5xl">
@@ -216,7 +216,7 @@ export default function ServicesCatalog() {
               </div>
 
               <div className="flex justify-between items-center pt-4 border-t border-slate-100">
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 group-hover:text-teal-600">
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-600 group-hover:text-teal-600">
                   Mais detalhes →
                 </span>
                 <span className="font-bold text-slate-900 bg-slate-100 px-3 py-1 rounded text-sm">
