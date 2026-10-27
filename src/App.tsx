@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,52 +7,54 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { SecurityProvider } from "@/components/SecurityProvider";
 
-import Index from "./pages/Index";
-import About from "./pages/About";
-import Services from "./pages/Services";
-import ServiceDetail from "./pages/ServiceDetail";
-import Contact from "./pages/Contact";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
-import Team from "./pages/Team";
-import Values from "./pages/Values";
-import Mission from "./pages/Mission";
-import Approach from "./pages/Approach";
-import FAQ from "./pages/FAQ";
-import Testimonials from "./pages/Testimonials";
-import Career from "./pages/Career";
-import Appointment from "./pages/Appointment";
-import Feedback from "./pages/Feedback";
-import Location from "./pages/Location";
-import Administration from "./pages/Administration";
-import Obrigado from "./pages/Obrigado";
-import PoliticaPrivacidade from "./pages/PoliticaPrivacidade";
-import NotFound from "./pages/NotFound";
-import ProximosPassos from "./pages/ProximosPassos";
-import SecurityDashboard from "./pages/SecurityDashboard";
-import SecurityIncidentsAdmin from "./pages/admin/SecurityIncidents";
-import SecurityAnalytics from "./pages/admin/SecurityAnalytics";
-import Auth from "./pages/Auth";
-import OAuthConsent from "./pages/OAuthConsent";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
-import Psicoterapia from "./pages/services/Psicoterapia";
-import Consultoria from "./pages/services/Consultoria";
-import Cursos from "./pages/services/Cursos";
-import Workshops from "./pages/services/Workshops";
-import { EcosystemItemPage, EcosystemCategoryPage } from "./pages/EcosystemDetail";
+const Index = lazy(() => import("./pages/Index"));
+const About = lazy(() => import("./pages/About"));
+const Services = lazy(() => import("./pages/Services"));
+const ServiceDetail = lazy(() => import("./pages/ServiceDetail"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+const Team = lazy(() => import("./pages/Team"));
+const Values = lazy(() => import("./pages/Values"));
+const Mission = lazy(() => import("./pages/Mission"));
+const Approach = lazy(() => import("./pages/Approach"));
+const FAQ = lazy(() => import("./pages/FAQ"));
+const Testimonials = lazy(() => import("./pages/Testimonials"));
+const Career = lazy(() => import("./pages/Career"));
+const Appointment = lazy(() => import("./pages/Appointment"));
+const Feedback = lazy(() => import("./pages/Feedback"));
+const Location = lazy(() => import("./pages/Location"));
+const Administration = lazy(() => import("./pages/Administration"));
+const Obrigado = lazy(() => import("./pages/Obrigado"));
+const PoliticaPrivacidade = lazy(() => import("./pages/PoliticaPrivacidade"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const ProximosPassos = lazy(() => import("./pages/ProximosPassos"));
+const SecurityDashboard = lazy(() => import("./pages/SecurityDashboard"));
+const SecurityIncidentsAdmin = lazy(() => import("./pages/admin/SecurityIncidents"));
+const SecurityAnalytics = lazy(() => import("./pages/admin/SecurityAnalytics"));
+const Auth = lazy(() => import("./pages/Auth"));
+const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
 
-import MBSRMetaAnalise from "./pages/blog/MBSRMetaAnalise";
-import TraumaCulturalResiliencia from "./pages/blog/TraumaCulturalResiliencia";
-import ACTTerapiaContextos from "./pages/blog/ACTTerapiaContextos";
-import PsicologiaOrganizacional from "./pages/blog/PsicologiaOrganizacional";
-import RedesSociaisOportunidadesConflitos from "./pages/blog/RedesSociaisOportunidadesConflitos";
+const Psicoterapia = lazy(() => import("./pages/services/Psicoterapia"));
+const Consultoria = lazy(() => import("./pages/services/Consultoria"));
+const Cursos = lazy(() => import("./pages/services/Cursos"));
+const Workshops = lazy(() => import("./pages/services/Workshops"));
+const EcosystemItemPage = lazy(() => import("./pages/EcosystemDetail").then((module) => ({ default: module.EcosystemItemPage })));
+const EcosystemCategoryPage = lazy(() => import("./pages/EcosystemDetail").then((module) => ({ default: module.EcosystemCategoryPage })));
 
-import Loja from "./pages/Loja";
-import Carrinho from "./pages/Carrinho";
-import Checkout from "./pages/Checkout";
-import ProductDetail from "./pages/ProductDetail";
-import Success from "./pages/Success";
+const MBSRMetaAnalise = lazy(() => import("./pages/blog/MBSRMetaAnalise"));
+const TraumaCulturalResiliencia = lazy(() => import("./pages/blog/TraumaCulturalResiliencia"));
+const ACTTerapiaContextos = lazy(() => import("./pages/blog/ACTTerapiaContextos"));
+const PsicologiaOrganizacional = lazy(() => import("./pages/blog/PsicologiaOrganizacional"));
+const RedesSociaisOportunidadesConflitos = lazy(() => import("./pages/blog/RedesSociaisOportunidadesConflitos"));
+
+const Loja = lazy(() => import("./pages/Loja"));
+const Carrinho = lazy(() => import("./pages/Carrinho"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const ProductDetail = lazy(() => import("./pages/ProductDetail"));
+const Success = lazy(() => import("./pages/Success"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -71,6 +74,7 @@ export function App() {
             <Toaster />
             <Sonner />
             <BrowserRouter>
+              <Suspense fallback={<div role="status" aria-live="polite" className="min-h-screen flex items-center justify-center">A carregar página…</div>}>
               <Routes>
                 {/* Rotas Públicas Principais */}
                 <Route path="/" element={<Index />} />
@@ -157,6 +161,7 @@ export function App() {
                 {/* Tratamento de Rota Não Encontrada (404) */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              </Suspense>
             </BrowserRouter>
           </TooltipProvider>
         </SecurityProvider>
