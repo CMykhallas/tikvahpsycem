@@ -65,7 +65,7 @@ const EcosystemFallback = ({
           <p className="text-slate-700 max-w-xl mx-auto mb-6">{description}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button asChild variant="default">
-              <Link to="/services" aria-label="Voltar ao catálogo de serviços">
+              <Link to="/services">
                 Ver todos os serviços
               </Link>
             </Button>

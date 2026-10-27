@@ -6,13 +6,13 @@ test.describe("/ecosistema navigation", () => {
   test("category page renders and lists items with working item links", async ({
     page,
   }) => {
-    await page.goto(BASE_URL + "/ecosistema/saude-mental");
+    await page.goto(BASE_URL + "/ecosistema/saude-mental-e-psicologia");
 
     // H1 + structured breadcrumb
     await expect(
       page.getByRole("heading", {
         level: 1,
-        name: /Saúde mental, reabilitação e intervenção/i,
+        name: /Saúde mental, psicologia, reabilitação e intervenção/i,
       }),
     ).toBeVisible();
     await expect(
@@ -27,7 +27,7 @@ test.describe("/ecosistema navigation", () => {
     await firstItem.click();
 
     await expect(page).toHaveURL(
-      /\/ecosistema\/saude-mental\/[a-z0-9-]+$/,
+      /\/ecosistema\/saude-mental-e-psicologia\/[a-z0-9-]+$/,
     );
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
@@ -41,7 +41,7 @@ test.describe("/ecosistema navigation", () => {
   test("unknown item slug under valid category renders accessible 404", async ({
     page,
   }) => {
-    await page.goto(BASE_URL + "/ecosistema/saude-mental/__nope__");
+    await page.goto(BASE_URL + "/ecosistema/saude-mental-e-psicologia/__nope__");
     await expect(page.getByRole("alert")).toBeVisible();
     await expect(page.getByText(/Erro 404/i)).toBeVisible();
   });

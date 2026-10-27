@@ -8,16 +8,7 @@ interface SecurityProviderProps {
 
 export const SecurityProvider = ({ children }: SecurityProviderProps) => {
   useEffect(() => {
-    // Set enhanced security headers (only those valid via <meta>)
-    // X-Frame-Options and Strict-Transport-Security are IGNORED in <meta> by browsers —
-    // they must be sent as HTTP headers. We use CSP frame-ancestors instead for clickjacking.
     const setSecurityHeaders = () => {
-      // Content Security Policy — frame-ancestors replaces X-Frame-Options
-      const cspMeta = document.createElement('meta')
-      cspMeta.httpEquiv = 'Content-Security-Policy'
-      cspMeta.content = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net https://*.lovable.app https://*.lovable.dev; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; connect-src 'self' https://qldrknhhvucupcviaedj.supabase.co wss://qldrknhhvucupcviaedj.supabase.co https://api.pwnedpasswords.com https://*.lovable.dev https://*.lovable.app; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; media-src 'self' https: blob:; frame-src 'self' https://lovable.app https://*.lovable.app https://*.lovable.dev; frame-ancestors 'self' https://*.lovable.app https://*.lovable.dev; worker-src 'self' blob:; upgrade-insecure-requests;"
-      document.head.appendChild(cspMeta)
-
       // X-Content-Type-Options (valid in <meta>)
       const noSniffMeta = document.createElement('meta')
       noSniffMeta.httpEquiv = 'X-Content-Type-Options'

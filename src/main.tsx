@@ -1,7 +1,28 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { PRELOAD_RELOAD_KEY } from "./utils/preloadRecovery";
 import "./index.css";
+
+let preloadReloaded = false;
+try {
+  preloadReloaded = Boolean(sessionStorage.getItem(PRELOAD_RELOAD_KEY));
+} catch {
+  preloadReloaded = true;
+}
+
+window.addEventListener("vite:preloadError", (event) => {
+  if (preloadReloaded) return;
+  try {
+    sessionStorage.setItem(PRELOAD_RELOAD_KEY, "1");
+  } catch {
+    return;
+  }
+  preloadReloaded = true;
+  event.preventDefault();
+  window.location.reload();
+});
 
 // Tratamento de erro global para capturar falhas críticas não tratadas no ciclo de vida da UI
 window.addEventListener("error", (event) => {
@@ -28,6 +49,16 @@ if (!rootElement) {
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <App />
+    <ErrorBoundary fallback={
+      <div role="alert" className="min-h-screen flex flex-col items-center justify-center gap-4 p-6 text-center">
+        <h1 className="text-2xl font-bold">Não foi possível apresentar esta página</h1>
+        <p>Ocorreu um erro inesperado. Por favor, recarregue a página para tentar novamente.</p>
+        <button className="underline" onClick={() => window.location.reload()}>
+          Recarregar página
+        </button>
+      </div>
+    }>
+      <App />
+    </ErrorBoundary>
   </React.StrictMode>
 );

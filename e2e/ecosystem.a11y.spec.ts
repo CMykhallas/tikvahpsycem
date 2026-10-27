@@ -4,7 +4,7 @@ import AxeBuilder from "@axe-core/playwright";
 const BASE_URL = process.env.E2E_BASE_URL || "http://localhost:8080";
 
 // Stable, representative routes from TIKVAH_CATEGORIES.
-const CATEGORY = "saude-mental";
+const CATEGORY = "saude-mental-e-psicologia";
 const ITEM = "psicologia-clinica-social-e-organizacional";
 const ITEM_URL = `/ecosistema/${CATEGORY}/${ITEM}`;
 const CATEGORY_URL = `/ecosistema/${CATEGORY}`;

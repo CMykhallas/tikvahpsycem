@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "generate:sitemap": "npx tsx scripts/generate-sitemap.ts",
     "predev": "npx tsx scripts/generate-sitemap.ts",
@@ -13,6 +16,7 @@
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
     "type-check": "tsc --noEmit",
+    "test": "vitest run",
     "preview": "vite preview",
     "security:audit": "npm audit --audit-level=moderate",
     "security:check": "npm run type-check && npm run lint && npm run security:audit"
@@ -53,7 +57,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^4.4.0",
-    "dompurify": "^3.4.14",
+    "dompurify": "^3.4.17",
     "embla-carousel-react": "^8.5.1",
     "framer-motion": "^12.43.0",
     "input-otp": "^1.5.0",
@@ -97,7 +101,7 @@
     "lovable-tagger": "^1.1.3",
     "postcss": "^8.5.2",
     "tailwindcss": "^4.3.3",
-    "typescript": "^7.0.2",
+    "typescript": "6.0.3",
     "typescript-eslint": "^8.67.0",
     "vite": "^8.1.5",
     "vitest": "^4.1.10"
