@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +8,12 @@ import { HelmetProvider } from "react-helmet-async";
 import { SecurityProvider } from "@/components/SecurityProvider";
 
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { clearPreloadReloadFlag } from "@/utils/preloadRecovery";
+
+const RouteLoadSuccess = () => {
+  useEffect(clearPreloadReloadFlag, []);
+  return null;
+};
 
 const Index = lazy(() => import("./pages/Index"));
 const About = lazy(() => import("./pages/About"));
@@ -161,6 +167,7 @@ export function App() {
                 {/* Tratamento de Rota Não Encontrada (404) */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              <RouteLoadSuccess />
               </Suspense>
             </BrowserRouter>
           </TooltipProvider>

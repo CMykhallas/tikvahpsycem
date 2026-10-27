@@ -2,7 +2,27 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { PRELOAD_RELOAD_KEY } from "./utils/preloadRecovery";
 import "./index.css";
+
+let preloadReloaded = false;
+try {
+  preloadReloaded = Boolean(sessionStorage.getItem(PRELOAD_RELOAD_KEY));
+} catch {
+  preloadReloaded = true;
+}
+
+window.addEventListener("vite:preloadError", (event) => {
+  if (preloadReloaded) return;
+  try {
+    sessionStorage.setItem(PRELOAD_RELOAD_KEY, "1");
+  } catch {
+    return;
+  }
+  preloadReloaded = true;
+  event.preventDefault();
+  window.location.reload();
+});
 
 // Tratamento de erro global para capturar falhas críticas não tratadas no ciclo de vida da UI
 window.addEventListener("error", (event) => {
