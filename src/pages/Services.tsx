@@ -114,6 +114,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
 import LiveServicesGrid from "@/components/services/LiveServicesGrid";
+import { TikvahEcosystem } from "@/components/TikvahEcosystem";
 
 
 /* ============================================================================
@@ -443,6 +444,8 @@ const ServicesPage = () => {
         >
           <LiveServicesGrid />
         </section>
+
+        <TikvahEcosystem compact />
 
         {/* ====================================================================
          * COMMERCIAL CATALOGUE LAYER
