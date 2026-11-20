@@ -3,10 +3,10 @@
 // supabase function: mcp
 // Bundled from src/lib/mcp/index.ts by @lovable.dev/mcp-js.
 // src/lib/mcp/index.ts
-import { auth, defineMcp } from "npm:@lovable.dev/mcp-js@3.0.1";
+import { auth, defineMcp } from "npm:@lovable.dev/mcp-js@3.3.0";
 
 // src/lib/mcp/tools/list-services.ts
-import { defineTool } from "npm:@lovable.dev/mcp-js@3.0.1";
+import { defineTool } from "npm:@lovable.dev/mcp-js@3.3.0";
 
 // src/data/tikvah-services.ts
 var TIKVAH_PSYCEM_INTRO = "A Tikvah Psycem estrutura os seus servi\xE7os como um ecossistema integrado, pensado para gerar impacto mensur\xE1vel em pessoas, organiza\xE7\xF5es e comunidades. Aliamos psicologia fundamentada em evid\xEAncia, gest\xE3o estrat\xE9gica, tecnologia, direito, finan\xE7as e responsabilidade social num modelo de interven\xE7\xE3o centrado em efici\xEAncia, rigor t\xE9cnico e sustentabilidade.";
@@ -346,7 +346,7 @@ ${categories.map((c) => `- ${c.title} (${c.id}): ${c.summary}`).join("\n")}`
 });
 
 // src/lib/mcp/tools/get-service-category.ts
-import { ToolError, defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@3.0.1";
+import { ToolError, defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@3.3.0";
 import { z } from "npm:zod@^4.6.5";
 var get_service_category_default = defineTool2({
   name: "get_service_category",
@@ -388,7 +388,7 @@ ${detail.items.map((i) => `- ${i.title}: ${i.description}`).join("\n")}`
 });
 
 // src/lib/mcp/tools/list-blog-posts.ts
-import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@3.0.1";
+import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@3.3.0";
 
 // src/data/blog-posts.ts
 var DEFAULT_IMAGE = "/og-image.jpg";
@@ -463,7 +463,7 @@ var list_blog_posts_default = defineTool3({
 });
 
 // src/lib/mcp/tools/list-appointments.ts
-import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@3.0.1";
+import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@3.3.0";
 import { z as z2 } from "npm:zod@^4.6.5";
 
 // src/lib/mcp/supabase.ts
@@ -576,5 +576,5 @@ var mcp_default = defineMcp({
 });
 
 // lovable-mcp-supabase-entry.ts
-import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@3.0.1/stacks/supabase";
+import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@3.3.0/stacks/supabase";
 Deno.serve(createSupabaseHandler(mcp_default, { functionName: "mcp" }));
