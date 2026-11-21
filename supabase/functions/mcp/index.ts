@@ -562,7 +562,7 @@ var list_appointments_default = defineTool4({
 });
 
 // src/lib/mcp/index.ts
-var projectRef = "rrlwabtzwvurhhfwpmiq";
+var projectRef = "roqtlwvoxlbkotfyeuwa";
 var mcp_default = defineMcp({
   name: "tikvahpsycem",
   title: "tikvahpsycem",
